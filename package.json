@@ -15,7 +15,8 @@
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
     "generate:secret": "payload generate:secret",
-    "seed": "payload run src/seed"
+    "seed": "payload run src/seed",
+    "prepare": "husky"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -32,12 +33,15 @@
     "zod": "^4.5.4"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.2.2",
+    "@commitlint/config-conventional": "^21.2.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.4",
+    "husky": "^9.1.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

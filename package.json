@@ -15,7 +15,7 @@
     "generate:types": "payload generate:types",
     "generate:importmap": "payload generate:importmap",
     "generate:secret": "payload generate:secret",
-    "seed": "payload run seed"
+    "seed": "payload run src/seed"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

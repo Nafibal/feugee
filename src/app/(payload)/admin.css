@@ -1,0 +1,41 @@
+/*
+ * CMS Dashboard brand overrides.
+ *
+ * Payload's "success" palette is its accent color (focus rings, selection,
+ * links, drag states) despite the name — remapping it to the primary ramp
+ * rebrands the accent in one seam. Elevation greys and error/warning stay
+ * Payload's own. Brand values come from docs/DESIGN_SYSTEMS.md; steps absent
+ * from that 11-step ramp (150, 250, …) are midpoints of their neighbors.
+ */
+
+:root {
+  --color-success-50: #FEEFE8;
+  --color-success-100: #FCE0D2;
+  --color-success-150: #FBD1BB;
+  --color-success-200: #FAC1A4;
+  --color-success-250: #F9B18E;
+  --color-success-300: #F7A177;
+  --color-success-350: #F69260;
+  --color-success-400: #F58249;
+  --color-success-450: #F47333;
+  --color-success-500: #F2631C;
+  --color-success-550: #E65E1B;
+  --color-success-600: #DA5919;
+  --color-success-650: #CE5418;
+  --color-success-700: #C24F16;
+  --color-success-750: #B64A15;
+  --color-success-800: #A94514;
+  --color-success-850: #9D4013;
+  --color-success-900: #913B11;
+  --color-success-950: #79320E;
+
+  --font-body: var(--font-albert-sans), sans-serif;
+}
+
+/* Primary buttons default to near-black; 700 keeps white text at AA (4.75:1). */
+.btn--style-primary {
+  --color: var(--theme-elevation-0);
+  --bg-color: var(--theme-success-700);
+  --hover-bg: var(--theme-success-600);
+  --hover-color: var(--color);
+}

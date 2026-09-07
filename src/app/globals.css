@@ -1,26 +1,93 @@
 @import "tailwindcss";
 
+/*
+ * Design Tokens — the source of record is docs/DESIGN_SYSTEMS.md (handed off
+ * from the Agency's Figma). Sync this file and src/app/(payload)/admin.css
+ * manually when the doc changes.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #FFFFFF;
+  --foreground: #191919;
+}
+
+/*
+ * `static` keeps every token at :root even before a utility uses it — GSAP
+ * and arbitrary-value styles read these variables directly.
+ */
+@theme static {
+  /* Primary */
+  --color-primary-50: #FEEFE8;
+  --color-primary-100: #FCE0D2;
+  --color-primary-200: #FAC1A4;
+  --color-primary-300: #F7A177;
+  --color-primary-400: #F58249;
+  --color-primary-500: #F2631C;
+  --color-primary-600: #DA5919;
+  --color-primary-700: #C24F16;
+  --color-primary-800: #A94514;
+  --color-primary-900: #913B11;
+  --color-primary-950: #79320E;
+
+  /* Secondary */
+  --color-secondary-50: #EFF8FC;
+  --color-secondary-100: #DFF0F9;
+  --color-secondary-200: #BFE1F3;
+  --color-secondary-300: #A0D2EE;
+  --color-secondary-400: #80C3E8;
+  --color-secondary-500: #60B4E2;
+  --color-secondary-600: #56A2CB;
+  --color-secondary-700: #4D90B5;
+  --color-secondary-800: #437E9E;
+  --color-secondary-900: #3A6C88;
+  --color-secondary-950: #305A71;
+
+  /* Neutral */
+  --color-neutral-50: #FFFFFF;
+  --color-neutral-100: #E8E8E8;
+  --color-neutral-200: #D1D1D1;
+  --color-neutral-300: #BABABA;
+  --color-neutral-400: #A3A3A3;
+  --color-neutral-500: #8C8C8C;
+  --color-neutral-600: #757575;
+  --color-neutral-700: #5E5E5E;
+  --color-neutral-800: #474747;
+  --color-neutral-900: #303030;
+  --color-neutral-950: #191919;
+
+  /* Type scale — the doc's "md" step is Tailwind's "base" */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.125rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.25rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.5rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2rem;
+  --text-3xl: 1.875rem;
+  --text-3xl--line-height: 2.375rem;
+  --text-4xl: 2.25rem;
+  --text-4xl--line-height: 2.75rem;
+  --text-5xl: 3rem;
+  --text-5xl--line-height: 3.75rem;
+  --text-6xl: 3.75rem;
+  --text-6xl--line-height: 4.5rem;
+  --text-7xl: 4.5rem;
+  --text-7xl--line-height: 5.625rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-albert-sans), sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }

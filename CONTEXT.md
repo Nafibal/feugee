@@ -39,3 +39,9 @@ _Avoid_: Client, owner, user
 **Asset**:
 An uploaded image or video file managed by the CMS and referenced by site content.
 _Avoid_: Media, file, upload
+
+### Design
+
+**Design Tokens**:
+The canonical visual values — colors and typography — shared by the Public site and the CMS Dashboard. Handed off from the Agency's Figma; `docs/DESIGN_SYSTEMS.md` is the source of record. One light mode only.
+_Avoid_: Theme, palette, brand kit

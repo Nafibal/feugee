@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 
+import { layoutBlocks } from "../blocks/layouts";
 import { slugField } from "../utilities/slug";
 
 export const Works: CollectionConfig = {
@@ -107,6 +108,34 @@ export const Works: CollectionConfig = {
           name: "testimony",
           type: "textarea",
           required: true,
+        },
+      ],
+    },
+    {
+      name: "sections",
+      type: "array",
+      labels: {
+        singular: "Section",
+        plural: "Sections",
+      },
+      admin: {
+        description: "The content of the Work Detail Page, in sidebar order.",
+      },
+      fields: [
+        {
+          name: "title",
+          type: "text",
+          required: true,
+        },
+        {
+          name: "layouts",
+          type: "blocks",
+          labels: {
+            singular: "Layout",
+            plural: "Layouts",
+          },
+          blocks: layoutBlocks,
+          minRows: 1,
         },
       ],
     },

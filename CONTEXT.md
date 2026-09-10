@@ -21,8 +21,20 @@ The public page presenting one Work in depth.
 _Avoid_: Case study page, project page
 
 **Work**:
-A single portfolio piece the agency presents publicly. Richly detailed — not a simple record. Its core field shape is defined; dynamic sections and a gallery will be added over time.
+A single portfolio piece the agency presents publicly. Richly detailed — not a simple record. Presented as a sequence of Sections; its core field shape is defined.
 _Avoid_: Project, portfolio item, case study
+
+**Section**:
+A titled group of content within a Work. Each Section is one destination in the Work Detail Page's sidebar navigation.
+_Avoid_: Chapter, part, block
+
+**Layout**:
+A named arrangement from a fixed vocabulary that positions Items on a grid. Each Layout determines how many Items it holds and where each one sits.
+_Avoid_: Grid, row, layout type
+
+**Item**:
+A single content cell within a Layout — a standalone title, a set of paragraphs (titled or plain), or an Asset.
+_Avoid_: Cell, block, element
 
 ### CMS
 

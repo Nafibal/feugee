@@ -5,6 +5,7 @@ import { buildConfig } from "payload"
 import { fileURLToPath } from "url"
 import sharp from "sharp"
 
+import { Assets } from "./collections/Assets"
 import { Sectors } from "./collections/Sectors"
 import { Users } from "./collections/Users"
 import { Works } from "./collections/Works"
@@ -21,7 +22,7 @@ export default buildConfig({
     },
     theme: "light",
   },
-  collections: [Works, Sectors, Users],
+  collections: [Works, Sectors, Assets, Users],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {
@@ -33,8 +34,9 @@ export default buildConfig({
     },
   }),
   sharp,
-  // R2 asset storage stays unwired until credentials exist — see docs/adr/0002-asset-storage-on-cloudflare-r2.md.
-  // To enable: add s3Adapter({ bucket, config: { endpoint, credentials } }) from @payloadcms/storage-s3
-  // together with an Assets collection, driven by the R2_* vars in .env.example.
+  // Assets upload to local disk; R2 offload stays unwired until credentials exist —
+  // see docs/adr/0002-asset-storage-on-cloudflare-r2.md. To enable: add
+  // s3Adapter({ bucket, config: { endpoint, credentials } }) from @payloadcms/storage-s3,
+  // driven by the R2_* vars in .env.example.
   plugins: [],
 })

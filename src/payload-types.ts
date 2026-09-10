@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     works: Work;
     sectors: Sector;
+    assets: Asset;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -79,6 +80,7 @@ export interface Config {
   collectionsSelect: {
     works: WorksSelect<false> | WorksSelect<true>;
     sectors: SectorsSelect<false> | SectorsSelect<true>;
+    assets: AssetsSelect<false> | AssetsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -175,6 +177,319 @@ export interface Work {
         id?: string | null;
       }[]
     | null;
+  /**
+   * The content of the Work Detail Page, in sidebar order.
+   */
+  sections?:
+    | {
+        title: string;
+        layouts?:
+          | (
+              | {
+                  /**
+                   * A single item at full width.
+                   */
+                  items?:
+                    | (
+                        | {
+                            title: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'title';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  title: string;
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'titled-text';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            asset: number | Asset;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'asset';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'one-column';
+                }
+              | {
+                  /**
+                   * Two items side by side.
+                   */
+                  items?:
+                    | (
+                        | {
+                            title: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'title';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  title: string;
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'titled-text';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            asset: number | Asset;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'asset';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'two-column';
+                }
+              | {
+                  /**
+                   * Three items side by side.
+                   */
+                  items?:
+                    | (
+                        | {
+                            title: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'title';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  title: string;
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'titled-text';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            asset: number | Asset;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'asset';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'three-column';
+                }
+              | {
+                  /**
+                   * Item 1 spans two rows on the left; items 2 and 3 stack on the top and bottom right.
+                   */
+                  items?:
+                    | (
+                        | {
+                            title: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'title';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  title: string;
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'titled-text';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            asset: number | Asset;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'asset';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'feature-left';
+                }
+            )[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -194,6 +509,57 @@ export interface Sector {
   slug?: string | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * Images and videos referenced by site content.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assets".
+ */
+export interface Asset {
+  id: number;
+  /**
+   * Describes the image or video for screen readers and search engines.
+   */
+  alt: string;
+  caption?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    tablet?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    desktop?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -252,6 +618,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'sectors';
         value: number | Sector;
+      } | null)
+    | ({
+        relationTo: 'assets';
+        value: number | Asset;
       } | null)
     | ({
         relationTo: 'users';
@@ -325,6 +695,212 @@ export interface WorksSelect<T extends boolean = true> {
         testimony?: T;
         id?: T;
       };
+  sections?:
+    | T
+    | {
+        title?: T;
+        layouts?:
+          | T
+          | {
+              'one-column'?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          title?:
+                            | T
+                            | {
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          'titled-text'?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          text?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          asset?:
+                            | T
+                            | {
+                                asset?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+              'two-column'?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          title?:
+                            | T
+                            | {
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          'titled-text'?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          text?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          asset?:
+                            | T
+                            | {
+                                asset?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+              'three-column'?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          title?:
+                            | T
+                            | {
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          'titled-text'?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          text?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          asset?:
+                            | T
+                            | {
+                                asset?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+              'feature-left'?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          title?:
+                            | T
+                            | {
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          'titled-text'?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          text?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          asset?:
+                            | T
+                            | {
+                                asset?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+            };
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -338,6 +914,59 @@ export interface SectorsSelect<T extends boolean = true> {
   slug?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "assets_select".
+ */
+export interface AssetsSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        tablet?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        desktop?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

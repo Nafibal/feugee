@@ -13,6 +13,18 @@ export const Works: CollectionConfig = {
   admin: {
     useAsTitle: "title",
     defaultColumns: ["title", "sector", "_status"],
+    livePreview: {
+      url: ({ data }) => {
+        if (typeof data.slug === "string" && data.slug.length > 0) {
+          return `/works/${data.slug}`;
+        }
+        return undefined;
+      },
+      breakpoints: [
+        { label: "Mobile", name: "mobile", width: 375, height: 667 },
+        { label: "Tablet", name: "tablet", width: 768, height: 1024 },
+      ],
+    },
   },
   access: {
     read: () => true,
@@ -33,6 +45,14 @@ export const Works: CollectionConfig = {
     {
       name: "subtitle",
       type: "text",
+    },
+    {
+      name: "thumbnail",
+      type: "upload",
+      relationTo: "assets",
+      admin: {
+        description: "The primary visual for this Work, shown at the top of the Work Detail Page.",
+      },
     },
     {
       name: "tags",

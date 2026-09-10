@@ -135,6 +135,10 @@ export interface Work {
   slug?: string | null;
   subtitle?: string | null;
   /**
+   * The primary visual for this Work, shown at the top of the Work Detail Page.
+   */
+  thumbnail?: (number | null) | Asset;
+  /**
    * Free-form labels, displayed as chips.
    */
   tags?: string[] | null;
@@ -495,22 +499,6 @@ export interface Work {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * The industries Works are filed under — drives filtering on the Works Page.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "sectors".
- */
-export interface Sector {
-  id: number;
-  name: string;
-  /**
-   * Generated from the name — edit only if you need a different URL.
-   */
-  slug?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
  * Images and videos referenced by site content.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -560,6 +548,22 @@ export interface Asset {
       filename?: string | null;
     };
   };
+}
+/**
+ * The industries Works are filed under — drives filtering on the Works Page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sectors".
+ */
+export interface Sector {
+  id: number;
+  name: string;
+  /**
+   * Generated from the name — edit only if you need a different URL.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -678,6 +682,7 @@ export interface WorksSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   subtitle?: T;
+  thumbnail?: T;
   tags?: T;
   description?: T;
   client?: T;

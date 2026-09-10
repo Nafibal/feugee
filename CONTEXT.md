@@ -24,6 +24,10 @@ _Avoid_: Case study page, project page
 A single portfolio piece the agency presents publicly. Richly detailed — not a simple record. Presented as a sequence of Sections; its core field shape is defined.
 _Avoid_: Project, portfolio item, case study
 
+**Thumbnail**:
+The primary visual representing a Work, shown at the top of the Work Detail Page. An Asset — image or video.
+_Avoid_: Cover, hero image, featured image
+
 **Section**:
 A titled group of content within a Work. Each Section is one destination in the Work Detail Page's sidebar navigation.
 _Avoid_: Chapter, part, block

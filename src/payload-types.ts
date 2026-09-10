@@ -67,6 +67,8 @@ export interface Config {
   };
   blocks: {};
   collections: {
+    works: Work;
+    sectors: Sector;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -75,6 +77,8 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
+    works: WorksSelect<false> | WorksSelect<true>;
+    sectors: SectorsSelect<false> | SectorsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -114,6 +118,82 @@ export interface UserAuthOperations {
     email: string;
     password: string;
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works".
+ */
+export interface Work {
+  id: number;
+  _order?: string | null;
+  title: string;
+  /**
+   * Generated from the title — edit only if you need a different URL.
+   */
+  slug?: string | null;
+  subtitle?: string | null;
+  /**
+   * Free-form labels, displayed as chips.
+   */
+  tags?: string[] | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  client?: string | null;
+  sector?: (number | null) | Sector;
+  /**
+   * The project lead responsible for this Work.
+   */
+  associate?: string | null;
+  expertise?: string[] | null;
+  /**
+   * Feugee's own staff credited on this Work.
+   */
+  projectTeam?: string[] | null;
+  /**
+   * People outside Feugee credited on this Work.
+   */
+  collaborators?: string[] | null;
+  testimonials?:
+    | {
+        name: string;
+        job?: string | null;
+        company?: string | null;
+        testimony: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * The industries Works are filed under — drives filtering on the Works Page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sectors".
+ */
+export interface Sector {
+  id: number;
+  name: string;
+  /**
+   * Generated from the name — edit only if you need a different URL.
+   */
+  slug?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -164,10 +244,19 @@ export interface PayloadKv {
  */
 export interface PayloadLockedDocument {
   id: number;
-  document?: {
-    relationTo: 'users';
-    value: number | User;
-  } | null;
+  document?:
+    | ({
+        relationTo: 'works';
+        value: number | Work;
+      } | null)
+    | ({
+        relationTo: 'sectors';
+        value: number | Sector;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
@@ -209,6 +298,46 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "works_select".
+ */
+export interface WorksSelect<T extends boolean = true> {
+  _order?: T;
+  title?: T;
+  slug?: T;
+  subtitle?: T;
+  tags?: T;
+  description?: T;
+  client?: T;
+  sector?: T;
+  associate?: T;
+  expertise?: T;
+  projectTeam?: T;
+  collaborators?: T;
+  testimonials?:
+    | T
+    | {
+        name?: T;
+        job?: T;
+        company?: T;
+        testimony?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "sectors_select".
+ */
+export interface SectorsSelect<T extends boolean = true> {
+  name?: T;
+  slug?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

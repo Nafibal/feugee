@@ -21,7 +21,7 @@ The public page presenting one Work in depth.
 _Avoid_: Case study page, project page
 
 **Work**:
-A single portfolio piece the agency presents publicly. Richly detailed — not a simple record. Its field shape is still being defined by the agency.
+A single portfolio piece the agency presents publicly. Richly detailed — not a simple record. Its core field shape is defined; dynamic sections and a gallery will be added over time.
 _Avoid_: Project, portfolio item, case study
 
 ### CMS
@@ -39,6 +39,42 @@ _Avoid_: Client, owner, user
 **Asset**:
 An uploaded image or video file managed by the CMS and referenced by site content.
 _Avoid_: Media, file, upload
+
+**Draft**:
+A Work visible only inside the CMS Dashboard, not yet shown on the public site.
+_Avoid_: Unpublished, pending
+
+**Published**:
+A Work visible on the public site. Only the Agency can publish.
+_Avoid_: Live, released
+
+**Sector**:
+The industry a Work was created for; the facet the Works Page filters Works by.
+_Avoid_: Category, industry, vertical
+
+**Tag**:
+A short free-form label attached to a Work and displayed as a chip.
+_Avoid_: Tag chip, label, keyword
+
+**Associate**:
+The project lead responsible for a Work.
+_Avoid_: Partner, collaborator
+
+**Project Team**:
+The Agency's own staff credited on a Work.
+_Avoid_: Team members, staff list
+
+**Collaborator**:
+A person outside the Agency credited on a Work.
+_Avoid_: Contributor, partner
+
+**Expertise**:
+The creative disciplines the Agency applied to a Work.
+_Avoid_: Skills, services
+
+**Testimonial**:
+A quoted endorsement of a Work, attributed to a named person and their company.
+_Avoid_: Quote, review
 
 ### Design
 

@@ -5,7 +5,9 @@ import { buildConfig } from "payload"
 import { fileURLToPath } from "url"
 import sharp from "sharp"
 
+import { Sectors } from "./collections/Sectors"
 import { Users } from "./collections/Users"
+import { Works } from "./collections/Works"
 import { env } from "./env"
 
 const filename = fileURLToPath(import.meta.url)
@@ -19,7 +21,7 @@ export default buildConfig({
     },
     theme: "light",
   },
-  collections: [Users],
+  collections: [Works, Sectors, Users],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {

@@ -489,6 +489,81 @@ export interface Work {
                   blockName?: string | null;
                   blockType: 'feature-left';
                 }
+              | {
+                  /**
+                   * Item 1 spans two rows on the right; items 2 and 3 stack on the top and bottom left.
+                   */
+                  items?:
+                    | (
+                        | {
+                            title: string;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'title';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  title: string;
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'titled-text';
+                          }
+                        | {
+                            entries?:
+                              | {
+                                  text: {
+                                    root: {
+                                      type: string;
+                                      children: {
+                                        type: any;
+                                        version: number;
+                                        [k: string]: unknown;
+                                      }[];
+                                      direction: ('ltr' | 'rtl') | null;
+                                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                                      indent: number;
+                                      version: number;
+                                    };
+                                    [k: string]: unknown;
+                                  };
+                                  id?: string | null;
+                                }[]
+                              | null;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'text';
+                          }
+                        | {
+                            asset: number | Asset;
+                            id?: string | null;
+                            blockName?: string | null;
+                            blockType: 'asset';
+                          }
+                      )[]
+                    | null;
+                  id?: string | null;
+                  blockName?: string | null;
+                  blockType: 'feature-right';
+                }
             )[]
           | null;
         id?: string | null;
@@ -855,6 +930,55 @@ export interface WorksSelect<T extends boolean = true> {
                     blockName?: T;
                   };
               'feature-left'?:
+                | T
+                | {
+                    items?:
+                      | T
+                      | {
+                          title?:
+                            | T
+                            | {
+                                title?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                          'titled-text'?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      title?: T;
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          text?:
+                            | T
+                            | {
+                                entries?:
+                                  | T
+                                  | {
+                                      text?: T;
+                                      id?: T;
+                                    };
+                                id?: T;
+                                blockName?: T;
+                              };
+                          asset?:
+                            | T
+                            | {
+                                asset?: T;
+                                id?: T;
+                                blockName?: T;
+                              };
+                        };
+                    id?: T;
+                    blockName?: T;
+                  };
+              'feature-right'?:
                 | T
                 | {
                     items?:

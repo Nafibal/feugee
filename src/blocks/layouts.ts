@@ -1,12 +1,12 @@
-import type { Block } from "payload"
+import type { Block } from "payload";
 
-import { assetItem, textItem, titledTextItem, titleItem } from "./items"
+import { assetItem, textItem, titledTextItem, titleItem } from "./items";
 
 const layoutBlock = (options: {
-  slug: string
-  label: string
-  slots: number
-  geometry: string
+  slug: string;
+  label: string;
+  slots: number;
+  geometry: string;
 }): Block => ({
   slug: options.slug,
   labels: { singular: options.label, plural: options.label },
@@ -23,7 +23,7 @@ const layoutBlock = (options: {
       },
     },
   ],
-})
+});
 
 // The vocabulary is provisional until the Agency finalises each layout's spec —
 // see docs/adr/0003-named-layouts-with-fixed-item-slots.md.
@@ -53,4 +53,11 @@ export const layoutBlocks: Block[] = [
     geometry:
       "Item 1 spans two rows on the left; items 2 and 3 stack on the top and bottom right.",
   }),
-]
+  layoutBlock({
+    slug: "feature-right",
+    label: "Feature right",
+    slots: 3,
+    geometry:
+      "Item 1 spans two rows on the right; items 2 and 3 stack on the top and bottom left.",
+  }),
+];

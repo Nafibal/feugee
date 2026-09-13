@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Work } from "@/payload-types";
 
 import { WorkSections, sectionAnchor } from "./WorkSections";
+import { ScrollProgress } from "./ScrollProgress";
 
 const ArrowRight = () => (
   <svg
@@ -109,6 +110,7 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
 
   return (
     <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
+      <ScrollProgress />
       <aside className="self-start md:sticky md:top-10 px-6">
         <nav aria-label="Work sections" className="space-y-12">
           <div className="w-full pb-12 border-b border-neutral-900 space-y-6">

@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import { ArrowRight } from "../ArrowRight";
+import { AutoVideo } from "../AutoVideo";
 import { ScrollProgress } from "../ScrollProgress";
 
 export interface WorksListItem {
@@ -20,12 +21,22 @@ export interface WorksListItem {
   title: string;
   firstExpertise: string | null;
   sectorSlug: string | null;
-  thumbnail: {
-    url: string;
-    width: number;
-    height: number;
-    alt: string;
-  };
+  thumbnail:
+    | {
+        kind: "image";
+        url: string;
+        width: number;
+        height: number;
+        alt: string;
+      }
+    | {
+        kind: "video";
+        url: string;
+        posterUrl: string | null;
+        width: number;
+        height: number;
+        alt: string;
+      };
 }
 
 export interface SectorOption {
@@ -100,13 +111,26 @@ const WorkCard = ({
     <div
       className={`transition-[filter] duration-300 ${dimmed ? "grayscale" : ""}`}
     >
-      <Image
-        alt={item.thumbnail.alt}
-        className="h-auto w-full object-cover"
-        height={item.thumbnail.height}
-        src={item.thumbnail.url}
-        width={item.thumbnail.width}
-      />
+      {item.thumbnail.kind === "video" ? (
+        // Video thumbnails autoplay muted while on screen; the poster-derived
+        // width/height keep the card's slot identical to an image card's.
+        <AutoVideo
+          alt={item.thumbnail.alt}
+          className="h-auto w-full object-cover"
+          height={item.thumbnail.height}
+          poster={item.thumbnail.posterUrl}
+          src={item.thumbnail.url}
+          width={item.thumbnail.width}
+        />
+      ) : (
+        <Image
+          alt={item.thumbnail.alt}
+          className="h-auto w-full object-cover"
+          height={item.thumbnail.height}
+          src={item.thumbnail.url}
+          width={item.thumbnail.width}
+        />
+      )}
     </div>
     {/* Tailwind's hover: variant is (hover: hover)-guarded, so touch devices
         stay image-only — captions and the scrim never appear there. */}

@@ -25,7 +25,7 @@ A single portfolio piece the agency presents publicly. Richly detailed — not a
 _Avoid_: Project, portfolio item, case study
 
 **Thumbnail**:
-The primary visual representing a Work, shown at the top of the Work Detail Page. An Asset — image or video.
+The primary visual representing a Work, shown at the top of the Work Detail Page and as its card on the Works Page. An Asset — image or video. A video Thumbnail plays muted, looping, and without controls, like every video on the public site.
 _Avoid_: Cover, hero image, featured image
 
 **Section**:
@@ -59,6 +59,10 @@ _Avoid_: Client, owner, user
 **Asset**:
 An uploaded image or video file managed by the CMS and referenced by site content.
 _Avoid_: Media, file, upload
+
+**Poster**:
+The image Asset standing in for a video Asset before it plays. Serves as the preview frame and — because Payload measures no dimensions for videos — as the video's aspect ratio in the Works masonry and Layouts.
+_Avoid_: Still frame, preview image, thumbnail frame
 
 **Draft**:
 A Work visible only inside the CMS Dashboard, not yet shown on the public site.

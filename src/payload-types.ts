@@ -586,6 +586,10 @@ export interface Asset {
    */
   alt: string;
   caption?: string | null;
+  /**
+   * Image shown before the video plays. Pick one with the same frame size as the video — it fixes the video's slot in grids and the masonry.
+   */
+  poster?: (number | null) | Asset;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1051,6 +1055,7 @@ export interface SectorsSelect<T extends boolean = true> {
 export interface AssetsSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
+  poster?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

@@ -8,7 +8,12 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { Work } from "@/payload-types";
 
 import { ArrowRight } from "../../ArrowRight";
+import { AutoVideo } from "../../AutoVideo";
 import { ScrollProgress } from "../../ScrollProgress";
+import {
+  VIDEO_ASPECT_FALLBACK,
+  videoPosterOf,
+} from "../../videoAsset";
 import { WorkSections, sectionAnchor } from "./WorkSections";
 
 const Chip = ({ children }: { children: ReactNode }) => (
@@ -64,6 +69,10 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
   const sectorName =
     typeof data.sector === "object" && data.sector !== null
       ? data.sector.name
+      : null;
+  const thumbnailPoster =
+    typeof data.thumbnail === "object" && data.thumbnail !== null
+      ? videoPosterOf(data.thumbnail)
       : null;
 
   // Scroll-spy for the Contents nav: the section crossing a band near the top
@@ -134,10 +143,20 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
 
       <div className="w-full">
         <section id="work-detail" className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] ">
-          {typeof data.thumbnail === "object" &&
-            data.thumbnail?.url &&
-            !data.thumbnail.mimeType?.startsWith("video/") && (
-              <div className="relative w-full h-screen">
+          {typeof data.thumbnail === "object" && data.thumbnail?.url && (
+            <div className="relative w-full h-screen">
+              {data.thumbnail.mimeType?.startsWith("video/") ? (
+                <AutoVideo
+                  alt={data.thumbnail.alt}
+                  className="absolute inset-0 h-full w-full object-cover"
+                  height={
+                    thumbnailPoster?.height ?? VIDEO_ASPECT_FALLBACK.height
+                  }
+                  poster={thumbnailPoster?.url ?? null}
+                  src={data.thumbnail.url}
+                  width={thumbnailPoster?.width ?? VIDEO_ASPECT_FALLBACK.width}
+                />
+              ) : (
                 <Image
                   src={data.thumbnail.url}
                   alt={data.thumbnail.alt}
@@ -146,8 +165,9 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
                   // width={data.thumbnail.width ?? 1}
                   // height={data.thumbnail.height ?? 1}
                 />
-              </div>
-            )}
+              )}
+            </div>
+          )}
 
           <div className="p-8 flex flex-col gap-y-8">
             <div className="w-full flex flex-row justify-start items-stretch gap-x-8">

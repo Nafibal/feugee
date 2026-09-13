@@ -1,3 +1,8 @@
+import { execFileSync } from "node:child_process"
+import { mkdtempSync, readFileSync, rmSync } from "node:fs"
+import { tmpdir } from "node:os"
+import path from "node:path"
+
 import { getPayload } from "payload"
 import sharp from "sharp"
 import { z } from "zod"
@@ -214,6 +219,96 @@ if (createdAssets === 0) {
   payload.logger.info(`Seeded ${createdAssets} new assets (${assetDefs.length} total)`)
 }
 
+// Video Assets are generated with ffmpeg: an animated gradient clip plus its
+// first frame as the poster image. Without ffmpeg on the machine the video
+// fixtures are skipped and the Works stay image-only.
+const videoDefs = [
+  {
+    key: "pulseTeaser",
+    name: "pulse-teaser.mp4",
+    posterName: "pulse-teaser-poster.png",
+    alt: "Animated gradient teaser in the Pulse Festival colourway",
+    caption: "Motion teaser, opening night",
+  },
+]
+
+const videoAssetIds: Record<(typeof videoDefs)[number]["key"], number> = {}
+
+const hasFfmpeg = (() => {
+  try {
+    execFileSync("ffmpeg", ["-version"], { stdio: "ignore" })
+    return true
+  } catch {
+    return false
+  }
+})()
+
+if (!hasFfmpeg) {
+  payload.logger.info("ffmpeg not found — skipping video asset seed")
+} else {
+  const tmp = mkdtempSync(path.join(tmpdir(), "feugee-seed-"))
+  try {
+    for (const def of videoDefs) {
+      const existingVideo = await payload.find({
+        collection: "assets",
+        limit: 1,
+        where: { filename: { equals: def.name } },
+      })
+      if (existingVideo.docs.length > 0) {
+        videoAssetIds[def.key] = existingVideo.docs[0].id
+        continue
+      }
+
+      const videoPath = path.join(tmp, def.name)
+      const posterPath = path.join(tmp, def.posterName)
+      execFileSync("ffmpeg", [
+        "-f",
+        "lavfi",
+        "-i",
+        // A slowly drifting two-colour gradient in the festival palette —
+        // clearly in motion, safely looping, tiny file.
+        "gradients=size=1280x720:duration=4:rate=30:speed=0.03:c0=0xd94f30:c1=0x274b9f",
+        "-t",
+        "4",
+        "-pix_fmt",
+        "yuv420p",
+        "-movflags",
+        "+faststart",
+        videoPath,
+      ])
+      execFileSync("ffmpeg", ["-i", videoPath, "-frames:v", "1", posterPath])
+
+      const posterData = readFileSync(posterPath)
+      const poster = await payload.create({
+        collection: "assets",
+        data: { alt: `${def.alt} — still frame` },
+        file: {
+          data: posterData,
+          mimetype: "image/png",
+          name: def.posterName,
+          size: posterData.length,
+        },
+      })
+
+      const videoData = readFileSync(videoPath)
+      const video = await payload.create({
+        collection: "assets",
+        data: { alt: def.alt, caption: def.caption, poster: poster.id },
+        file: {
+          data: videoData,
+          mimetype: "video/mp4",
+          name: def.name,
+          size: videoData.length,
+        },
+      })
+      videoAssetIds[def.key] = video.id
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true })
+  }
+  payload.logger.info(`Seeded ${videoDefs.length} video asset(s) with ffmpeg`)
+}
+
 const existingWorks = await payload.find({
   collection: "works",
   limit: 1,
@@ -226,6 +321,7 @@ if (existingWorks.docs.length === 0) {
       title: "Solstice Denim Rebrand",
       slug: "solstice-denim-rebrand",
       subtitle: "A denim house re-cut for the archive era",
+      thumbnail: assetIds.solsticeFeature,
       description: lexicalParagraph(
         "Solstice came to Feugee with a forty-year archive and no way to wear it. We rebuilt the identity around the garments themselves — every touchpoint now borrows its rhythm from the cutting table.",
       ),
@@ -321,6 +417,9 @@ if (existingWorks.docs.length === 0) {
       title: "Pulse Festival Identity",
       slug: "pulse-festival-identity",
       subtitle: "A living identity for a three-day music festival",
+      // The video teaser doubles as the Thumbnail and a gallery Item when
+      // ffmpeg generated it; image-only environments fall back.
+      thumbnail: videoAssetIds.pulseTeaser ?? assetIds.pulseStageWide,
       description: lexicalParagraph(
         "An identity that behaves like the lineup: loud, layered, and different every night. The system generates poster variants from the artists' own waveforms.",
       ),
@@ -354,7 +453,10 @@ if (existingWorks.docs.length === 0) {
             {
               blockType: "two-column",
               items: [
-                { blockType: "asset", asset: assetIds.pulseStageWide },
+                {
+                  blockType: "asset",
+                  asset: videoAssetIds.pulseTeaser ?? assetIds.pulseStageWide,
+                },
                 { blockType: "asset", asset: assetIds.pulseStagePortrait },
               ],
             },

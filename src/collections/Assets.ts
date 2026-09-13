@@ -36,5 +36,21 @@ export const Assets: CollectionConfig = {
       name: "caption",
       type: "text",
     },
+    {
+      name: "poster",
+      type: "upload",
+      relationTo: "assets",
+      // Payload stores no dimensions for videos, so the poster image is the
+      // only thing that can hold the video's aspect ratio — grids and masonry
+      // read it from the poster instead of the video itself.
+      filterOptions: () => ({ mimeType: { like: "image/" } }),
+      admin: {
+        condition: (data) =>
+          typeof data?.mimeType === "string" &&
+          data.mimeType.startsWith("video/"),
+        description:
+          "Image shown before the video plays. Pick one with the same frame size as the video — it fixes the video's slot in grids and the masonry.",
+      },
+    },
   ],
 }

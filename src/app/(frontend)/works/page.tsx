@@ -4,6 +4,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
+import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "../videoAsset";
 import {
   WorksListing,
   type SectorOption,
@@ -25,16 +26,37 @@ const sectorSlugOf = (
     ? sector.slug ?? String(sector.id)
     : null;
 
-// Works without a usable image Thumbnail are left out; video thumbnails get
-// their masonry treatment in a later pass.
+// Works without a usable Thumbnail are left out. Video thumbnails autoplay
+// muted in their card; the poster image holds their aspect ratio for the
+// masonry math, falling back to 16:9 when no poster is set.
 const toListItem = (work: Work): WorksListItem | null => {
   if (
     typeof work.thumbnail !== "object" ||
     work.thumbnail === null ||
-    typeof work.thumbnail.url !== "string" ||
-    work.thumbnail.mimeType?.startsWith("video/")
+    typeof work.thumbnail.url !== "string"
   ) {
     return null;
+  }
+
+  const { url, alt } = work.thumbnail;
+
+  if (work.thumbnail.mimeType?.startsWith("video/")) {
+    const poster = videoPosterOf(work.thumbnail);
+    return {
+      id: work.id,
+      slug: work.slug ?? "",
+      title: work.title,
+      firstExpertise: work.expertise?.[0] ?? null,
+      sectorSlug: sectorSlugOf(work.sector),
+      thumbnail: {
+        kind: "video",
+        url,
+        posterUrl: poster?.url ?? null,
+        width: poster?.width ?? VIDEO_ASPECT_FALLBACK.width,
+        height: poster?.height ?? VIDEO_ASPECT_FALLBACK.height,
+        alt,
+      },
+    };
   }
 
   return {
@@ -44,10 +66,11 @@ const toListItem = (work: Work): WorksListItem | null => {
     firstExpertise: work.expertise?.[0] ?? null,
     sectorSlug: sectorSlugOf(work.sector),
     thumbnail: {
-      url: work.thumbnail.url,
+      kind: "image",
+      url,
       width: work.thumbnail.width ?? 1,
       height: work.thumbnail.height ?? 1,
-      alt: work.thumbnail.alt,
+      alt,
     },
   };
 };
@@ -66,7 +89,8 @@ const getWorksPageData = cache(
     const [worksResult, sectorsResult] = await Promise.all([
       payload.find({
         collection: "works",
-        depth: 1,
+        // Depth 2 populates the thumbnail Asset and, in turn, its poster.
+        depth: 2,
         draft: false,
         limit: 0,
         where: { _status: { equals: "published" } },

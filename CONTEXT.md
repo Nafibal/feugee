@@ -41,7 +41,7 @@ A single content cell within a Layout — a standalone title, a set of paragraph
 _Avoid_: Cell, block, element
 
 **Scroll Progress Bar**:
-A thin fixed bar at the top of the Work Detail Page that fills left to right as the visitor scrolls through the Work.
+A thin fixed bar at the top of a public page that fills left to right as the visitor scrolls through the page's main content.
 _Avoid_: Progress indicator, reading bar, scroll tracker
 
 ### CMS

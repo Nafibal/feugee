@@ -110,10 +110,10 @@ const WorkCard = ({
     </div>
     {/* Tailwind's hover: variant is (hover: hover)-guarded, so touch devices
         stay image-only — captions and the scrim never appear there. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-4 bg-gradient-to-t from-neutral-950/70 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
-      <span className="text-lg text-white">{item.title}</span>
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-4 bg-linear-to-t from-neutral-950/70 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
+      <span className="text-3xl text-white font-bold">{item.title}</span>
       {item.firstExpertise && (
-        <span className="text-sm text-neutral-300">{item.firstExpertise}</span>
+        <span className="text-xl text-white">{item.firstExpertise}</span>
       )}
     </div>
   </Link>
@@ -270,16 +270,18 @@ export const WorksListing = ({
         {filteredItems.length === 0 ? (
           <p className="p-8 text-xl text-neutral-600">Works coming soon</p>
         ) : (
-          <div className="flex w-full flex-col gap-[4px] md:flex-row" ref={gridRef}>
+          <div className="flex w-full flex-col gap-1 md:flex-row" ref={gridRef}>
             {columns.map((column, columnIndex) => (
               <div
-                className="flex w-full flex-1 flex-col gap-[4px]"
+                className="flex w-full flex-1 flex-col gap-1"
                 key={columnIndex}
               >
                 {column.map((item) => (
                   <WorkCard
                     canHover={canHover}
-                    dimmed={canHover && hoveredId !== null && hoveredId !== item.id}
+                    dimmed={
+                      canHover && hoveredId !== null && hoveredId !== item.id
+                    }
                     item={item}
                     key={item.id}
                     onHoverEnd={() => setHoveredId(null)}

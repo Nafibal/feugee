@@ -133,12 +133,17 @@ const WorkCard = ({
       )}
     </div>
     {/* Tailwind's hover: variant is (hover: hover)-guarded, so touch devices
-        stay image-only — captions and the scrim never appear there. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-baseline justify-between gap-4 bg-linear-to-t from-neutral-950/70 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover/card:opacity-100">
-      <span className="text-3xl text-white font-bold">{item.title}</span>
-      {item.firstExpertise && (
-        <span className="text-xl text-white">{item.firstExpertise}</span>
-      )}
+        stay image-only — captions never appear there. The caption backdrop is
+        a blur gradient: the Thumbnail's own pixels, blurred by backdrop-filter
+        and faded out by a mask — no dark scrim. blur(0px) rather than none
+        keeps the hover transition interpolable. */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100">
+      <div className="flex w-full items-baseline justify-between gap-4 p-4">
+        <span className="text-3xl text-white font-bold">{item.title}</span>
+        {item.firstExpertise && (
+          <span className="text-xl text-white">{item.firstExpertise}</span>
+        )}
+      </div>
     </div>
   </Link>
 );

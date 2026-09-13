@@ -3,6 +3,7 @@ import { albertSans } from "@/app/fonts";
 import "../globals.css";
 
 import { SmoothScroll } from "./SmoothScroll";
+import { Navbar } from "./Navbar";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -13,7 +14,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${albertSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-neutral-950">
-        <SmoothScroll>{children}</SmoothScroll>
+        <SmoothScroll>
+          <Navbar />
+          {children}
+        </SmoothScroll>
       </body>
     </html>
   );

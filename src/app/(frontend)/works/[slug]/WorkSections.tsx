@@ -39,7 +39,7 @@ export const WorkSections = ({ sections }: { sections: Work["sections"] }) => {
         <section
           key={section.id ?? sectionIndex}
           id={sectionAnchor(sectionIndex)}
-          className="scroll-mt-10 space-y-1"
+          className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] space-y-1"
         >
           {(section.layouts ?? []).map((layout, layoutIndex) => (
             <div

@@ -9,6 +9,9 @@
 :root {
   --background: #FFFFFF;
   --foreground: #191919;
+  /* Layout dimension, not a Design Token: navbar-driven clearances across
+   * the public site (sticky offsets, scroll margins) hang off this value. */
+  --navbar-height: 4.5rem;
 }
 
 /*

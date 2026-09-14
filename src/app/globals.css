@@ -89,6 +89,20 @@
   --font-sans: var(--font-albert-sans), sans-serif;
 }
 
+/*
+ * Client Marquee scroll — page behavior, not a Design Token, so it lives
+ * outside the token block above.
+ */
+@theme {
+  --animate-marquee: marquee 36s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground font-sans;

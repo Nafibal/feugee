@@ -6,10 +6,12 @@ import { fileURLToPath } from "url"
 import sharp from "sharp"
 
 import { Assets } from "./collections/Assets"
+import { Clients } from "./collections/Clients"
 import { Sectors } from "./collections/Sectors"
 import { Users } from "./collections/Users"
 import { Works } from "./collections/Works"
 import { env } from "./env"
+import { LandingPage } from "./globals/LandingPage"
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,7 +24,8 @@ export default buildConfig({
     },
     theme: "light",
   },
-  collections: [Works, Sectors, Assets, Users],
+  collections: [Works, Sectors, Assets, Clients, Users],
+  globals: [LandingPage],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {

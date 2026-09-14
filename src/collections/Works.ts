@@ -76,6 +76,22 @@ export const Works: CollectionConfig = {
       relationTo: "sectors",
     },
     {
+      name: "year",
+      type: "number",
+      min: 1990,
+      max: new Date().getFullYear(),
+      admin: {
+        description: "Year the Work was produced or released.",
+      },
+    },
+    {
+      name: "duration",
+      type: "text",
+      admin: {
+        description: 'How long the Work took to produce, in your own words — e.g. "6 weeks".',
+      },
+    },
+    {
       name: "associate",
       type: "text",
       admin: {

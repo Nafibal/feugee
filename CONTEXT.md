@@ -12,6 +12,22 @@ The visitor-facing part of the website. Animation-heavy (scroll and page transit
 The site's front page a visitor lands on first.
 _Avoid_: Home, homepage
 
+**Hero**:
+The opening, full-screen section of the Landing Page — a slider of autoplaying video Assets beneath a single title and subtitle.
+_Avoid_: Banner, header, carousel
+
+**Slide**:
+A single video Asset in the Hero's slider, shown full-screen one at a time.
+_Avoid_: Frame, panel
+
+**Client Marquee**:
+The strip of Client logos on the Landing Page that auto-scrolls horizontally without end.
+_Avoid_: Logo wall, partners, trusted-by
+
+**Selected Works**:
+The Works the Agency curates to feature on the Landing Page, in display order.
+_Avoid_: Featured works, highlights
+
 **Works Page**:
 The public page listing every published Work.
 _Avoid_: Portfolio page, projects page
@@ -56,6 +72,10 @@ _Avoid_: Admin panel, back office
 Feugee itself — the owner of the site and its content. Distinguished from a site visitor or the developer.
 _Avoid_: Client, owner, user
 
+**Client**:
+The external company a Work was made for. Distinct from the Agency and from a site visitor.
+_Avoid_: Customer, brand, partner
+
 **Asset**:
 An uploaded image or video file managed by the CMS and referenced by site content.
 _Avoid_: Media, file, upload
@@ -80,6 +100,14 @@ _Avoid_: Category, industry, vertical
 A short free-form label attached to a Work and displayed as a chip.
 _Avoid_: Tag chip, label, keyword
 
+**Year**:
+The year a Work was produced or released.
+_Avoid_: Date, date completed
+
+**Duration**:
+How long a Work took to produce, in the Agency's own words — e.g. "6 weeks". Not a film runtime.
+_Avoid_: Runtime, length, timeframe
+
 **Associate**:
 The project lead responsible for a Work.
 _Avoid_: Partner, collaborator
@@ -99,6 +127,10 @@ _Avoid_: Skills, services
 **Testimonial**:
 A quoted endorsement of a Work, attributed to a named person and their company.
 _Avoid_: Quote, review
+
+**Stat**:
+A proof figure on the Landing Page, as a value with a label — e.g. "55+" with "Videos".
+_Avoid_: Metric, counter, fact
 
 ### Design
 

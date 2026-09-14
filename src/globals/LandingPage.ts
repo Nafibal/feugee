@@ -1,0 +1,119 @@
+import type { GlobalConfig } from "payload"
+
+export const LandingPage: GlobalConfig = {
+  slug: "landing-page",
+  label: "Landing Page",
+  admin: {
+    description: "The content of the site's front page, section by section.",
+    livePreview: {
+      url: "/",
+      breakpoints: [
+        { label: "Mobile", name: "mobile", width: 375, height: 667 },
+        { label: "Tablet", name: "tablet", width: 768, height: 1024 },
+      ],
+    },
+  },
+  access: {
+    read: () => true,
+  },
+  versions: {
+    drafts: {
+      autosave: true,
+    },
+    max: 50,
+  },
+  fields: [
+    {
+      type: "group",
+      name: "hero",
+      label: "Hero",
+      admin: {
+        description: "The full-screen opening: one title and subtitle over a slider of videos.",
+      },
+      fields: [
+        {
+          name: "title",
+          type: "text",
+        },
+        {
+          name: "subtitle",
+          type: "text",
+        },
+        {
+          name: "slides",
+          type: "array",
+          labels: {
+            singular: "Slide",
+            plural: "Slides",
+          },
+          minRows: 1,
+          fields: [
+            {
+              name: "video",
+              type: "upload",
+              relationTo: "assets",
+              required: true,
+              filterOptions: () => ({ mimeType: { like: "video/" } }),
+              admin: {
+                description:
+                  "Video only. Set the poster on the Asset itself — it is the slide's preview frame.",
+              },
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "group",
+      name: "whoWeAre",
+      label: "Who We Are",
+      fields: [
+        {
+          name: "heading",
+          type: "text",
+          defaultValue: "Who We Are",
+        },
+        {
+          name: "description",
+          type: "textarea",
+        },
+      ],
+    },
+    {
+      name: "stats",
+      type: "array",
+      labels: {
+        singular: "Stat",
+        plural: "Stats",
+      },
+      admin: {
+        description: "Proof figures shown together — e.g. 55+ / Videos.",
+      },
+      fields: [
+        {
+          name: "value",
+          type: "text",
+          required: true,
+          admin: {
+            description: 'The figure — e.g. "55+" or "35+M".',
+          },
+        },
+        {
+          name: "label",
+          type: "text",
+          required: true,
+        },
+      ],
+    },
+    {
+      name: "selectedWorks",
+      type: "relationship",
+      relationTo: "works",
+      hasMany: true,
+      filterOptions: () => ({ _status: { equals: "published" } }),
+      admin: {
+        description: "Works featured on the Landing Page, in display order.",
+      },
+    },
+  ],
+}

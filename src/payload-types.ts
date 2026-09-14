@@ -70,6 +70,7 @@ export interface Config {
     works: Work;
     sectors: Sector;
     assets: Asset;
+    clients: Client;
     users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
@@ -81,6 +82,7 @@ export interface Config {
     works: WorksSelect<false> | WorksSelect<true>;
     sectors: SectorsSelect<false> | SectorsSelect<true>;
     assets: AssetsSelect<false> | AssetsSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
@@ -91,8 +93,12 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'landing-page': LandingPage;
+  };
+  globalsSelect: {
+    'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -159,6 +165,14 @@ export interface Work {
   } | null;
   client?: string | null;
   sector?: (number | null) | Sector;
+  /**
+   * Year the Work was produced or released.
+   */
+  year?: number | null;
+  /**
+   * How long the Work took to produce, in your own words — e.g. "6 weeks".
+   */
+  duration?: string | null;
   /**
    * The project lead responsible for this Work.
    */
@@ -645,6 +659,27 @@ export interface Sector {
   createdAt: string;
 }
 /**
+ * The external companies Works are made for — drives the Client Marquee on the Landing Page. Drag order is the marquee order.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: number;
+  _order?: string | null;
+  name: string;
+  /**
+   * Image only. The marquee applies its own colour treatment at render time.
+   */
+  logo: number | Asset;
+  /**
+   * Optional link to the client's website.
+   */
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -707,6 +742,10 @@ export interface PayloadLockedDocument {
         value: number | Asset;
       } | null)
     | ({
+        relationTo: 'clients';
+        value: number | Client;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null);
@@ -766,6 +805,8 @@ export interface WorksSelect<T extends boolean = true> {
   description?: T;
   client?: T;
   sector?: T;
+  year?: T;
+  duration?: T;
   associate?: T;
   expertise?: T;
   projectTeam?: T;
@@ -1104,6 +1145,18 @@ export interface AssetsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  _order?: T;
+  name?: T;
+  logo?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -1164,6 +1217,91 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * The content of the site's front page, section by section.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-page".
+ */
+export interface LandingPage {
+  id: number;
+  /**
+   * The full-screen opening: one title and subtitle over a slider of videos.
+   */
+  hero?: {
+    title?: string | null;
+    subtitle?: string | null;
+    slides?:
+      | {
+          /**
+           * Video only. Set the poster on the Asset itself — it is the slide's preview frame.
+           */
+          video: number | Asset;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  whoWeAre?: {
+    heading?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Proof figures shown together — e.g. 55+ / Videos.
+   */
+  stats?:
+    | {
+        /**
+         * The figure — e.g. "55+" or "35+M".
+         */
+        value: string;
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Works featured on the Landing Page, in display order.
+   */
+  selectedWorks?: (number | Work)[] | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "landing-page_select".
+ */
+export interface LandingPageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        slides?:
+          | T
+          | {
+              video?: T;
+              id?: T;
+            };
+      };
+  whoWeAre?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+      };
+  stats?:
+    | T
+    | {
+        value?: T;
+        label?: T;
+        id?: T;
+      };
+  selectedWorks?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

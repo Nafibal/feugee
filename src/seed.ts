@@ -222,13 +222,55 @@ if (createdAssets === 0) {
 // Video Assets are generated with ffmpeg: an animated gradient clip plus its
 // first frame as the poster image. Without ffmpeg on the machine the video
 // fixtures are skipped and the Works stay image-only.
-const videoDefs = [
+type VideoDef = {
+  key: string
+  name: string
+  posterName: string
+  alt: string
+  caption?: string
+  // The lavfi "gradients" source — each def carries its own colourway, pace,
+  // and duration (the hero loops match the slider's 8-second interval).
+  gradient: string
+  duration: number
+}
+
+const videoDefs: VideoDef[] = [
   {
     key: "pulseTeaser",
     name: "pulse-teaser.mp4",
     posterName: "pulse-teaser-poster.png",
     alt: "Animated gradient teaser in the Pulse Festival colourway",
     caption: "Motion teaser, opening night",
+    gradient:
+      "gradients=size=1280x720:duration=4:rate=30:speed=0.03:c0=0xd94f30:c1=0x274b9f",
+    duration: 4,
+  },
+  {
+    key: "heroEmber",
+    name: "hero-loop-ember.mp4",
+    posterName: "hero-loop-ember-poster.png",
+    alt: "Drifting loop from brand orange into black",
+    gradient:
+      "gradients=size=1280x720:duration=8:rate=30:speed=0.025:c0=0xf2631c:c1=0x191919",
+    duration: 8,
+  },
+  {
+    key: "heroTide",
+    name: "hero-loop-tide.mp4",
+    posterName: "hero-loop-tide-poster.png",
+    alt: "Drifting loop in the secondary blue palette",
+    gradient:
+      "gradients=size=1280x720:duration=8:rate=30:speed=0.035:c0=0x60b4e2:c1=0x1c2e52",
+    duration: 8,
+  },
+  {
+    key: "heroInk",
+    name: "hero-loop-ink.mp4",
+    posterName: "hero-loop-ink-poster.png",
+    alt: "Drifting loop from violet into near-black",
+    gradient:
+      "gradients=size=1280x720:duration=8:rate=30:speed=0.02:c0=0x7a3fb0:c1=0x14141f",
+    duration: 8,
   },
 ]
 
@@ -243,6 +285,7 @@ const hasFfmpeg = (() => {
   }
 })()
 
+let createdVideos = 0
 if (!hasFfmpeg) {
   payload.logger.info("ffmpeg not found — skipping video asset seed")
 } else {
@@ -265,11 +308,11 @@ if (!hasFfmpeg) {
         "-f",
         "lavfi",
         "-i",
-        // A slowly drifting two-colour gradient in the festival palette —
-        // clearly in motion, safely looping, tiny file.
-        "gradients=size=1280x720:duration=4:rate=30:speed=0.03:c0=0xd94f30:c1=0x274b9f",
+        // A slowly drifting two-colour gradient — clearly in motion, safely
+        // looping, tiny file.
+        def.gradient,
         "-t",
-        "4",
+        String(def.duration),
         "-pix_fmt",
         "yuv420p",
         "-movflags",
@@ -302,11 +345,14 @@ if (!hasFfmpeg) {
         },
       })
       videoAssetIds[def.key] = video.id
+      createdVideos++
     }
   } finally {
     rmSync(tmp, { recursive: true, force: true })
   }
-  payload.logger.info(`Seeded ${videoDefs.length} video asset(s) with ffmpeg`)
+  payload.logger.info(
+    `Seeded ${createdVideos} new video asset(s) with ffmpeg (${videoDefs.length} total)`,
+  )
 }
 
 const existingWorks = await payload.find({
@@ -490,6 +536,169 @@ if (existingWorks.docs.length === 0) {
   payload.logger.info("Seeded works: Solstice (sections), Pulse (gallery), Atlas Museum (draft)")
 } else {
   payload.logger.info("Works already exist — skipping work seed")
+}
+
+// ---- Clients (the Client Marquee) ------------------------------------
+// Wordmark logos rendered from SVG text: the marquee silhouettes every logo
+// white at render time, so dark text on a transparent canvas is all a dummy
+// logo needs. Sharp's trim() cuts the transparent margins so spacing between
+// marquee items comes from the layout gap, not hidden padding.
+type ClientDef = {
+  name: string
+  wordmark: string
+  font: string
+  weight: number
+  fontSize: number
+  letterSpacing: number
+  italic?: boolean
+  url?: string
+}
+
+const clientDefs: ClientDef[] = [
+  { name: "Solstice", wordmark: "SOLSTICE", font: "Noto Sans", weight: 400, fontSize: 64, letterSpacing: 18 },
+  { name: "Pulse Festival", wordmark: "Pulse Festival", font: "Noto Sans", weight: 700, fontSize: 60, letterSpacing: 2 },
+  { name: "Atlas Museum", wordmark: "Atlas Museum", font: "Noto Serif", weight: 400, fontSize: 60, letterSpacing: 6 },
+  { name: "Northline Rail", wordmark: "NORTHLINE RAIL", font: "Noto Sans", weight: 700, fontSize: 54, letterSpacing: 10, url: "https://example.com" },
+  { name: "Kestrel Coffee", wordmark: "kestrel coffee", font: "Noto Sans", weight: 700, fontSize: 60, letterSpacing: 4 },
+  { name: "Mono Records", wordmark: "MONO RECORDS", font: "Noto Sans", weight: 400, fontSize: 58, letterSpacing: 14, url: "https://example.com" },
+  { name: "Harbor Books", wordmark: "Harbor Books", font: "Noto Serif", weight: 400, fontSize: 60, letterSpacing: 2, italic: true },
+  { name: "Vela Sport", wordmark: "VELA SPORT", font: "Noto Sans", weight: 700, fontSize: 58, letterSpacing: 8, italic: true },
+]
+
+const wordmarkLogo = async (def: ClientDef) => {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="200">
+  <text x="400" y="100" text-anchor="middle" dominant-baseline="central"
+    font-family="${def.font}, sans-serif" font-weight="${def.weight}"
+    font-style="${def.italic ? "italic" : "normal"}"
+    font-size="${def.fontSize}" letter-spacing="${def.letterSpacing}"
+    fill="#141414">${def.wordmark}</text>
+</svg>`
+  return sharp(Buffer.from(svg)).trim().png().toBuffer()
+}
+
+const existingClients = await payload.find({
+  collection: "clients",
+  limit: 1,
+})
+
+if (existingClients.docs.length === 0) {
+  for (const def of clientDefs) {
+    const data = await wordmarkLogo(def)
+    // Logos are Assets like every other image; Clients references them.
+    const logo = await payload.create({
+      collection: "assets",
+      data: { alt: `${def.name} wordmark logo` },
+      file: {
+        data,
+        mimetype: "image/png",
+        name: `logo-${def.name.toLowerCase().replace(/\s+/g, "-")}.png`,
+        size: data.length,
+      },
+    })
+    await payload.create({
+      collection: "clients",
+      data: { name: def.name, url: def.url ?? null, logo: logo.id },
+    })
+  }
+  payload.logger.info(`Seeded ${clientDefs.length} clients for the Client Marquee`)
+} else {
+  payload.logger.info("Clients already exist — skipping client seed")
+}
+
+// Read the published state, not the draft — the stats are live content.
+const publishedLandingPage = await payload.findGlobal({
+  slug: "landing-page",
+  draft: false,
+})
+
+if ((publishedLandingPage.stats?.length ?? 0) === 0) {
+  await payload.updateGlobal({
+    slug: "landing-page",
+    draft: false,
+    data: {
+      // Without an explicit _status the saved version defaults to draft,
+      // and the published read path would never see the stats.
+      _status: "published",
+      stats: [
+        { value: "55+", label: "Videos" },
+        { value: "35+M", label: "Views" },
+      ],
+    },
+  })
+  payload.logger.info('Seeded landing page stats: "55+ Videos", "35+M Views"')
+} else {
+  payload.logger.info("Landing page stats already published — skipping stat seed")
+}
+
+// ---- Landing Page hero, Who We Are, and Selected Works ----------------
+// Re-read the published state: the stats block above may have just written
+// it, and this update passes every section explicitly.
+const landingNow = await payload.findGlobal({
+  slug: "landing-page",
+  draft: false,
+})
+
+if ((landingNow.hero?.slides?.length ?? 0) === 0) {
+  const publishedWorks = await payload.find({
+    collection: "works",
+    depth: 0,
+    draft: false,
+    limit: 0,
+    where: { _status: { equals: "published" } },
+  })
+
+  // Curated order: video-thumbnail works first for landing variety, then the
+  // remaining published Works in CMS order.
+  const preferredSlugs = [
+    "pulse-festival-identity",
+    "fest-for-music",
+    "solstice-denim-rebrand",
+  ]
+  const idBySlug = new Map(
+    publishedWorks.docs.map((work) => [work.slug ?? "", work.id]),
+  )
+  const selectedWorks = [
+    ...preferredSlugs.flatMap((slug) => {
+      const id = idBySlug.get(slug)
+      return id !== undefined ? [id] : []
+    }),
+    ...publishedWorks.docs
+      .filter((work) => !preferredSlugs.includes(work.slug ?? ""))
+      .map((work) => work.id),
+  ]
+
+  // Hero slides are the ffmpeg gradient loops; image-only environments seed
+  // no slides and the Hero stays hidden until real videos are uploaded.
+  const heroSlides = (["heroEmber", "heroTide", "heroInk"] as const).flatMap(
+    (key) => (videoAssetIds[key] ? [{ video: videoAssetIds[key] }] : []),
+  )
+
+  await payload.updateGlobal({
+    slug: "landing-page",
+    draft: false,
+    data: {
+      // Without an explicit _status the saved version defaults to draft,
+      // and the published read path would never see the content.
+      _status: "published",
+      hero: {
+        title: "Feugee",
+        subtitle: "Ambitious ideas for ambitious business",
+        slides: heroSlides,
+      },
+      whoWeAre: {
+        heading: "Who We Are",
+        description:
+          "Feugee is a creative agency for ambitious business. One team directs, designs, and builds — carrying films, identities, and campaigns from first sketch to final frame.",
+      },
+      stats: landingNow.stats ?? [],
+      selectedWorks,
+    },
+  })
+  payload.logger.info(
+    `Seeded landing page: ${heroSlides.length} hero slide(s), Who We Are copy, ${selectedWorks.length} selected work(s)`,
+  )
+} else {
+  payload.logger.info("Landing page hero already has slides — skipping landing content seed")
 }
 
 process.exit(0)

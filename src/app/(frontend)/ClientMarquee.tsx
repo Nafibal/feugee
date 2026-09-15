@@ -24,7 +24,13 @@ const LogoImage = ({ client }: { client: MarqueeClient }) => (
   />
 );
 
-const LogoList = ({ clients, hidden }: { clients: MarqueeClient[]; hidden?: boolean }) => (
+const LogoList = ({
+  clients,
+  hidden,
+}: {
+  clients: MarqueeClient[];
+  hidden?: boolean;
+}) => (
   <ul
     aria-hidden={hidden || undefined}
     className="flex shrink-0 items-center gap-x-20 pr-20"
@@ -58,11 +64,13 @@ const LogoList = ({ clients, hidden }: { clients: MarqueeClient[]; hidden?: bool
 export const ClientMarquee = ({ clients }: { clients: MarqueeClient[] }) => (
   <section
     aria-label="Clients"
-    className="group relative overflow-hidden border-y border-neutral-900 py-10 md:py-12"
+    className="group relative border-t border-neutral-900 p-16"
   >
-    <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-      <LogoList clients={clients} />
-      <LogoList clients={clients} hidden />
+    <div className="overflow-hidden mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+      <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+        <LogoList clients={clients} />
+        <LogoList clients={clients} hidden />
+      </div>
     </div>
   </section>
 );

@@ -141,6 +141,10 @@ export interface Work {
   slug?: string | null;
   subtitle?: string | null;
   /**
+   * One-line teaser shown on the Selected Works card on the Landing Page.
+   */
+  shortDescription?: string | null;
+  /**
    * The primary visual for this Work, shown at the top of the Work Detail Page.
    */
   thumbnail?: (number | null) | Asset;
@@ -800,6 +804,7 @@ export interface WorksSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   subtitle?: T;
+  shortDescription?: T;
   thumbnail?: T;
   tags?: T;
   description?: T;

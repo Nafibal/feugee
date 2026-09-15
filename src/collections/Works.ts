@@ -47,6 +47,14 @@ export const Works: CollectionConfig = {
       type: "text",
     },
     {
+      name: "shortDescription",
+      type: "textarea",
+      admin: {
+        description:
+          "One-line teaser shown on the Selected Works card on the Landing Page.",
+      },
+    },
+    {
       name: "thumbnail",
       type: "upload",
       relationTo: "assets",

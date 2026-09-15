@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import { albertSans } from "@/app/fonts";
 import "../globals.css";
 
-import { SmoothScroll } from "./SmoothScroll";
+import { Footer } from "./Footer";
 import { Navbar } from "./Navbar";
+import { SmoothScroll } from "./SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Feugee",
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SmoothScroll>
           <Navbar />
           {children}
+          <Footer />
         </SmoothScroll>
       </body>
     </html>

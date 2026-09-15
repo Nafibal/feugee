@@ -1270,6 +1270,25 @@ export interface LandingPage {
    * Works featured on the Landing Page, in display order.
    */
   selectedWorks?: (number | Work)[] | null;
+  /**
+   * The closing call-to-action section: eyebrow, headline, body copy, and the button.
+   */
+  contactCta?: {
+    /**
+     * The small line above the headline — e.g. "Free 20-min intro call".
+     */
+    eyebrow?: string | null;
+    headline?: string | null;
+    body?: string | null;
+    /**
+     * The button label — e.g. "Work with us".
+     */
+    actionLabel?: string | null;
+    /**
+     * Where the button points — internal path or external URL. Without it the button renders inert.
+     */
+    actionUrl?: string | null;
+  };
   _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
@@ -1372,6 +1391,15 @@ export interface LandingPageSelect<T extends boolean = true> {
         id?: T;
       };
   selectedWorks?: T;
+  contactCta?:
+    | T
+    | {
+        eyebrow?: T;
+        headline?: T;
+        body?: T;
+        actionLabel?: T;
+        actionUrl?: T;
+      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

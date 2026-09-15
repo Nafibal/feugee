@@ -15,6 +15,7 @@ import {
   workThumbnailOf,
   type WorkThumbnail,
 } from "./videoAsset";
+import { ArrowRight } from "./ArrowRight";
 
 export interface SelectedWorkItem {
   id: number;
@@ -46,8 +47,11 @@ const toSelectedWorkItem = (work: Work): SelectedWorkItem | null => {
   };
 };
 
-const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => {
-  return (
+// Shared by the Contact CTA's link and fallback-button branches.
+const ctaButtonClassName =
+  "inline-flex items-center gap-2 text-white px-6 py-3 rounded border-neutral-800 border";
+
+const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => {  return (
     <Link className="relative block" href={`/works/${item.slug}`}>
       {item.thumbnail.kind === "video" ? (
         <AutoVideo
@@ -125,6 +129,17 @@ export const LandingPageView = ({
     return item ? [item] : [];
   });
 
+  const ctaEyebrow = data.contactCta?.eyebrow?.trim() || null;
+  const ctaHeadline = data.contactCta?.headline?.trim() || null;
+  const ctaBody = data.contactCta?.body?.trim() || null;
+  const ctaActionLabel = data.contactCta?.actionLabel?.trim() || null;
+  const ctaActionUrl = data.contactCta?.actionUrl?.trim() || null;
+  const showContactCta =
+    ctaEyebrow !== null ||
+    ctaHeadline !== null ||
+    ctaBody !== null ||
+    ctaActionLabel !== null;
+
   return (
     <main className="flex flex-1 flex-col">
       {slides.length > 0 && <HeroSlider slides={slides} />}
@@ -175,23 +190,34 @@ export const LandingPageView = ({
         </section>
       )}
 
-      <section
-        aria-label="Contact"
-        className="h-screen w-full px-16 flex flex-col items-center justify-center"
-      >
-        <div className="flex flex-col gap-y-6 items-center text-center">
-          <span className="text-xl text-neutral-300">
-            Free 20-min intro call
-          </span>
-          <h2 className="text-7xl text-white font-bold">
-            Tell us what you&lsquo;re building
-          </h2>
-          <span className="text-xl text-neutral-300">
-            Tell us about your goals and we will reply within a day with a clear{" "}
-            <br /> scope and next steps.
-          </span>
-        </div>
-      </section>
+      {showContactCta && (
+        <section
+          aria-label="Contact"
+          className="h-screen w-full px-16 flex flex-col items-center justify-center gap-y-12"
+        >
+          <div className="flex flex-col gap-y-6 items-center text-center">
+            {ctaEyebrow && (
+              <span className="text-xl text-neutral-300">{ctaEyebrow}</span>
+            )}
+            {ctaHeadline && (
+              <h2 className="text-7xl text-white font-bold">{ctaHeadline}</h2>
+            )}
+            {ctaBody && (
+              <span className="text-xl text-neutral-300">{ctaBody}</span>
+            )}
+          </div>
+          {ctaActionLabel &&
+            (ctaActionUrl ? (
+              <Link className={ctaButtonClassName} href={ctaActionUrl}>
+                {ctaActionLabel} <ArrowRight />
+              </Link>
+            ) : (
+              <button className={ctaButtonClassName} type="button">
+                {ctaActionLabel} <ArrowRight />
+              </button>
+            ))}
+        </section>
+      )}
     </main>
   );
 };

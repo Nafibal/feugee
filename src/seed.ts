@@ -698,6 +698,13 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
       },
       stats: landingNow.stats ?? [],
       selectedWorks,
+      // Preserve a CTA an editor may have set on a hero-less global.
+      contactCta: landingNow.contactCta ?? {
+        eyebrow: "Free 20-min intro call",
+        headline: "Tell us what you\u2019re building",
+        body: "Tell us about your goals and we will reply within a day with a clear scope and next steps.",
+        actionLabel: "Work with us",
+      },
     },
   })
   payload.logger.info(
@@ -705,6 +712,34 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
   )
 } else {
   payload.logger.info("Landing page hero already has slides — skipping landing content seed")
+}
+
+// ---- Landing Page Contact CTA ------------------------------------------
+// Independent of the hero guard above: a database seeded before this section
+// existed has hero slides but no contactCta, and would otherwise silently
+// lose the section (it renders only with content).
+const landingForCta = await payload.findGlobal({
+  slug: "landing-page",
+  draft: false,
+})
+
+if ((landingForCta.contactCta?.headline ?? "").trim() === "") {
+  await payload.updateGlobal({
+    slug: "landing-page",
+    draft: false,
+    data: {
+      _status: "published",
+      contactCta: {
+        eyebrow: "Free 20-min intro call",
+        headline: "Tell us what you\u2019re building",
+        body: "Tell us about your goals and we will reply within a day with a clear scope and next steps.",
+        actionLabel: "Work with us",
+      },
+    },
+  })
+  payload.logger.info("Seeded landing page Contact CTA")
+} else {
+  payload.logger.info("Landing page already has a Contact CTA — skipping CTA seed")
 }
 
 // ---- Footer (site-wide chrome) ----------------------------------------

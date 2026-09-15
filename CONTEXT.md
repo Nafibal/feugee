@@ -144,6 +144,10 @@ _Avoid_: Quote, review
 A proof figure on the Landing Page, as a value with a label — e.g. "55+" with "Videos".
 _Avoid_: Metric, counter, fact
 
+**Contact CTA**:
+The closing call-to-action section of the Landing Page — an eyebrow, headline, body copy, and the Work with us button. Managed as the `contactCta` group on the Landing Page global.
+_Avoid_: Contact section, CTA banner
+
 ### Design
 
 **Design Tokens**:

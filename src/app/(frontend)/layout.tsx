@@ -16,7 +16,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-neutral-950">
         <SmoothScroll>
           <Navbar />
-          {children}
+          {/* Every page's primary content sits in one main landmark; page
+              views contribute sections, not their own main. */}
+          <main className="flex flex-1 flex-col">{children}</main>
           <Footer />
         </SmoothScroll>
       </body>

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useLivePreview } from "@payloadcms/live-preview-react";
-import { RichText } from "@payloadcms/richtext-lexical/react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import type { Work } from "@/payload-types";
@@ -16,40 +15,27 @@ import {
 } from "../../videoAsset";
 import { WorkSections, sectionAnchor } from "./WorkSections";
 
-const Chip = ({ children }: { children: ReactNode }) => (
-  <li className="rounded-full bg-primary-50 px-3 py-1 text-sm text-primary-300">
-    {children}
-  </li>
-);
-
+// Meta blocks are label/value pairs — description lists fit them exactly.
 const Meta = ({ label, value }: { label: string; value: ReactNode }) => (
-  <div className="space-y-3 w-full">
-    <h4 className="text-xl text-neutral-600">{label}</h4>
-    <p className="text-xl text-white">{value}</p>
-  </div>
+  <dl className="space-y-3 w-full">
+    <dt className="text-xl text-neutral-600">{label}</dt>
+    <dd className="text-xl text-white">{value}</dd>
+  </dl>
 );
 
 const MetaList = ({ label, values }: { label: string; values: string[] }) => (
-  <div className="w-full space-y-3">
-    <h4 className="text-xl text-neutral-600">{label}</h4>
-    <ul className="space-y-1">
-      {values.map((value) => (
-        <li key={value} className="text-xl text-white">
-          {value}
-        </li>
-      ))}
-    </ul>
-  </div>
-  // <div>
-  //   <dt className="text-neutral-400">{label}</dt>
-  //   <dd className="mt-1">
-  //     <ul className="list-inside list-disc text-neutral-200">
-  //       {values.map((value) => (
-  //         <li key={value}>{value}</li>
-  //       ))}
-  //     </ul>
-  //   </dd>
-  // </div>
+  <dl className="w-full space-y-3">
+    <dt className="text-xl text-neutral-600">{label}</dt>
+    <dd>
+      <ul className="space-y-1">
+        {values.map((value) => (
+          <li key={value} className="text-xl text-white">
+            {value}
+          </li>
+        ))}
+      </ul>
+    </dd>
+  </dl>
 );
 
 export const WorkDetail = ({ initialData }: { initialData: Work }) => {
@@ -113,7 +99,9 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
             <p className="text-neutral-500 text-lg block">{data.subtitle}</p>
           </div>
           <div className="space-y-6">
-            <span className="text-lg text-white">Contents</span>
+            {/* inline keeps the span-era layout: space-y-6's margin-bottom is
+                ignored on inline boxes, so the ul's mt-4 still sets the gap. */}
+            <h2 className="inline text-lg text-white">Contents</h2>
             <ul className="mt-4 space-y-2">
               {sections.map((section, index) => {
                 const anchor = sectionAnchor(index);
@@ -213,18 +201,20 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
             <div className="space-y-8">
               {(data.testimonials ?? []).map((testimonial, index) => (
                 <figure key={testimonial.id ?? index} className="space-y-8">
-                  <div className="text-2xl text-white">
+                  <blockquote className="text-2xl text-white">
                     &quot;{testimonial.testimony}&quot;
-                  </div>
-                  <div className=" space-y-1.5">
-                    <figcaption className="text-md text-primary-500">
+                  </blockquote>
+                  {/* One figcaption per figure; the two lines keep their own
+                      classes inside it. */}
+                  <figcaption className="space-y-1.5">
+                    <div className="text-md text-primary-500">
                       {testimonial.name}
-                    </figcaption>
-                    <figcaption className="text-xs text-neutral-300">
-                      {testimonial.job && `${testimonial.job}`}
+                    </div>
+                    <div className="text-xs text-neutral-300">
+                      {testimonial.job}
                       {testimonial.company && `, ${testimonial.company}`}
-                    </figcaption>
-                  </div>
+                    </div>
+                  </figcaption>
                 </figure>
               ))}
             </div>

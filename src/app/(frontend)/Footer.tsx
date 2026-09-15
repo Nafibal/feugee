@@ -140,13 +140,13 @@ export const Footer = async () => {
         <div className="w-full flex gap-10 justify-between items-start">
           {aboutDescription && (
             <div className="space-y-3 w-full">
-              <h4 className="text-base text-neutral-500">{aboutHeading}</h4>
+              <h2 className="text-base text-neutral-500">{aboutHeading}</h2>
               <p className="text-base text-white w-[80%]">{aboutDescription}</p>
             </div>
           )}
           {otherWorks.length > 0 && (
             <div className="space-y-3 w-full">
-              <h4 className="text-base text-neutral-500">{otherWorksHeading}</h4>
+              <h2 className="text-base text-neutral-500">{otherWorksHeading}</h2>
               <div className="w-full flex gap-x-1 justify-end items-start">
                 {otherWorks.map((item) => (
                   <WorkCard item={item} key={item.id} />
@@ -158,24 +158,24 @@ export const Footer = async () => {
         <div className="w-full flex gap-10 justify-between items-start">
           {menuLinks.length > 0 && (
             <div className="space-y-4 w-full">
-              <h4 className="text-base text-neutral-500">{menuHeading}</h4>
-              <div className="flex flex-col justify-start items-start gap-y-2">
+              <h2 className="text-base text-neutral-500">{menuHeading}</h2>
+              <ul className="flex flex-col justify-start items-start gap-y-2">
                 {menuLinks.map((link) => (
-                  <Link
-                    className="text-base text-white"
-                    href={link.url}
-                    key={link.id}
-                  >
-                    {link.label}
-                  </Link>
+                  <li key={link.id}>
+                    <Link className="text-base text-white" href={link.url}>
+                      {link.label}
+                    </Link>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           )}
           {showContact && (
             <div className="space-y-4 w-full">
-              <h4 className="text-base text-neutral-500">{contactHeading}</h4>
-              <div className="flex flex-col justify-start items-start gap-y-2">
+              <h2 className="text-base text-neutral-500">{contactHeading}</h2>
+              {/* address marks the agency's own contact details; preflight
+                  doesn't un-italicize it, so not-italic keeps the look. */}
+              <address className="flex flex-col justify-start items-start gap-y-2 not-italic">
                 {callToAction &&
                   (callToActionUrl ? (
                     <Link className="text-base text-white" href={callToActionUrl}>
@@ -184,17 +184,29 @@ export const Footer = async () => {
                   ) : (
                     <span className="text-base text-white">{callToAction}</span>
                   ))}
-                {email && <span className="text-base text-white">{email}</span>}
-                {phone && <span className="text-base text-white">{phone}</span>}
-              </div>
+                {email && (
+                  <a className="text-base text-white" href={`mailto:${email}`}>
+                    {email}
+                  </a>
+                )}
+                {phone && (
+                  <a
+                    className="text-base text-white"
+                    href={`tel:${phone.replace(/\s+/g, "")}`}
+                  >
+                    {phone}
+                  </a>
+                )}
+              </address>
             </div>
           )}
         </div>
       </div>
       <div className="@container w-full">
-        <h2 className="w-full whitespace-nowrap text-[12.8cqw] font-bold leading-none text-white">
+        {/* Display wordmark, not a heading — keep it out of the outline. */}
+        <div className="w-full whitespace-nowrap text-[12.8cqw] font-bold leading-none text-white">
           {wordmark}
-        </h2>
+        </div>
       </div>
       <div className="w-full h-px bg-neutral-700"></div>
       <div className="w-full flex justify-between items-center">

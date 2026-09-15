@@ -52,9 +52,9 @@ export const WorkItemView = ({ item }: { item: WorkItem }) => {
     case "title":
       return (
         <div className="p-8">
-          <h3 className="text-xl font-semibold text-neutral-50">
+          <h2 className="text-xl font-semibold text-neutral-50">
             {item.title}
-          </h3>
+          </h2>
         </div>
       );
     case "titled-text":
@@ -62,7 +62,7 @@ export const WorkItemView = ({ item }: { item: WorkItem }) => {
         <div className="space-y-8 p-8">
           {(item.entries ?? []).map((entry, index) => (
             <div key={entry.id ?? index} className="space-y-2">
-              <h4 className="text-md text-neutral-600">{entry.title}</h4>
+              <h3 className="text-md text-neutral-600">{entry.title}</h3>
               <RichText data={entry.text} className="text-2xl text-white" />
             </div>
           ))}

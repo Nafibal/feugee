@@ -141,7 +141,10 @@ export const LandingPageView = ({
     ctaActionLabel !== null;
 
   return (
-    <main className="flex flex-1 flex-col">
+    <div className="flex flex-1 flex-col">
+      {/* The Hero renders no visible title, so this stands in as the page's
+          h1 — same text as the metadata title, hidden from sighted visitors. */}
+      <h1 className="sr-only">{data.hero?.title?.trim() || "Feugee"}</h1>
       {slides.length > 0 && <HeroSlider slides={slides} />}
 
       {showAbout && (
@@ -157,18 +160,18 @@ export const LandingPageView = ({
                 <p className="text-5xl text-white ">{description}</p>
               )}
               {stats.length > 0 && (
-                <div className={`flex gap-24 ${description ? "mt-12" : ""}`}>
+                <ul className={`flex gap-24 ${description ? "mt-12" : ""}`}>
                   {stats.map((stat, index) => (
-                    <div key={stat.id ?? index}>
+                    <li key={stat.id ?? index}>
                       <p className="text-7xl font-semibold text-secondary-500">
                         {stat.value}
                       </p>
                       <p className="mt-3 text-xl text-neutral-300">
                         {stat.label}
                       </p>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
             </div>
           </div>
@@ -197,13 +200,13 @@ export const LandingPageView = ({
         >
           <div className="flex flex-col gap-y-6 items-center text-center">
             {ctaEyebrow && (
-              <span className="text-xl text-neutral-300">{ctaEyebrow}</span>
+              <p className="text-xl text-neutral-300">{ctaEyebrow}</p>
             )}
             {ctaHeadline && (
               <h2 className="text-7xl text-white font-bold">{ctaHeadline}</h2>
             )}
             {ctaBody && (
-              <span className="text-xl text-neutral-300">{ctaBody}</span>
+              <p className="text-xl text-neutral-300">{ctaBody}</p>
             )}
           </div>
           {ctaActionLabel &&
@@ -218,6 +221,6 @@ export const LandingPageView = ({
             ))}
         </section>
       )}
-    </main>
+    </div>
   );
 };

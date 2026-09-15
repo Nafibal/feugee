@@ -125,7 +125,7 @@ const WorkCard = ({
         keeps the hover transition interpolable. */}
     <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100">
       <div className="flex w-full items-baseline justify-between gap-4 p-4">
-        <span className="text-3xl text-white font-bold">{item.title}</span>
+        <h2 className="text-3xl text-white font-bold">{item.title}</h2>
         {item.firstExpertise && (
           <span className="text-xl text-white">{item.firstExpertise}</span>
         )}
@@ -241,7 +241,8 @@ export const WorksListing = ({
     <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
       <ScrollProgress colorClassName="bg-secondary-500" scope={mainRef} />
       <aside className="self-start px-6 md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
-        <nav aria-label="Filter works" className="space-y-12">
+        {/* A div, not a nav: the filter buttons are controls, not links. */}
+        <div className="space-y-12">
           <div className="w-full space-y-6 border-b border-neutral-900 pb-12">
             <h1 className="block text-4xl font-bold text-neutral-50">
               Our Works
@@ -252,7 +253,9 @@ export const WorksListing = ({
           </div>
           {filterable && (
             <div className="space-y-6">
-              <span className="text-lg text-white">Filter Projects</span>
+              {/* inline keeps the span-era layout: space-y-6's margin-bottom
+                  is ignored on inline boxes, so the ul's mt-4 sets the gap. */}
+              <h2 className="inline text-lg text-white">Filter Projects</h2>
               <ul className="mt-4 space-y-2">
                 {[null, ...sectorOptions].map((sector) => {
                   const active = activeSector === (sector?.slug ?? null);
@@ -278,7 +281,7 @@ export const WorksListing = ({
               </ul>
             </div>
           )}
-        </nav>
+        </div>
       </aside>
 
       <div className="w-full" ref={mainRef}>

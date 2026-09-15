@@ -5,7 +5,7 @@ import { getPayload } from "payload";
 
 import type { Client } from "@/payload-types";
 
-import type { MarqueeClient } from "./ClientMarquee";
+import type { MarqueeClient } from "@/components/ClientMarquee";
 import { LandingPageView } from "./LandingPageView";
 
 // The page reads the database on every request, so request-time rendering is

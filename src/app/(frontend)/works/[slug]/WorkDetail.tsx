@@ -6,13 +6,13 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import type { Work } from "@/payload-types";
 
-import { ArrowRight } from "../../ArrowRight";
-import { AutoVideo } from "../../AutoVideo";
-import { ScrollProgress } from "../../ScrollProgress";
+import { ArrowRight } from "@/components/ArrowRight";
+import { AutoVideo } from "@/components/AutoVideo";
+import { ScrollProgress } from "@/components/ScrollProgress";
 import {
   VIDEO_ASPECT_FALLBACK,
   videoPosterOf,
-} from "../../videoAsset";
+} from "@/components/videoAsset";
 import { WorkSections, sectionAnchor } from "./WorkSections";
 
 // Meta blocks are label/value pairs — description lists fit them exactly.

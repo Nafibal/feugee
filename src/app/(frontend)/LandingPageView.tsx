@@ -7,15 +7,15 @@ import { useState } from "react";
 
 import type { LandingPage, Work } from "@/payload-types";
 
-import { AutoVideo } from "./AutoVideo";
-import { ClientMarquee, type MarqueeClient } from "./ClientMarquee";
-import { HeroSlider, type HeroSlide } from "./HeroSlider";
+import { AutoVideo } from "@/components/AutoVideo";
+import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
+import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
+import { ArrowRight } from "@/components/ArrowRight";
 import {
   videoPosterOf,
   workThumbnailOf,
   type WorkThumbnail,
-} from "./videoAsset";
-import { ArrowRight } from "./ArrowRight";
+} from "@/components/videoAsset";
 
 export interface SelectedWorkItem {
   id: number;

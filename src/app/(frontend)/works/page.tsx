@@ -4,7 +4,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
-import { workThumbnailOf } from "../videoAsset";
+import { workThumbnailOf } from "@/components/videoAsset";
 import {
   WorksListing,
   type SectorOption,

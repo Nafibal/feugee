@@ -11,10 +11,10 @@ import {
   useSyncExternalStore,
 } from "react";
 
-import { ArrowRight } from "../ArrowRight";
-import { AutoVideo } from "../AutoVideo";
-import { ScrollProgress } from "../ScrollProgress";
-import type { WorkThumbnail } from "../videoAsset";
+import { ArrowRight } from "@/components/ArrowRight";
+import { AutoVideo } from "@/components/AutoVideo";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import type { WorkThumbnail } from "@/components/videoAsset";
 
 export interface WorksListItem {
   id: number;

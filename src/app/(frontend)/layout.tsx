@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { albertSans } from "@/app/fonts";
 import "../globals.css";
 
-import { Footer } from "./Footer";
-import { Navbar } from "./Navbar";
-import { SmoothScroll } from "./SmoothScroll";
+import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
+import { SmoothScroll } from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
   title: "Feugee",

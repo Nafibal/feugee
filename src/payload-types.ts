@@ -1324,6 +1324,16 @@ export interface Footer {
    */
   location?: string | null;
   /**
+   * Social media profiles in the bottom bar — the platform picks the icon.
+   */
+  socialLinks?:
+    | {
+        platform: 'facebook' | 'instagram' | 'x';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
    * Who holds the copyright in the bottom bar — e.g. "Feugee".
    */
   copyrightName?: string | null;
@@ -1399,6 +1409,13 @@ export interface FooterSelect<T extends boolean = true> {
       };
   wordmark?: T;
   location?: T;
+  socialLinks?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
   copyrightName?: T;
   _status?: T;
   updatedAt?: T;

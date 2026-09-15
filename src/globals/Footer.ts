@@ -127,6 +127,35 @@ export const Footer: GlobalConfig = {
       },
     },
     {
+      name: "socialLinks",
+      type: "array",
+      labels: {
+        singular: "Social Link",
+        plural: "Social Links",
+      },
+      admin: {
+        description:
+          "Social media profiles in the bottom bar — the platform picks the icon.",
+      },
+      fields: [
+        {
+          name: "platform",
+          type: "select",
+          options: [
+            { label: "Facebook", value: "facebook" },
+            { label: "Instagram", value: "instagram" },
+            { label: "X", value: "x" },
+          ],
+          required: true,
+        },
+        {
+          name: "url",
+          type: "text",
+          required: true,
+        },
+      ],
+    },
+    {
       name: "copyrightName",
       type: "text",
       defaultValue: "Feugee",

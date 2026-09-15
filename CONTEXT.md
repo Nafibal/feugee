@@ -68,6 +68,10 @@ _Avoid_: Bottom bar, site footer, footer section
 The Works shown as cards in the Footer, in display order. Distinct from the Landing Page's Selected Works.
 _Avoid_: Other projects, featured works
 
+**Social Link**:
+A social media profile linked from the Footer's bottom bar — a platform (which picks the icon) and its URL.
+_Avoid_: Social icon, social media button
+
 ### CMS
 
 The authenticated area where the agency manages public site content.

@@ -750,6 +750,12 @@ if (!existingFooter.id) {
       },
       wordmark: "FEUGEE STUDIO",
       location: "Malang, Indonesia",
+      // Placeholder handles — the Agency swaps in the real profiles.
+      socialLinks: [
+        { platform: "facebook", url: "https://www.facebook.com/feugeestudio" },
+        { platform: "instagram", url: "https://www.instagram.com/feugeestudio" },
+        { platform: "x", url: "https://x.com/feugeestudio" },
+      ],
       copyrightName: "Feugee",
     },
   })

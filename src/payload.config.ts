@@ -11,6 +11,7 @@ import { Sectors } from "./collections/Sectors"
 import { Users } from "./collections/Users"
 import { Works } from "./collections/Works"
 import { env } from "./env"
+import { Footer } from "./globals/Footer"
 import { LandingPage } from "./globals/LandingPage"
 
 const filename = fileURLToPath(import.meta.url)
@@ -25,7 +26,7 @@ export default buildConfig({
     theme: "light",
   },
   collections: [Works, Sectors, Assets, Clients, Users],
-  globals: [LandingPage],
+  globals: [LandingPage, Footer],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
   typescript: {

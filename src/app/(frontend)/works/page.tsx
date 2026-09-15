@@ -4,7 +4,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
-import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "../videoAsset";
+import { workThumbnailOf } from "../videoAsset";
 import {
   WorksListing,
   type SectorOption,
@@ -30,34 +30,8 @@ const sectorSlugOf = (
 // muted in their card; the poster image holds their aspect ratio for the
 // masonry math, falling back to 16:9 when no poster is set.
 const toListItem = (work: Work): WorksListItem | null => {
-  if (
-    typeof work.thumbnail !== "object" ||
-    work.thumbnail === null ||
-    typeof work.thumbnail.url !== "string"
-  ) {
-    return null;
-  }
-
-  const { url, alt } = work.thumbnail;
-
-  if (work.thumbnail.mimeType?.startsWith("video/")) {
-    const poster = videoPosterOf(work.thumbnail);
-    return {
-      id: work.id,
-      slug: work.slug ?? "",
-      title: work.title,
-      firstExpertise: work.expertise?.[0] ?? null,
-      sectorSlug: sectorSlugOf(work.sector),
-      thumbnail: {
-        kind: "video",
-        url,
-        posterUrl: poster?.url ?? null,
-        width: poster?.width ?? VIDEO_ASPECT_FALLBACK.width,
-        height: poster?.height ?? VIDEO_ASPECT_FALLBACK.height,
-        alt,
-      },
-    };
-  }
+  const thumbnail = workThumbnailOf(work);
+  if (thumbnail === null) return null;
 
   return {
     id: work.id,
@@ -65,13 +39,7 @@ const toListItem = (work: Work): WorksListItem | null => {
     title: work.title,
     firstExpertise: work.expertise?.[0] ?? null,
     sectorSlug: sectorSlugOf(work.sector),
-    thumbnail: {
-      kind: "image",
-      url,
-      width: work.thumbnail.width ?? 1,
-      height: work.thumbnail.height ?? 1,
-      alt,
-    },
+    thumbnail,
   };
 };
 

@@ -60,6 +60,14 @@ _Avoid_: Cell, block, element
 A thin fixed bar at the top of a public page that fills left to right as the visitor scrolls through the page's main content.
 _Avoid_: Progress indicator, reading bar, scroll tracker
 
+**Footer**:
+The strip at the bottom of every public page: an About blurb, Other Works cards, menu links, contact details, and the display wordmark above the bottom bar. Its content is a global in the CMS, separate from the Landing Page.
+_Avoid_: Bottom bar, site footer, footer section
+
+**Other Works**:
+The Works shown as cards in the Footer, in display order. Distinct from the Landing Page's Selected Works.
+_Avoid_: Other projects, featured works
+
 ### CMS
 
 The authenticated area where the agency manages public site content.

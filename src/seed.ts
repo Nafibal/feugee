@@ -707,4 +707,57 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
   payload.logger.info("Landing page hero already has slides — skipping landing content seed")
 }
 
+// ---- Footer (site-wide chrome) ----------------------------------------
+// Seed only a Footer the CMS has never saved (findGlobal returns a doc with
+// no id for one) — anything an editor has touched is theirs. Publish
+// explicitly: a drafts global saves as draft and the published read path
+// would never see the content.
+const existingFooter = await payload.findGlobal({
+  slug: "footer",
+  draft: false,
+})
+
+if (!existingFooter.id) {
+  const publishedWorks = await payload.find({
+    collection: "works",
+    draft: false,
+    limit: 3,
+    where: { _status: { equals: "published" } },
+  })
+
+  await payload.updateGlobal({
+    slug: "footer",
+    draft: false,
+    data: {
+      _status: "published",
+      about: {
+        heading: "About",
+        description:
+          "We create thoughtful digital experiences that feel simple, human, and easy to love. From the little details to the bigger picture, everything is designed with care to make everyday moments feel a little more effortless",
+      },
+      otherWorksHeading: "Other Works",
+      otherWorks: publishedWorks.docs.map((work) => work.id),
+      menuHeading: "Menu",
+      menuLinks: [
+        { label: "Home", url: "/" },
+        { label: "Works", url: "/works" },
+      ],
+      contact: {
+        heading: "Contact Us",
+        callToAction: "Book a Call",
+        email: "feugeestudio@gmail.com",
+        phone: "+1 (123) 456-7890",
+      },
+      wordmark: "FEUGEE STUDIO",
+      location: "Malang, Indonesia",
+      copyrightName: "Feugee",
+    },
+  })
+  payload.logger.info(
+    `Seeded footer: about, ${publishedWorks.docs.length} other work(s), menu, contact`,
+  )
+} else {
+  payload.logger.info("Footer already has content — skipping footer seed")
+}
+
 process.exit(0)

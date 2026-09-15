@@ -95,9 +95,11 @@ export interface Config {
   fallbackLocale: null;
   globals: {
     'landing-page': LandingPage;
+    footer: Footer;
   };
   globalsSelect: {
     'landing-page': LandingPageSelect<false> | LandingPageSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
   widgets: {
@@ -1273,6 +1275,63 @@ export interface LandingPage {
   createdAt?: string | null;
 }
 /**
+ * The content of the Footer at the bottom of every public page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  about?: {
+    heading?: string | null;
+    description?: string | null;
+  };
+  /**
+   * Heading above the Other Works cards.
+   */
+  otherWorksHeading?: string | null;
+  /**
+   * Works shown as cards beside the About blurb, in display order.
+   */
+  otherWorks?: (number | Work)[] | null;
+  /**
+   * Heading above the menu links.
+   */
+  menuHeading?: string | null;
+  menuLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  contact?: {
+    heading?: string | null;
+    /**
+     * The call-to-action label — e.g. "Book a Call". Links out when a URL is set.
+     */
+    callToAction?: string | null;
+    callToActionUrl?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  };
+  /**
+   * The oversized display wordmark above the bottom bar.
+   */
+  wordmark?: string | null;
+  /**
+   * The pinned location label in the bottom bar.
+   */
+  location?: string | null;
+  /**
+   * Who holds the copyright in the bottom bar — e.g. "Feugee".
+   */
+  copyrightName?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "landing-page_select".
  */
@@ -1303,6 +1362,44 @@ export interface LandingPageSelect<T extends boolean = true> {
         id?: T;
       };
   selectedWorks?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  about?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+      };
+  otherWorksHeading?: T;
+  otherWorks?: T;
+  menuHeading?: T;
+  menuLinks?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        id?: T;
+      };
+  contact?:
+    | T
+    | {
+        heading?: T;
+        callToAction?: T;
+        callToActionUrl?: T;
+        email?: T;
+        phone?: T;
+      };
+  wordmark?: T;
+  location?: T;
+  copyrightName?: T;
   _status?: T;
   updatedAt?: T;
   createdAt?: T;

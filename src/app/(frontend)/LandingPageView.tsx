@@ -10,7 +10,11 @@ import type { LandingPage, Work } from "@/payload-types";
 import { AutoVideo } from "./AutoVideo";
 import { ClientMarquee, type MarqueeClient } from "./ClientMarquee";
 import { HeroSlider, type HeroSlide } from "./HeroSlider";
-import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "./videoAsset";
+import {
+  videoPosterOf,
+  workThumbnailOf,
+  type WorkThumbnail,
+} from "./videoAsset";
 
 export interface SelectedWorkItem {
   id: number;
@@ -19,22 +23,7 @@ export interface SelectedWorkItem {
   shortDescription: string | null;
   year: number | null;
   firstExpertise: string | null;
-  thumbnail:
-    | {
-        kind: "image";
-        url: string;
-        width: number;
-        height: number;
-        alt: string;
-      }
-    | {
-        kind: "video";
-        url: string;
-        posterUrl: string | null;
-        width: number;
-        height: number;
-        alt: string;
-      };
+  thumbnail: WorkThumbnail;
 }
 
 // Works the agency picked but has since unpublished (or that never got a
@@ -43,48 +32,17 @@ export interface SelectedWorkItem {
 // docs that draft:false would have excluded.
 const toSelectedWorkItem = (work: Work): SelectedWorkItem | null => {
   if (work._status !== "published") return null;
-  if (
-    typeof work.thumbnail !== "object" ||
-    work.thumbnail === null ||
-    typeof work.thumbnail.url !== "string"
-  ) {
-    return null;
-  }
+  const thumbnail = workThumbnailOf(work);
+  if (thumbnail === null) return null;
 
-  const { url, alt } = work.thumbnail;
-  const base = {
+  return {
     id: work.id,
     slug: work.slug ?? "",
     title: work.title,
     shortDescription: work.shortDescription ?? null,
     year: work.year ?? null,
     firstExpertise: work.expertise?.[0] ?? null,
-  };
-
-  if (work.thumbnail.mimeType?.startsWith("video/")) {
-    const poster = videoPosterOf(work.thumbnail);
-    return {
-      ...base,
-      thumbnail: {
-        kind: "video",
-        url,
-        posterUrl: poster?.url ?? null,
-        width: poster?.width ?? VIDEO_ASPECT_FALLBACK.width,
-        height: poster?.height ?? VIDEO_ASPECT_FALLBACK.height,
-        alt,
-      },
-    };
-  }
-
-  return {
-    ...base,
-    thumbnail: {
-      kind: "image",
-      url,
-      width: work.thumbnail.width ?? 1,
-      height: work.thumbnail.height ?? 1,
-      alt,
-    },
+    thumbnail,
   };
 };
 

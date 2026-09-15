@@ -14,6 +14,7 @@ import {
 import { ArrowRight } from "../ArrowRight";
 import { AutoVideo } from "../AutoVideo";
 import { ScrollProgress } from "../ScrollProgress";
+import type { WorkThumbnail } from "../videoAsset";
 
 export interface WorksListItem {
   id: number;
@@ -21,22 +22,7 @@ export interface WorksListItem {
   title: string;
   firstExpertise: string | null;
   sectorSlug: string | null;
-  thumbnail:
-    | {
-        kind: "image";
-        url: string;
-        width: number;
-        height: number;
-        alt: string;
-      }
-    | {
-        kind: "video";
-        url: string;
-        posterUrl: string | null;
-        width: number;
-        height: number;
-        alt: string;
-      };
+  thumbnail: WorkThumbnail;
 }
 
 export interface SectorOption {

@@ -11,39 +11,26 @@ import { AutoVideo } from "@/components/AutoVideo";
 import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ArrowRight } from "@/components/ArrowRight";
-import {
-  videoPosterOf,
-  workThumbnailOf,
-  type WorkThumbnail,
-} from "@/components/videoAsset";
+import { toCardWork, videoPosterOf, type CardWork } from "@/components/work";
 
-export interface SelectedWorkItem {
-  id: number;
-  slug: string;
-  title: string;
+export interface SelectedWorkItem extends CardWork {
   shortDescription: string | null;
   year: number | null;
   firstExpertise: string | null;
-  thumbnail: WorkThumbnail;
 }
 
-// Works the agency picked but has since unpublished (or that never got a
-// usable Thumbnail) drop out here rather than rendering a dead card. The
-// `_status` guard is belt-and-braces: populated relationships can resolve
-// docs that draft:false would have excluded.
-const toSelectedWorkItem = (work: Work): SelectedWorkItem | null => {
-  if (work._status !== "published") return null;
-  const thumbnail = workThumbnailOf(work);
-  if (thumbnail === null) return null;
+// The card guards (published, populated, usable Thumbnail) live in
+// toCardWork; this adds only what the Selected Works cards display.
+const toSelectedWorkItem = (work: number | Work): SelectedWorkItem | null => {
+  if (typeof work !== "object") return null;
+  const card = toCardWork(work);
+  if (card === null) return null;
 
   return {
-    id: work.id,
-    slug: work.slug ?? "",
-    title: work.title,
+    ...card,
     shortDescription: work.shortDescription ?? null,
     year: work.year ?? null,
     firstExpertise: work.expertise?.[0] ?? null,
-    thumbnail,
   };
 };
 
@@ -124,7 +111,6 @@ export const LandingPageView = ({
   const showAbout = description !== null || stats.length > 0;
 
   const selectedWorks = (data.selectedWorks ?? []).flatMap((work) => {
-    if (typeof work !== "object" || work === null) return [];
     const item = toSelectedWorkItem(work);
     return item ? [item] : [];
   });

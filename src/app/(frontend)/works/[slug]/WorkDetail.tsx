@@ -9,10 +9,7 @@ import type { Work } from "@/payload-types";
 import { ArrowRight } from "@/components/ArrowRight";
 import { AutoVideo } from "@/components/AutoVideo";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import {
-  VIDEO_ASPECT_FALLBACK,
-  videoPosterOf,
-} from "@/components/videoAsset";
+import { workThumbnailOf } from "@/components/work";
 import { WorkSections, sectionAnchor } from "./WorkSections";
 
 // Meta blocks are label/value pairs — description lists fit them exactly.
@@ -56,10 +53,9 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
     typeof data.sector === "object" && data.sector !== null
       ? data.sector.name
       : null;
-  const thumbnailPoster =
-    typeof data.thumbnail === "object" && data.thumbnail !== null
-      ? videoPosterOf(data.thumbnail)
-      : null;
+  // The hero is a direct thumbnail consumer — the work module owns the
+  // video/poster discrimination and the poster-derived dimensions.
+  const heroThumbnail = workThumbnailOf(data);
 
   // Scroll-spy for the Contents nav: the section crossing a band near the top
   // of the viewport is the current one.
@@ -131,27 +127,23 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
 
       <div className="w-full">
         <section id="work-detail" className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] ">
-          {typeof data.thumbnail === "object" && data.thumbnail?.url && (
+          {heroThumbnail && (
             <div className="relative w-full h-screen">
-              {data.thumbnail.mimeType?.startsWith("video/") ? (
+              {heroThumbnail.kind === "video" ? (
                 <AutoVideo
-                  alt={data.thumbnail.alt}
+                  alt={heroThumbnail.alt}
                   className="absolute inset-0 h-full w-full object-cover"
-                  height={
-                    thumbnailPoster?.height ?? VIDEO_ASPECT_FALLBACK.height
-                  }
-                  poster={thumbnailPoster?.url ?? null}
-                  src={data.thumbnail.url}
-                  width={thumbnailPoster?.width ?? VIDEO_ASPECT_FALLBACK.width}
+                  height={heroThumbnail.height}
+                  poster={heroThumbnail.posterUrl}
+                  src={heroThumbnail.url}
+                  width={heroThumbnail.width}
                 />
               ) : (
                 <Image
-                  src={data.thumbnail.url}
-                  alt={data.thumbnail.alt}
+                  src={heroThumbnail.url}
+                  alt={heroThumbnail.alt}
                   fill
                   className="object-cover"
-                  // width={data.thumbnail.width ?? 1}
-                  // height={data.thumbnail.height ?? 1}
                 />
               )}
             </div>

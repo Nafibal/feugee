@@ -14,15 +14,11 @@ import {
 import { ArrowRight } from "@/components/ArrowRight";
 import { AutoVideo } from "@/components/AutoVideo";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import type { WorkThumbnail } from "@/components/videoAsset";
+import type { CardWork } from "@/components/work";
 
-export interface WorksListItem {
-  id: number;
-  slug: string;
-  title: string;
+export interface WorksListItem extends CardWork {
   firstExpertise: string | null;
   sectorSlug: string | null;
-  thumbnail: WorkThumbnail;
 }
 
 export interface SectorOption {

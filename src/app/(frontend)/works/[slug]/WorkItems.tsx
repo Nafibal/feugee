@@ -4,7 +4,7 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { Asset } from "@/payload-types";
 
 import { AutoVideo } from "@/components/AutoVideo";
-import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "@/components/videoAsset";
+import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "@/components/work";
 import type { WorkLayout } from "./WorkSections";
 
 export type WorkItem = NonNullable<NonNullable<WorkLayout["items"]>[number]>;

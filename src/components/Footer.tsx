@@ -6,30 +6,20 @@ import { getPayload } from "payload";
 import type { Work } from "@/payload-types";
 
 import { AutoVideo } from "./AutoVideo";
-import { workThumbnailOf, type WorkThumbnail } from "./videoAsset";
+import { toCardWork, type CardWork } from "./work";
 
-interface FooterWorkCard {
-  id: number;
-  slug: string;
-  title: string;
+interface FooterWorkCard extends CardWork {
   subtitle: string | null;
-  thumbnail: WorkThumbnail;
 }
 
-// Same shape-guarding as the landing page's Selected Works: unpublished or
-// thumbnail-less Works drop out rather than rendering a dead card.
-const toFooterWorkCard = (work: Work): FooterWorkCard | null => {
-  if (work._status !== "published") return null;
-  const thumbnail = workThumbnailOf(work);
-  if (thumbnail === null) return null;
+// The card guards (published, populated, usable Thumbnail) live in
+// toCardWork; this adds only what the Footer's Other Works cards display.
+const toFooterWorkCard = (work: number | Work): FooterWorkCard | null => {
+  if (typeof work !== "object") return null;
+  const card = toCardWork(work);
+  if (card === null) return null;
 
-  return {
-    id: work.id,
-    slug: work.slug ?? "",
-    title: work.title,
-    subtitle: work.subtitle ?? null,
-    thumbnail,
-  };
+  return { ...card, subtitle: work.subtitle ?? null };
 };
 
 const WorkCard = ({ item }: { item: FooterWorkCard }) => (
@@ -108,7 +98,6 @@ export const Footer = async () => {
   const menuHeading = footer.menuHeading?.trim() || "Menu";
 
   const otherWorks = (footer.otherWorks ?? []).flatMap((work) => {
-    if (typeof work !== "object" || work === null) return [];
     const card = toFooterWorkCard(work);
     return card ? [card] : [];
   });

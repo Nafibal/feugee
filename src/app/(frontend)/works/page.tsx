@@ -4,7 +4,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
-import { workThumbnailOf } from "@/components/videoAsset";
+import { toCardWork } from "@/components/work";
 import {
   WorksListing,
   type SectorOption,
@@ -26,20 +26,17 @@ const sectorSlugOf = (
     ? sector.slug ?? String(sector.id)
     : null;
 
-// Works without a usable Thumbnail are left out. Video thumbnails autoplay
-// muted in their card; the poster image holds their aspect ratio for the
-// masonry math, falling back to 16:9 when no poster is set.
+// The card guards live in toCardWork; this adds only what the Works Page's
+// masonry cards display. Its published check is belt-and-braces — the query
+// above already filters to published Works.
 const toListItem = (work: Work): WorksListItem | null => {
-  const thumbnail = workThumbnailOf(work);
-  if (thumbnail === null) return null;
+  const card = toCardWork(work);
+  if (card === null) return null;
 
   return {
-    id: work.id,
-    slug: work.slug ?? "",
-    title: work.title,
+    ...card,
     firstExpertise: work.expertise?.[0] ?? null,
     sectorSlug: sectorSlugOf(work.sector),
-    thumbnail,
   };
 };
 

@@ -33,7 +33,7 @@ const LogoList = ({
 }) => (
   <ul
     aria-hidden={hidden || undefined}
-    className="flex shrink-0 items-center gap-x-20 pr-20"
+    className="flex shrink-0 items-center gap-x-10 pr-10 md:gap-x-20 md:pr-20"
   >
     {clients.map((client) => (
       <li key={client.id}>
@@ -64,7 +64,7 @@ const LogoList = ({
 export const ClientMarquee = ({ clients }: { clients: MarqueeClient[] }) => (
   <section
     aria-label="Clients"
-    className="group relative border-t border-neutral-900 p-16"
+    className="group relative border-t border-neutral-900 p-6 md:p-16"
   >
     <div className="overflow-hidden mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
       <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none">

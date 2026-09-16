@@ -65,7 +65,7 @@ export const HeroSlider = ({ slides }: { slides: HeroSlide[] }) => {
   return (
     <section
       aria-label="Featured videos"
-      className="relative h-screen w-full overflow-hidden bg-neutral-950"
+      className="relative h-svh w-full overflow-hidden bg-neutral-950"
     >
       {slides.map((slide, index) => (
         <div
@@ -92,13 +92,13 @@ export const HeroSlider = ({ slides }: { slides: HeroSlide[] }) => {
       {slides.length > 1 && (
         <div
           aria-hidden
-          className="pointer-events-none absolute bottom-12 left-16 z-20 flex items-center gap-2"
+          className="pointer-events-none absolute bottom-6 left-6 z-20 flex items-center gap-2 md:bottom-12 md:left-16"
         >
           {slides.map((slide, index) => (
             <div
               className={
                 index === safeActiveIndex
-                  ? "h-[3px] w-16 bg-white"
+                  ? "h-[3px] w-8 bg-white md:w-16"
                   : "h-[3px] w-6 bg-white/50"
               }
               key={slide.id || index}

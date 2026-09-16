@@ -1,11 +1,11 @@
-import configPromise from "@payload-config";
 import Image from "next/image";
 import Link from "next/link";
-import { getPayload } from "payload";
 
 import type { Work } from "@/payload-types";
 
 import { AutoVideo } from "./AutoVideo";
+import { getFooterGlobal } from "./footer-data";
+import { toMenuLinks } from "./menu";
 import { toCardWork, type CardWork } from "./work";
 
 interface FooterWorkCard extends CardWork {
@@ -82,15 +82,12 @@ const socialPlatforms = {
 // Mounted once in the frontend root layout, so every public page shares it.
 // mt-auto pins it to the viewport bottom on pages shorter than 100vh — the
 // body is a flex column and this is its last child.
+// Both column rows stack the same way below md — one class keeps them in step.
+const columnRowClassName =
+  "w-full flex flex-col gap-10 items-start md:flex-row md:justify-between";
+
 export const Footer = async () => {
-  const payload = await getPayload({ config: configPromise });
-  // Depth 3 populates the Other Works, their Thumbnails and, in turn, the
-  // posters — same requirement as the Landing Page's Selected Works.
-  const footer = await payload.findGlobal({
-    slug: "footer",
-    depth: 3,
-    draft: false,
-  });
+  const footer = await getFooterGlobal();
 
   const aboutHeading = footer.about?.heading?.trim() || "About";
   const aboutDescription = footer.about?.description?.trim() || null;
@@ -102,9 +99,7 @@ export const Footer = async () => {
     return card ? [card] : [];
   });
 
-  const menuLinks = (footer.menuLinks ?? []).filter(
-    (link) => link.label.trim() !== "" && link.url.trim() !== "",
-  );
+  const menuLinks = toMenuLinks(footer.menuLinks);
 
   const contactHeading = footer.contact?.heading?.trim() || "Contact Us";
   const callToAction = footer.contact?.callToAction?.trim() || null;
@@ -125,18 +120,18 @@ export const Footer = async () => {
 
   return (
     <footer className="mt-auto p-6 flex flex-col gap-y-6 items-stretch justify-start">
-      <div className="w-full flex flex-col gap-y-16">
-        <div className="w-full flex gap-10 justify-between items-start">
+      <div className="w-full flex flex-col gap-y-12 md:gap-y-16">
+        <div className={columnRowClassName}>
           {aboutDescription && (
             <div className="space-y-3 w-full">
               <h2 className="text-base text-neutral-500">{aboutHeading}</h2>
-              <p className="text-base text-white w-[80%]">{aboutDescription}</p>
+              <p className="text-base text-white w-full md:w-[80%]">{aboutDescription}</p>
             </div>
           )}
           {otherWorks.length > 0 && (
             <div className="space-y-3 w-full">
               <h2 className="text-base text-neutral-500">{otherWorksHeading}</h2>
-              <div className="w-full flex gap-x-1 justify-end items-start">
+              <div className="w-full grid grid-cols-2 gap-1 md:flex md:justify-end md:items-start">
                 {otherWorks.map((item) => (
                   <WorkCard item={item} key={item.id} />
                 ))}
@@ -144,7 +139,7 @@ export const Footer = async () => {
             </div>
           )}
         </div>
-        <div className="w-full flex gap-10 justify-between items-start">
+        <div className={columnRowClassName}>
           {menuLinks.length > 0 && (
             <div className="space-y-4 w-full">
               <h2 className="text-base text-neutral-500">{menuHeading}</h2>
@@ -198,7 +193,7 @@ export const Footer = async () => {
         </div>
       </div>
       <div className="w-full h-px bg-neutral-700"></div>
-      <div className="w-full flex justify-between items-center">
+      <div className="w-full flex flex-wrap justify-between items-center gap-x-6 gap-y-3">
         <span className="text-sm text-neutral-500">
           &copy; {new Date().getFullYear()} {copyrightName}. All Rights
           Reserved.

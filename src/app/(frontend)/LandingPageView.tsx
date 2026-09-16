@@ -43,7 +43,7 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => {  return (
       {item.thumbnail.kind === "video" ? (
         <AutoVideo
           alt={item.thumbnail.alt}
-          className="h-screen w-full object-cover"
+          className="h-svh w-full object-cover"
           height={item.thumbnail.height}
           poster={item.thumbnail.posterUrl}
           src={item.thumbnail.url}
@@ -52,18 +52,20 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => {  return (
       ) : (
         <Image
           alt={item.thumbnail.alt}
-          className="h-screen w-full object-cover"
+          className="h-svh w-full object-cover"
           height={item.thumbnail.height}
           src={item.thumbnail.url}
           width={item.thumbnail.width}
         />
       )}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-row justify-between items-center bg-linear-to-t from-black/80 via-black/30 to-transparent p-16">
-        <h3 className="text-5xl font-medium text-white md:text-5xl">
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16">
+        <h3 className="text-3xl font-medium text-white md:text-5xl">
           {item.title}
         </h3>
         {item.shortDescription && (
-          <p className="text-lg text-white">{item.shortDescription}</p>
+          <p className="text-base text-white md:text-lg">
+            {item.shortDescription}
+          </p>
         )}
       </div>
     </Link>
@@ -134,22 +136,26 @@ export const LandingPageView = ({
       {slides.length > 0 && <HeroSlider slides={slides} />}
 
       {showAbout && (
-        <section aria-label={heading} className="p-16 ">
-          <div className="flex ">
-            <div className="w-[25%]">
+        <section aria-label={heading} className="p-6 md:p-16">
+          <div className="flex flex-col gap-10 md:flex-row">
+            <div className="w-full md:w-[25%]">
               <div className="inline-flex rounded border border-neutral-700 px-4 py-2">
                 <h2 className="text-md text-white">{heading}</h2>
               </div>
             </div>
-            <div className="w-[75%]">
+            <div className="w-full md:w-[75%]">
               {description && (
-                <p className="text-5xl text-white ">{description}</p>
+                <p className="text-3xl text-white md:text-5xl">{description}</p>
               )}
               {stats.length > 0 && (
-                <ul className={`flex gap-24 ${description ? "mt-12" : ""}`}>
+                <ul
+                  className={`grid grid-cols-2 gap-x-6 gap-y-10 md:flex md:gap-24 ${
+                    description ? "mt-8 md:mt-12" : ""
+                  }`}
+                >
                   {stats.map((stat, index) => (
                     <li key={stat.id ?? index}>
-                      <p className="text-7xl font-semibold text-secondary-500">
+                      <p className="text-5xl font-semibold text-secondary-500 md:text-7xl">
                         {stat.value}
                       </p>
                       <p className="mt-3 text-xl text-neutral-300">
@@ -182,17 +188,21 @@ export const LandingPageView = ({
       {showContactCta && (
         <section
           aria-label="Contact"
-          className="h-screen w-full px-16 flex flex-col items-center justify-center gap-y-12"
+          className="flex min-h-svh w-full flex-col items-center justify-center gap-y-8 px-6 md:gap-y-12 md:px-16"
         >
           <div className="flex flex-col gap-y-6 items-center text-center">
             {ctaEyebrow && (
-              <p className="text-xl text-neutral-300">{ctaEyebrow}</p>
+              <p className="text-lg text-neutral-300 md:text-xl">
+                {ctaEyebrow}
+              </p>
             )}
             {ctaHeadline && (
-              <h2 className="text-7xl text-white font-bold">{ctaHeadline}</h2>
+              <h2 className="text-4xl text-white font-bold md:text-7xl">
+                {ctaHeadline}
+              </h2>
             )}
             {ctaBody && (
-              <p className="text-xl text-neutral-300">{ctaBody}</p>
+              <p className="text-lg text-neutral-300 md:text-xl">{ctaBody}</p>
             )}
           </div>
           {ctaActionLabel &&

@@ -60,6 +60,14 @@ _Avoid_: Cell, block, element
 A thin fixed bar at the top of a public page that fills left to right as the visitor scrolls through the page's main content.
 _Avoid_: Progress indicator, reading bar, scroll tracker
 
+**Navbar**:
+The strip at the top of every public page: the logo and the Menu control.
+_Avoid_: Header, top bar, navigation bar
+
+**Menu**:
+The public site's primary navigation, opened as a dropdown from the Navbar on every viewport. Its links are the Footer's menu links — managed once in the CMS.
+_Avoid_: Nav, hamburger, overlay menu, navigation drawer
+
 **Footer**:
 The strip at the bottom of every public page: an About blurb, Other Works cards, menu links, contact details, and the display wordmark above the bottom bar. Its content is a global in the CMS, separate from the Landing Page.
 _Avoid_: Bottom bar, site footer, footer section

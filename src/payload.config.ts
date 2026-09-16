@@ -1,4 +1,5 @@
 import { postgresAdapter } from "@payloadcms/db-postgres"
+import { s3Storage } from "@payloadcms/storage-s3"
 import { lexicalEditor } from "@payloadcms/richtext-lexical"
 import path from "path"
 import { buildConfig } from "payload"
@@ -13,6 +14,7 @@ import { Works } from "./collections/Works"
 import { env } from "./env"
 import { Footer } from "./globals/Footer"
 import { LandingPage } from "./globals/LandingPage"
+import { r2StorageOptions } from "./storage"
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -38,9 +40,10 @@ export default buildConfig({
     },
   }),
   sharp,
-  // Assets upload to local disk; R2 offload stays unwired until credentials exist —
-  // see docs/adr/0002-asset-storage-on-cloudflare-r2.md. To enable: add
-  // s3Adapter({ bucket, config: { endpoint, credentials } }) from @payloadcms/storage-s3,
-  // driven by the R2_* vars in .env.example.
-  plugins: [],
+  plugins: [
+    s3Storage({
+      collections: { assets: true },
+      ...r2StorageOptions(env),
+    }),
+  ],
 })

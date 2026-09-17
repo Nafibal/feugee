@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useLivePreview } from "@payloadcms/live-preview-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import type { LandingPage, Work } from "@/payload-types";
 
@@ -11,6 +11,7 @@ import { AutoVideo } from "@/components/AutoVideo";
 import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ArrowRight } from "@/components/ArrowRight";
+import { WhoWeAreSection } from "@/components/who-we-are/WhoWeAreSection";
 import { toCardWork, videoPosterOf, type CardWork } from "@/components/work";
 
 export interface SelectedWorkItem extends CardWork {
@@ -93,19 +94,24 @@ export const LandingPageView = ({
 
   // The video field is video-only by config; a shallow populate mid-edit
   // (bare ID) just leaves the slide out until it resolves again.
-  const slides: HeroSlide[] = (data.hero?.slides ?? []).flatMap((slide) => {
-    if (typeof slide.video !== "object" || slide.video === null) return [];
-    if (typeof slide.video.url !== "string") return [];
-    const poster = videoPosterOf(slide.video);
-    return [
-      {
-        id: slide.id ?? "",
-        url: slide.video.url,
-        posterUrl: poster?.url ?? null,
-        alt: slide.video.alt,
-      },
-    ];
-  });
+  const slides = useMemo<HeroSlide[]>(
+    () =>
+      (data.hero?.slides ?? []).flatMap((slide) => {
+        if (typeof slide.video !== "object" || slide.video === null)
+          return [];
+        if (typeof slide.video.url !== "string") return [];
+        const poster = videoPosterOf(slide.video);
+        return [
+          {
+            id: slide.id ?? "",
+            url: slide.video.url,
+            posterUrl: poster?.url ?? null,
+            alt: slide.video.alt,
+          },
+        ];
+      }),
+    [data],
+  );
 
   const heading = data.whoWeAre?.heading?.trim() || "Who We Are";
   const description = data.whoWeAre?.description?.trim() || null;
@@ -136,38 +142,11 @@ export const LandingPageView = ({
       {slides.length > 0 && <HeroSlider slides={slides} />}
 
       {showAbout && (
-        <section aria-label={heading} className="p-6 md:p-16">
-          <div className="flex flex-col gap-10 md:flex-row">
-            <div className="w-full md:w-[25%]">
-              <div className="inline-flex rounded border border-neutral-700 px-4 py-2">
-                <h2 className="text-md text-white">{heading}</h2>
-              </div>
-            </div>
-            <div className="w-full md:w-[75%]">
-              {description && (
-                <p className="text-3xl text-white md:text-5xl">{description}</p>
-              )}
-              {stats.length > 0 && (
-                <ul
-                  className={`grid grid-cols-2 gap-x-6 gap-y-10 md:flex md:gap-24 ${
-                    description ? "mt-8 md:mt-12" : ""
-                  }`}
-                >
-                  {stats.map((stat, index) => (
-                    <li key={stat.id ?? index}>
-                      <p className="text-5xl font-semibold text-secondary-500 md:text-7xl">
-                        {stat.value}
-                      </p>
-                      <p className="mt-3 text-xl text-neutral-300">
-                        {stat.label}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
-        </section>
+        <WhoWeAreSection
+          description={description}
+          heading={heading}
+          stats={data.stats}
+        />
       )}
 
       {clients.length > 0 && <ClientMarquee clients={clients} />}

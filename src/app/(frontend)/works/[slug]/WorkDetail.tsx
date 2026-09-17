@@ -86,7 +86,10 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
   return (
     <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
       <ScrollProgress />
-      <aside className="self-start md:sticky md:top-[calc(var(--navbar-height)+2.5rem)] px-6">
+      {/* The md+ sticky top already seats the aside clear of the overlaid
+          navbar (sticky pushes down to its offset); below md it is static,
+          so the padding supplies that clearance there instead. */}
+      <aside className="self-start px-6 max-md:pt-[calc(var(--navbar-height)+2.5rem)] md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
         <nav aria-label="Work sections" className="space-y-12">
           <div className="w-full pb-12 border-b border-neutral-900 space-y-6">
             <h1 className="text-neutral-50 text-4xl font-bold block">
@@ -126,7 +129,10 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
       </aside>
 
       <div className="w-full">
-        <section id="work-detail" className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] ">
+        <section
+          id="work-detail"
+          className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] "
+        >
           {heroThumbnail && (
             <div className="relative w-full h-screen">
               {heroThumbnail.kind === "video" ? (
@@ -189,7 +195,10 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
         <WorkSections sections={sections} />
 
         {data.testimonials?.length ? (
-          <section id="testimonials" className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] space-y-8 p-16">
+          <section
+            id="testimonials"
+            className="scroll-mt-[calc(var(--navbar-height)+0.5rem)] space-y-8 p-16"
+          >
             <div className="space-y-8">
               {(data.testimonials ?? []).map((testimonial, index) => (
                 <figure key={testimonial.id ?? index} className="space-y-8">

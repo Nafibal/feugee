@@ -236,7 +236,10 @@ export const WorksListing = ({
   return (
     <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
       <ScrollProgress colorClassName="bg-secondary-500" scope={mainRef} />
-      <aside className="self-start px-6 md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
+      {/* The md+ sticky top already seats the aside clear of the overlaid
+          navbar (sticky pushes down to its offset); below md it is static,
+          so the padding supplies that clearance there instead. */}
+      <aside className="self-start px-6 max-md:pt-[calc(var(--navbar-height)+2.5rem)] md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
         {/* A div, not a nav: the filter buttons are controls, not links. */}
         <div className="space-y-12">
           <div className="w-full space-y-6 border-b border-neutral-900 pb-12">

@@ -28,6 +28,10 @@ _Avoid_: Logo wall, partners, trusted-by
 The Works the Agency curates to feature on the Landing Page, in display order.
 _Avoid_: Featured works, highlights
 
+**Pinned Caption**:
+The title and short description of the Work currently occupying the bottom of the screen in the Selected Works section — held in one spot while Works scroll past, shown only while its Work is on screen.
+_Avoid_: Sticky caption, floating caption, work overlay
+
 **Works Page**:
 The public page listing every published Work.
 _Avoid_: Portfolio page, projects page

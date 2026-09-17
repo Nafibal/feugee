@@ -1,77 +1,21 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useLivePreview } from "@payloadcms/live-preview-react";
 import { useMemo, useState } from "react";
 
-import type { LandingPage, Work } from "@/payload-types";
+import type { LandingPage } from "@/payload-types";
 
-import { AutoVideo } from "@/components/AutoVideo";
 import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ArrowRight } from "@/components/ArrowRight";
 import { WhoWeAreSection } from "@/components/who-we-are/WhoWeAreSection";
-import { toCardWork, videoPosterOf, type CardWork } from "@/components/work";
-
-export interface SelectedWorkItem extends CardWork {
-  shortDescription: string | null;
-  year: number | null;
-  firstExpertise: string | null;
-}
-
-// The card guards (published, populated, usable Thumbnail) live in
-// toCardWork; this adds only what the Selected Works cards display.
-const toSelectedWorkItem = (work: number | Work): SelectedWorkItem | null => {
-  if (typeof work !== "object") return null;
-  const card = toCardWork(work);
-  if (card === null) return null;
-
-  return {
-    ...card,
-    shortDescription: work.shortDescription ?? null,
-    year: work.year ?? null,
-    firstExpertise: work.expertise?.[0] ?? null,
-  };
-};
+import { SelectedWorksSection } from "@/components/selected-works/SelectedWorksSection";
+import { videoPosterOf } from "@/components/work";
 
 // Shared by the Contact CTA's link and fallback-button branches.
 const ctaButtonClassName =
   "inline-flex items-center gap-2 text-white px-6 py-3 rounded border-neutral-800 border";
-
-const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => {  return (
-    <Link className="relative block" href={`/works/${item.slug}`}>
-      {item.thumbnail.kind === "video" ? (
-        <AutoVideo
-          alt={item.thumbnail.alt}
-          className="h-svh w-full object-cover"
-          height={item.thumbnail.height}
-          poster={item.thumbnail.posterUrl}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
-        />
-      ) : (
-        <Image
-          alt={item.thumbnail.alt}
-          className="h-svh w-full object-cover"
-          height={item.thumbnail.height}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
-        />
-      )}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16">
-        <h3 className="text-3xl font-medium text-white md:text-5xl">
-          {item.title}
-        </h3>
-        {item.shortDescription && (
-          <p className="text-base text-white md:text-lg">
-            {item.shortDescription}
-          </p>
-        )}
-      </div>
-    </Link>
-  );
-};
 
 export const LandingPageView = ({
   clients,
@@ -118,11 +62,6 @@ export const LandingPageView = ({
   const stats = data.stats ?? [];
   const showAbout = description !== null || stats.length > 0;
 
-  const selectedWorks = (data.selectedWorks ?? []).flatMap((work) => {
-    const item = toSelectedWorkItem(work);
-    return item ? [item] : [];
-  });
-
   const ctaEyebrow = data.contactCta?.eyebrow?.trim() || null;
   const ctaHeadline = data.contactCta?.headline?.trim() || null;
   const ctaBody = data.contactCta?.body?.trim() || null;
@@ -151,18 +90,7 @@ export const LandingPageView = ({
 
       {clients.length > 0 && <ClientMarquee clients={clients} />}
 
-      {selectedWorks.length > 0 && (
-        <section aria-label="Selected works" className="pt-32">
-          <h2 className="px-6 text-center text-4xl font-bold uppercase tracking-tight text-neutral-50 md:px-16 md:text-5xl">
-            Selected Works
-          </h2>
-          <div className="mt-12 flex flex-col gap-1 md:mt-16">
-            {selectedWorks.map((item) => (
-              <SelectedWorkCard item={item} key={item.id} />
-            ))}
-          </div>
-        </section>
-      )}
+      <SelectedWorksSection works={data.selectedWorks} />
 
       {showContactCta && (
         <section

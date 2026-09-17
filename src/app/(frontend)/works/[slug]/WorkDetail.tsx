@@ -84,20 +84,21 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
   }, [sections]);
 
   return (
-    <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
+    <div className="mx-auto grid w-full lg:grid-cols-[360px_1fr]">
       <ScrollProgress />
-      {/* The md+ sticky top already seats the aside clear of the overlaid
-          navbar (sticky pushes down to its offset); below md it is static,
-          so the padding supplies that clearance there instead. */}
-      <aside className="self-start px-6 max-md:pt-[calc(var(--navbar-height)+2.5rem)] md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
-        <nav aria-label="Work sections" className="space-y-12">
+      {/* The lg+ sticky top already seats the aside clear of the overlaid
+          navbar (sticky pushes down to its offset); below lg it is static
+          above the single column, so the padding supplies that clearance
+          there instead. */}
+      <aside className="self-start px-6 lg:pb-16 max-lg:pt-[calc(var(--navbar-height)+2.5rem)] lg:sticky lg:top-[calc(var(--navbar-height)+2.5rem)]">
+        <nav aria-label="Work sections" className="lg:space-y-12">
           <div className="w-full pb-12 border-b border-neutral-900 space-y-6">
             <h1 className="text-neutral-50 text-4xl font-bold block">
               {data.title}
             </h1>
             <p className="text-neutral-500 text-lg block">{data.subtitle}</p>
           </div>
-          <div className="space-y-6">
+          <div className="space-y-6 hidden lg:block">
             {/* inline keeps the span-era layout: space-y-6's margin-bottom is
                 ignored on inline boxes, so the ul's mt-4 still sets the gap. */}
             <h2 className="inline text-lg text-white">Contents</h2>

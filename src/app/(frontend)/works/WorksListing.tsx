@@ -26,7 +26,7 @@ export interface SectorOption {
   slug: string;
 }
 
-const desktopQuery = "(min-width: 768px)";
+const desktopQuery = "(min-width: 1024px)";
 const hoverQuery = "(hover: hover)";
 
 const subscribeMediaQuery =
@@ -114,12 +114,13 @@ const WorkCard = ({
         />
       )}
     </div>
-    {/* Tailwind's hover: variant is (hover: hover)-guarded, so touch devices
-        stay image-only — captions never appear there. The caption backdrop is
-        a blur gradient: the Thumbnail's own pixels, blurred by backdrop-filter
-        and faded out by a mask — no dark scrim. blur(0px) rather than none
-        keeps the hover transition interpolable. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100">
+    {/* Hover reveals the caption on hover-capable pointers (Tailwind's
+        hover: variant is (hover: hover)-guarded); below lg it is the default
+        instead, since mobile and tablet have no hover to reveal it. The
+        caption backdrop is a blur gradient: the Thumbnail's own pixels,
+        blurred by backdrop-filter and faded out by a mask — no dark scrim.
+        blur(0px) rather than none keeps the hover transition interpolable. */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 max-lg:opacity-100 max-lg:backdrop-blur-[12px] group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100">
       <div className="flex w-full items-baseline justify-between gap-4 p-4">
         <h2 className="text-3xl text-white font-bold">{item.title}</h2>
         {item.firstExpertise && (
@@ -185,8 +186,9 @@ export const WorksListing = ({
     [items, activeSector],
   );
 
-  // Two balanced columns on md+, one straight column on mobile. The server
-  // renders mobile-first so the curated order is correct in the initial HTML.
+  // Two balanced columns on desktop (lg+); tablet shares mobile's single
+  // column with the sidebar above it. The server renders that layout so the
+  // curated order is correct in the initial HTML.
   const isDesktop = useSyncExternalStore(
     subscribeDesktop,
     getDesktopSnapshot,
@@ -234,14 +236,15 @@ export const WorksListing = ({
   const mainRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mx-auto grid w-full md:grid-cols-[360px_1fr]">
+    <div className="mx-auto grid w-full lg:grid-cols-[360px_1fr]">
       <ScrollProgress colorClassName="bg-secondary-500" scope={mainRef} />
-      {/* The md+ sticky top already seats the aside clear of the overlaid
-          navbar (sticky pushes down to its offset); below md it is static,
-          so the padding supplies that clearance there instead. */}
-      <aside className="self-start px-6 max-md:pt-[calc(var(--navbar-height)+2.5rem)] md:sticky md:top-[calc(var(--navbar-height)+2.5rem)]">
+      {/* The lg+ sticky top already seats the aside clear of the overlaid
+          navbar (sticky pushes down to its offset); below lg it is static
+          above the single column, so the padding supplies that clearance
+          there instead. */}
+      <aside className="self-start lg:pb-6 px-6 max-lg:pt-[calc(var(--navbar-height)+2.5rem)] lg:sticky lg:top-[calc(var(--navbar-height)+2.5rem)]">
         {/* A div, not a nav: the filter buttons are controls, not links. */}
-        <div className="space-y-12">
+        <div className="lg:space-y-12">
           <div className="w-full space-y-6 border-b border-neutral-900 pb-12">
             <h1 className="block text-4xl font-bold text-neutral-50">
               Our Works
@@ -287,7 +290,7 @@ export const WorksListing = ({
         {filteredItems.length === 0 ? (
           <p className="p-8 text-xl text-neutral-600">Works coming soon</p>
         ) : (
-          <div className="flex w-full flex-col gap-1 md:flex-row" ref={gridRef}>
+          <div className="flex w-full flex-col gap-1 lg:flex-row" ref={gridRef}>
             {columns.map((column, columnIndex) => (
               <div
                 className="flex w-full flex-1 flex-col gap-1"

@@ -163,7 +163,7 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
   });
 
   return (
-    <footer className="mt-auto px-6 pt-6 flex flex-col gap-y-6 items-stretch justify-start">
+    <footer className="mt-auto px-6 pt-6 flex flex-col gap-y-6 items-stretch justify-start bg-linear-to-b from-[#161616] to-neutral-950">
       {hasFooterCtaContent(cta) && (
         <section
           aria-label="Contact CTA"
@@ -276,7 +276,7 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
           md the letters are too short to spare, so the bar just follows them.
           The window's bottom edge is the footer's bottom edge. */}
       <div className="relative overflow-hidden">
-        <div aria-hidden="true" className="w-full md:mb-[-3%]">
+        <div aria-hidden="true" className="w-full text-[#1F1F1F] md:mb-[-3%]">
           <LogoMark className="block h-auto w-full" monochrome />
         </div>
         <div className="relative z-10 pb-6 md:absolute md:inset-x-0 md:bottom-0">

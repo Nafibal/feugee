@@ -2,12 +2,8 @@ import type { SVGProps } from "react";
 
 // The Agency's FEUGEE wordmark artwork — the last two letters carry the
 // brand's orange and blue — inlined as the single source of truth for the
-// Navbar and the Footer's Wordmark. Monochrome renders the watermark: one
-// vertical gradient, darker than the letters' top and sinking toward the
-// background at the bottom, shared across the whole artwork via
-// userSpaceOnUse so it never restarts per letter.
-
-const WORDMARK_GRADIENT_ID = "wordmark-gradient";
+// Navbar and the Footer's Wordmark. Monochrome swaps every fill for
+// currentColor, so the consumer's text color sets the watermark tone.
 
 type LogoMarkProps = Omit<SVGProps<SVGSVGElement>, "aria-label"> & {
   ariaLabel?: string;
@@ -15,8 +11,7 @@ type LogoMarkProps = Omit<SVGProps<SVGSVGElement>, "aria-label"> & {
 };
 
 export const LogoMark = ({ ariaLabel, monochrome = false, ...svg }: LogoMarkProps) => {
-  const fill = (brand: string) =>
-    monochrome ? `url(#${WORDMARK_GRADIENT_ID})` : brand;
+  const fill = (brand: string) => (monochrome ? "currentColor" : brand);
 
   return (
     <svg
@@ -28,21 +23,6 @@ export const LogoMark = ({ ariaLabel, monochrome = false, ...svg }: LogoMarkProp
       xmlns="http://www.w3.org/2000/svg"
       {...svg}
     >
-      {monochrome && (
-        <defs>
-          <linearGradient
-            gradientUnits="userSpaceOnUse"
-            id={WORDMARK_GRADIENT_ID}
-            x1="0"
-            x2="0"
-            y1="0"
-            y2="383"
-          >
-            <stop offset="0" stopColor="#1E1E1E" />
-            <stop offset="1" stopColor="#0D0D0D" />
-          </linearGradient>
-        </defs>
-      )}
       <path
         d="M64.1356 8.33551C52.1792 13.8591 43.2706 21.7929 37.4431 32.1035C31.6156 42.4141 28.7019 55.2019 28.7019 70.4335V85.2299H0V133.234H28.7019V318.323L85.235 336.367V133.201H135.472V85.1964H85.235V70.4C85.235 55.4697 93.3064 47.9711 109.449 47.9711H150.744V0H109.014C91.0624 0 76.1254 2.77851 64.1356 8.30204V8.33551Z"
         fill={fill("white")}

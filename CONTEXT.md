@@ -197,3 +197,7 @@ _Avoid_: Contact info, contact section
 **Design Tokens**:
 The canonical visual values — colors and typography — shared by the Public site and the CMS Dashboard. Handed off from the Agency's Figma; `docs/DESIGN_SYSTEMS.md` is the source of record. One light mode only.
 _Avoid_: Theme, palette, brand kit
+
+**Difference Text**:
+Text the Public site renders white with difference blending over an image or video Asset, so it reads as the negative of whatever passes behind it.
+_Avoid_: Negative text, inverted text, knockout text, blend text

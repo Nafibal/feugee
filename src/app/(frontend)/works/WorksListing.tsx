@@ -117,11 +117,17 @@ const WorkCard = ({
     {/* Hover reveals the caption on hover-capable pointers (Tailwind's
         hover: variant is (hover: hover)-guarded); below lg it is the default
         instead, since mobile and tablet have no hover to reveal it. The
-        caption backdrop is a blur gradient: the Thumbnail's own pixels,
-        blurred by backdrop-filter and faded out by a mask — no dark scrim.
-        blur(0px) rather than none keeps the hover transition interpolable. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 max-lg:opacity-100 max-lg:backdrop-blur-[12px] group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100">
-      <div className="flex w-full items-baseline justify-between gap-4 p-4">
+        underlay is a blur gradient — the Thumbnail's own pixels, blurred by
+        backdrop-filter and faded out by a mask, no dark scrim; blur(0px)
+        rather than none keeps the hover transition interpolable. The text is
+        Difference Text (ADR 0006) and a sibling of the underlay, not its
+        child: a parent carrying backdrop-filter or a fading opacity isolates
+        its children, and the blend would never reach the media. The text
+        keeps its own opacity fade because blend and opacity compose on the
+        same element. */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end">
+      <div className="absolute inset-0 opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 max-lg:opacity-100 max-lg:backdrop-blur-[12px] group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100" />
+      <div className="relative flex w-full items-baseline justify-between gap-4 p-4 opacity-0 transition-opacity duration-300 mix-blend-difference max-lg:opacity-100 group-hover/card:opacity-100">
         <h2 className="text-3xl text-white font-bold">{item.title}</h2>
         {item.firstExpertise && (
           <span className="text-xl text-white">{item.firstExpertise}</span>

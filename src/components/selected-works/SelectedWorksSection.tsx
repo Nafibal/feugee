@@ -56,10 +56,10 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
       )}
     </div>
     {/* The static caption is the readable fallback: the accessible text,
-        the no-JS state, and what reduced-motion visitors see. Its gradient
-        stays on the media once the text steps aside for the Pinned
-        Caption. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16">
+        the no-JS state, and what reduced-motion visitors see — Difference
+        Text (ADR 0006), its contrast coming from the blend rather than a
+        scrim. */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 mix-blend-difference p-6 md:flex-row md:items-center md:justify-between md:p-16">
       <h3
         className="text-3xl font-medium text-white md:text-5xl"
         data-static-caption
@@ -111,7 +111,7 @@ export const SelectedWorksSection = ({
       ).matches;
 
       // ---- Works Rail ------------------------------------------------------
-      // Runs before the reduced-motion gate below: the white↔secondary mark
+      // Runs before the reduced-motion gate below: the white↔dimmed mark
       // is information, not motion — only the arrow's slide is gated. CSS
       // sticky owns the rail's visibility (in with the first card, out with
       // the last); this block only tracks which Work holds the mark.
@@ -143,10 +143,10 @@ export const SelectedWorksSection = ({
         };
 
         const mark = (index: number, instant = false) => {
+          // Difference Text is white-only (ADR 0006), so the active mark is
+          // full-opacity white against dimmed entries — not a color swap.
           entries.forEach((entry, i) => {
-            const active = i === index;
-            entry.classList.toggle("text-white", !active);
-            entry.classList.toggle("text-secondary-500", active);
+            entry.classList.toggle("opacity-40", i !== index);
           });
           const target = entries[index];
           if (!arrow || !target) return;
@@ -275,15 +275,17 @@ export const SelectedWorksSection = ({
             only JS positions it, so no-JS gets the bare titles. The md:
             gate keeps it off small viewports; z-20 sits it above the
             cards but below the Pinned Caption layer should a short
-            viewport ever overlap the two. */}
-        <div className="pointer-events-none absolute bottom-[50svh] right-0 top-[50svh] z-20">
+            viewport ever overlap the two. The wrapper carries the
+            difference blend — the sticky inner's parent stacking context
+            is empty, so blending the inner would have no backdrop. */}
+        <div className="pointer-events-none absolute bottom-[50svh] right-0 top-[50svh] z-20 mix-blend-difference">
           <div
             aria-hidden="true"
             className="sticky top-[50svh] -translate-y-1/2 hidden flex-col items-start gap-3 pr-16 md:flex"
             data-works-rail
           >
             <span
-              className="invisible absolute left-0 top-0 text-secondary-500"
+              className="invisible absolute left-0 top-0 text-white"
               data-rail-arrow
             >
               <ArrowRight />
@@ -305,10 +307,12 @@ export const SelectedWorksSection = ({
           spot, each clipped to its Work's bounds. It ships display:none so
           no-JS never sees it (the grid lives on a child, so unhiding never
           fights the hidden utility); aria-hidden because the static
-          captions remain the accessible text. */}
+          captions remain the accessible text. The layer itself carries the
+          difference blend — its fixed z-index stacking context would
+          isolate blending applied to the captions inside it. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 hidden"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-30 hidden mix-blend-difference"
         data-pinned-layer
       >
         <div className="grid">

@@ -168,7 +168,11 @@ export const HeroSlider = ({
         ))}
       </div>
 
-      <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-4 md:bottom-12 md:left-16 md:gap-6">
+      {/* Difference Text (ADR 0006): the title, dashes, and cue are white with
+          difference blending, so they read as the negative of the video. The
+          blend sits on this container and on the cue below — both are plain
+          children of the section, so their backdrop is the video stack. */}
+      <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-4 mix-blend-difference md:bottom-12 md:left-16 md:gap-6">
         {/* The visible lines are aria-hidden — the word swap would otherwise
             re-announce every few seconds — so a static sr-only twin carries
             the full title to assistive tech and crawlers. */}
@@ -186,7 +190,7 @@ export const HeroSlider = ({
                     line at a time, so words exit upward as the next enters.
                     The transition is dropped under reduced motion so the
                     reset to the first word snaps instead of sliding. */}
-                <span className="inline-block h-(--title-line) overflow-hidden align-bottom text-secondary-500">
+                <span className="inline-block h-(--title-line) overflow-hidden align-bottom">
                   <span
                     className={`block ${reducedMotion ? "" : "transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"}`}
                     style={{
@@ -195,7 +199,7 @@ export const HeroSlider = ({
                   >
                     {rotatingWords.map((word, index) => (
                       <span
-                        className="block h-(--title-line)"
+                        className="block h-(--title-line) text-secondary-500"
                         key={`${word}-${index}`}
                       >
                         {word}
@@ -229,7 +233,7 @@ export const HeroSlider = ({
 
       <div
         aria-hidden
-        className={`pointer-events-none absolute bottom-6 right-6 z-20 text-base tracking-wide text-white md:bottom-12 md:right-16 ${
+        className={`pointer-events-none absolute bottom-6 right-6 z-20 text-base tracking-wide text-white mix-blend-difference md:bottom-12 md:right-16 ${
           reducedMotion ? "" : "animate-cue-pulse"
         }`}
       >

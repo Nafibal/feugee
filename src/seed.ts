@@ -360,6 +360,15 @@ const existingWorks = await payload.find({
   limit: 1,
 })
 
+// One table for both paths below — the fresh-seed creates and the Year
+// backfill — so a Work's Year can never drift between them.
+const workYears: Record<string, number> = {
+  "solstice-denim-rebrand": 2024,
+  "pulse-festival-identity": 2023,
+  "atlas-museum-wayfinding": 2025,
+  "fest-for-music": 2025,
+}
+
 if (existingWorks.docs.length === 0) {
   await payload.create({
     collection: "works",
@@ -367,8 +376,7 @@ if (existingWorks.docs.length === 0) {
       title: "Solstice Denim Rebrand",
       slug: "solstice-denim-rebrand",
       subtitle: "A denim house re-cut for the archive era",
-      shortDescription:
-        "Solstice explores archive, craft, utility, and wearable identity",
+      year: workYears["solstice-denim-rebrand"],
       thumbnail: assetIds.solsticeFeature,
       description: lexicalParagraph(
         "Solstice came to Feugee with a forty-year archive and no way to wear it. We rebuilt the identity around the garments themselves — every touchpoint now borrows its rhythm from the cutting table.",
@@ -465,8 +473,7 @@ if (existingWorks.docs.length === 0) {
       title: "Pulse Festival Identity",
       slug: "pulse-festival-identity",
       subtitle: "A living identity for a three-day music festival",
-      shortDescription:
-        "Pulse explores sound, colour, crowds, and identity as a living system",
+      year: workYears["pulse-festival-identity"],
       // The video teaser doubles as the Thumbnail and a gallery Item when
       // ffmpeg generated it; image-only environments fall back.
       thumbnail: videoAssetIds.pulseTeaser ?? assetIds.pulseStageWide,
@@ -523,8 +530,7 @@ if (existingWorks.docs.length === 0) {
       title: "Atlas Museum Wayfinding",
       slug: "atlas-museum-wayfinding",
       subtitle: "Wayfinding and digital guides for a reopened museum",
-      shortDescription:
-        "Atlas explores architecture, signage, flow, and the returning visitor",
+      year: workYears["atlas-museum-wayfinding"],
       description: lexicalParagraph(
         "Draft in progress: a wayfinding system that carries the museum's reopening campaign into the building itself.",
       ),
@@ -542,6 +548,31 @@ if (existingWorks.docs.length === 0) {
   payload.logger.info("Seeded works: Solstice (sections), Pulse (gallery), Atlas Museum (draft)")
 } else {
   payload.logger.info("Works already exist — skipping work seed")
+}
+
+// ---- Works Years -------------------------------------------------------
+// Independent of the creates above: an older database can hold Works made
+// before Year mattered, and a Selected Works card without one shows no text
+// beside its title. Backfills only Works whose Year is still empty — an
+// editor-set Year always wins.
+const slugMatchedWorks = await payload.find({
+  collection: "works",
+  draft: false,
+  limit: 0,
+  where: { slug: { in: Object.keys(workYears) } },
+})
+
+for (const work of slugMatchedWorks.docs) {
+  if (work.year != null) continue
+  const year = workYears[work.slug ?? ""]
+  if (year === undefined) continue
+  await payload.update({
+    collection: "works",
+    id: work.id,
+    draft: false,
+    data: { year },
+  })
+  payload.logger.info(`Seeded year ${year} on work "${work.title}"`)
 }
 
 // ---- Clients (the Client Marquee) ------------------------------------

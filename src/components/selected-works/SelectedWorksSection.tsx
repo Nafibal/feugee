@@ -10,28 +10,12 @@ import { useRef } from "react";
 import type { Work } from "@/payload-types";
 
 import { AutoVideo } from "@/components/AutoVideo";
-import { toCardWork, type CardWork } from "@/components/work";
 
 import { clipInsetsFor, formatClipPath, type Rect } from "./captionClip";
+import { MEDIA_OVERSHOOT, driftTravelPercent } from "./mediaDrift";
+import { toSelectedWorkItem, type SelectedWorkItem } from "./selectedWorkItem";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
-
-export interface SelectedWorkItem extends CardWork {
-  shortDescription: string | null;
-}
-
-// The card guards (published, populated, usable Thumbnail) live in
-// toCardWork; this adds only what the Pinned Caption displays.
-const toSelectedWorkItem = (work: number | Work): SelectedWorkItem | null => {
-  if (typeof work !== "object") return null;
-  const card = toCardWork(work);
-  if (card === null) return null;
-
-  return {
-    ...card,
-    shortDescription: work.shortDescription ?? null,
-  };
-};
 
 const toRect = (rect: DOMRect): Rect => ({
   top: rect.top,
@@ -41,25 +25,34 @@ const toRect = (rect: DOMRect): Rect => ({
 });
 
 const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
-  <Link className="relative block" data-work-card href={`/works/${item.slug}`}>
-    {item.thumbnail.kind === "video" ? (
-      <AutoVideo
-        alt={item.thumbnail.alt}
-        className="h-svh w-full object-cover"
-        height={item.thumbnail.height}
-        poster={item.thumbnail.posterUrl}
-        src={item.thumbnail.url}
-        width={item.thumbnail.width}
-      />
-    ) : (
-      <Image
-        alt={item.thumbnail.alt}
-        className="h-svh w-full object-cover"
-        height={item.thumbnail.height}
-        src={item.thumbnail.url}
-        width={item.thumbnail.width}
-      />
-    )}
+  <Link
+    className="relative block h-svh overflow-hidden"
+    data-work-card
+    href={`/works/${item.slug}`}
+  >
+    {/* The drift track: taller than the card so it can travel while the
+        card clips it. No-JS and reduced motion leave it top-flush — a
+        static, fully covered frame. */}
+    <div data-work-media style={{ height: `${MEDIA_OVERSHOOT * 100}%` }}>
+      {item.thumbnail.kind === "video" ? (
+        <AutoVideo
+          alt={item.thumbnail.alt}
+          className="h-full w-full object-cover"
+          height={item.thumbnail.height}
+          poster={item.thumbnail.posterUrl}
+          src={item.thumbnail.url}
+          width={item.thumbnail.width}
+        />
+      ) : (
+        <Image
+          alt={item.thumbnail.alt}
+          className="h-full w-full object-cover"
+          height={item.thumbnail.height}
+          src={item.thumbnail.url}
+          width={item.thumbnail.width}
+        />
+      )}
+    </div>
     {/* The static caption is the readable fallback: the accessible text,
         the no-JS state, and what reduced-motion visitors see. Its gradient
         stays on the media once the text steps aside for the Pinned
@@ -71,9 +64,9 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
       >
         {item.title}
       </h3>
-      {item.shortDescription && (
+      {item.year !== null && (
         <p className="text-base text-white md:text-lg" data-static-caption>
-          {item.shortDescription}
+          {item.year}
         </p>
       )}
     </div>
@@ -124,6 +117,29 @@ export const SelectedWorksSection = ({
       gsap.set(staticCaptions, { opacity: 0 });
       layer.classList.remove("hidden");
 
+      // The drift: each media travels from bottom-flush to top-flush of its
+      // card while the card crosses the viewport, lagging behind the scroll.
+      // The card clips it, so the taller media only ever reads as motion.
+      const travel = driftTravelPercent(MEDIA_OVERSHOOT);
+      cards.forEach((card) => {
+        const media = card.querySelector<HTMLElement>("[data-work-media]");
+        if (!media) return;
+        gsap.fromTo(
+          media,
+          { yPercent: -travel },
+          {
+            yPercent: 0,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          },
+        );
+      });
+
       // Pure geometry: each caption shows exactly where its Work overlaps
       // the fixed caption zone, so the seam between two Works sweeps
       // through the caption and the content hands off mid-letter.
@@ -158,8 +174,11 @@ export const SelectedWorksSection = ({
 
   return (
     <section aria-label="Selected works" className="pt-32" ref={scopeRef}>
-      <div className="w-full flex justify-center border ">
-        <div className="rounded border border-neutral-700 px-4 py-2">
+      {/* Sticks below the Navbar for the whole section; z-20 keeps it above
+          the cards but below the Pinned Caption layer (z-30) should a very
+          short viewport ever make the two meet. */}
+      <div className="sticky top-(--navbar-height) z-20 flex w-full justify-center">
+        <div className="rounded border border-neutral-700 bg-neutral-950/70 px-4 py-2 backdrop-blur">
           <h2 className="text-md text-center text-white">Selected Works</h2>
         </div>
       </div>
@@ -189,10 +208,8 @@ export const SelectedWorksSection = ({
               <h3 className="text-3xl font-medium text-white md:text-5xl">
                 {item.title}
               </h3>
-              {item.shortDescription && (
-                <p className="text-base text-white md:text-lg">
-                  {item.shortDescription}
-                </p>
+              {item.year !== null && (
+                <p className="text-base text-white md:text-lg">{item.year}</p>
               )}
             </div>
           ))}

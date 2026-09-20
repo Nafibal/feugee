@@ -6,6 +6,7 @@ import * as migration_20260912_125923_add_feature_right_layout from './20260912_
 import * as migration_20260914_125939_add_year_duration_clients_landing_page from './20260914_125939_add_year_duration_clients_landing_page';
 import * as migration_20260919_103052_add_landing_page_testimonials from './20260919_103052_add_landing_page_testimonials';
 import * as migration_20260920_070322_add_landing_page_hero_rotating_words from './20260920_070322_add_landing_page_hero_rotating_words';
+import * as migration_20260920_081137_drop_works_short_description from './20260920_081137_drop_works_short_description';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260920_070322_add_landing_page_hero_rotating_words.up,
     down: migration_20260920_070322_add_landing_page_hero_rotating_words.down,
-    name: '20260920_070322_add_landing_page_hero_rotating_words'
+    name: '20260920_070322_add_landing_page_hero_rotating_words',
+  },
+  {
+    up: migration_20260920_081137_drop_works_short_description.up,
+    down: migration_20260920_081137_drop_works_short_description.down,
+    name: '20260920_081137_drop_works_short_description'
   },
 ];

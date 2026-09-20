@@ -1,8 +1,36 @@
 import { describe, expect, it } from "vitest";
 
-import type { Work } from "@/payload-types";
+import type { Asset, Work } from "@/payload-types";
 
 import { toSelectedWorkItem } from "./selectedWorkItem";
+
+const imageAsset = (overrides: Partial<Asset> = {}): Asset =>
+  ({
+    id: 1,
+    url: "/assets/img.png",
+    alt: "An image",
+    mimeType: "image/png",
+    width: 1600,
+    height: 900,
+    ...overrides,
+  }) as unknown as Asset;
+
+const videoAsset = (overrides: Partial<Asset> = {}): Asset =>
+  ({
+    id: 2,
+    url: "/assets/feature.mp4",
+    alt: "A feature video",
+    mimeType: "video/mp4",
+    width: null,
+    height: null,
+    poster: imageAsset({
+      id: 3,
+      url: "/assets/poster.png",
+      width: 640,
+      height: 360,
+    }),
+    ...overrides,
+  }) as unknown as Asset;
 
 const work = (overrides: Partial<Work> = {}): Work =>
   ({
@@ -10,14 +38,7 @@ const work = (overrides: Partial<Work> = {}): Work =>
     slug: "fest-for-music",
     title: "Fest for Music",
     _status: "published",
-    thumbnail: {
-      id: 1,
-      url: "/assets/img.png",
-      alt: "An image",
-      mimeType: "image/png",
-      width: 1600,
-      height: 900,
-    },
+    thumbnail: imageAsset(),
     ...overrides,
   }) as unknown as Work;
 
@@ -28,6 +49,58 @@ describe("toSelectedWorkItem", () => {
       slug: "fest-for-music",
       title: "Fest for Music",
       year: 2025,
+    });
+  });
+
+  it("prefers a populated Feature Visual over the Thumbnail", () => {
+    const item = toSelectedWorkItem(work({ featureVisual: videoAsset() }));
+
+    expect(item?.visual).toEqual({
+      kind: "video",
+      url: "/assets/feature.mp4",
+      posterUrl: "/assets/poster.png",
+      width: 640,
+      height: 360,
+      alt: "A feature video",
+    });
+  });
+
+  it("falls back to the Thumbnail when the Work has no Feature Visual", () => {
+    const item = toSelectedWorkItem(work({ featureVisual: null }));
+
+    expect(item?.visual).toEqual({
+      kind: "image",
+      url: "/assets/img.png",
+      width: 1600,
+      height: 900,
+      alt: "An image",
+    });
+  });
+
+  it("falls back to the Thumbnail when the Feature Visual is only shallow-populated", () => {
+    const item = toSelectedWorkItem(work({ featureVisual: 9 }));
+
+    expect(item?.visual).toMatchObject({ kind: "image", url: "/assets/img.png" });
+  });
+
+  it("shows a Work whose only visual is a Feature Visual", () => {
+    const item = toSelectedWorkItem(
+      work({
+        thumbnail: null,
+        featureVisual: imageAsset({
+          id: 4,
+          url: "/assets/feature.png",
+          alt: "A feature image",
+        }),
+      }),
+    );
+
+    expect(item?.visual).toEqual({
+      kind: "image",
+      url: "/assets/feature.png",
+      width: 1600,
+      height: 900,
+      alt: "A feature image",
     });
   });
 

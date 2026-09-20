@@ -1,19 +1,24 @@
 import type { Work } from "@/payload-types";
 
-import { toCardWork, type CardWork } from "@/components/work";
+import {
+  toCardWork,
+  workFeatureVisualOf,
+  type CardWork,
+} from "@/components/work";
 
 /** A Selected Works card: the card core plus the Year its caption shows. */
 export interface SelectedWorkItem extends CardWork {
   year: number | null;
 }
 
-// The card guards (published, populated, usable Thumbnail) live in
-// toCardWork; this adds only what the Pinned Caption displays.
+// The card guards (published, populated, usable visual) live in toCardWork;
+// this adds the section's visual preference — the Feature Visual, which wins
+// only when usable — and what the Pinned Caption displays.
 export const toSelectedWorkItem = (
   work: number | Work,
 ): SelectedWorkItem | null => {
   if (typeof work !== "object") return null;
-  const card = toCardWork(work);
+  const card = toCardWork(work, workFeatureVisualOf(work));
   if (card === null) return null;
 
   return {

@@ -8,6 +8,7 @@ import * as migration_20260919_103052_add_landing_page_testimonials from './2026
 import * as migration_20260920_070322_add_landing_page_hero_rotating_words from './20260920_070322_add_landing_page_hero_rotating_words';
 import * as migration_20260920_081137_drop_works_short_description from './20260920_081137_drop_works_short_description';
 import * as migration_20260920_123826_move_contact_cta_to_footer from './20260920_123826_move_contact_cta_to_footer';
+import * as migration_20260920_123832_add_works_feature_visual from './20260920_123832_add_works_feature_visual';
 
 export const migrations = [
   {
@@ -59,5 +60,10 @@ export const migrations = [
     up: migration_20260920_123826_move_contact_cta_to_footer.up,
     down: migration_20260920_123826_move_contact_cta_to_footer.down,
     name: '20260920_123826_move_contact_cta_to_footer',
+  },
+  {
+    up: migration_20260920_123832_add_works_feature_visual.up,
+    down: migration_20260920_123832_add_works_feature_visual.down,
+    name: '20260920_123832_add_works_feature_visual',
   },
 ];

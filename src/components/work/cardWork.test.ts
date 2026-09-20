@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import type { Asset, Work } from "@/payload-types";
 
 import { toCardWork } from "./cardWork";
-import { VIDEO_ASPECT_FALLBACK } from "./thumbnail";
+import { VIDEO_ASPECT_FALLBACK } from "./visual";
 
 const imageAsset = (overrides: Partial<Asset> = {}): Asset =>
   ({
@@ -72,7 +72,7 @@ describe("toCardWork", () => {
       id: 10,
       slug: "fest-for-music",
       title: "Fest for Music",
-      thumbnail: {
+      visual: {
         kind: "image",
         url: "/assets/img.png",
         width: 1600,
@@ -87,13 +87,13 @@ describe("toCardWork", () => {
       work({ thumbnail: imageAsset({ width: null, height: null }) }),
     );
 
-    expect(card?.thumbnail).toMatchObject({ kind: "image", width: 1, height: 1 });
+    expect(card?.visual).toMatchObject({ kind: "image", width: 1, height: 1 });
   });
 
   it("carries the poster's dimensions for a video Thumbnail", () => {
     const card = toCardWork(work({ thumbnail: videoAsset() }));
 
-    expect(card?.thumbnail).toEqual({
+    expect(card?.visual).toEqual({
       kind: "video",
       url: "/assets/vid.mp4",
       posterUrl: "/assets/poster.png",
@@ -106,7 +106,7 @@ describe("toCardWork", () => {
   it("falls back to the 16:9 aspect slot for a video without a poster", () => {
     const card = toCardWork(work({ thumbnail: videoAsset({ poster: 99 }) }));
 
-    expect(card?.thumbnail).toEqual({
+    expect(card?.visual).toEqual({
       kind: "video",
       url: "/assets/vid.mp4",
       posterUrl: null,

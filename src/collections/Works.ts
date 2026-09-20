@@ -55,6 +55,15 @@ export const Works: CollectionConfig = {
       },
     },
     {
+      name: "featureVisual",
+      type: "upload",
+      relationTo: "assets",
+      admin: {
+        description:
+          "Shown in place of the Thumbnail as this Work's card in the Landing Page's Selected Works. Image or video. Falls back to the Thumbnail when empty.",
+      },
+    },
+    {
       name: "tags",
       type: "text",
       hasMany: true,

@@ -147,6 +147,10 @@ export interface Work {
    */
   thumbnail?: (number | null) | Asset;
   /**
+   * Shown in place of the Thumbnail as this Work's card in the Landing Page's Selected Works. Image or video. Falls back to the Thumbnail when empty.
+   */
+  featureVisual?: (number | null) | Asset;
+  /**
    * Free-form labels, displayed as chips.
    */
   tags?: string[] | null;
@@ -671,7 +675,7 @@ export interface Client {
   _order?: string | null;
   name: string;
   /**
-   * Image only. The marquee applies its own colour treatment at render time.
+   * Image only — SVG especially welcome. The marquee applies its own colour treatment at render time.
    */
   logo: number | Asset;
   /**
@@ -803,6 +807,7 @@ export interface WorksSelect<T extends boolean = true> {
   slug?: T;
   subtitle?: T;
   thumbnail?: T;
+  featureVisual?: T;
   tags?: T;
   description?: T;
   client?: T;

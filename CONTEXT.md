@@ -61,8 +61,12 @@ A single portfolio piece the agency presents publicly. Richly detailed — not a
 _Avoid_: Project, portfolio item, case study
 
 **Thumbnail**:
-The primary visual representing a Work, shown at the top of the Work Detail Page and as its card on the Works Page. An Asset — image or video. A video Thumbnail plays muted, looping, and without controls, like every video on the public site.
+The primary visual representing a Work — shown at the top of the Work Detail Page, as its card on the Works Page and the Footer's Other Works, and as its card in Selected Works when the Work has no Feature Visual. An Asset — image or video. A video Thumbnail plays muted, looping, and without controls, like every video on the public site.
 _Avoid_: Cover, hero image, featured image
+
+**Feature Visual**:
+The optional Asset — image or video — shown in place of a Work's Thumbnail as its card in Selected Works. Absent one, the Work falls back to its Thumbnail there; every other surface keeps the Thumbnail regardless.
+_Avoid_: Feature video, selected works video, landing video
 
 **Section**:
 A titled group of content within a Work. Each Section is one destination in the Work Detail Page's sidebar navigation.

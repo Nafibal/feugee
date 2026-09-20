@@ -43,22 +43,22 @@ const WorkCard = ({
           : "aspect-4/3 md:aspect-4/3 lg:aspect-square"
       } w-full overflow-hidden rounded bg-neutral-800`}
     >
-      {item.thumbnail.kind === "video" ? (
+      {item.visual.kind === "video" ? (
         <AutoVideo
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-full w-full object-cover"
-          height={item.thumbnail.height}
-          poster={item.thumbnail.posterUrl}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          poster={item.visual.posterUrl}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       ) : (
         <Image
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-full w-full object-cover"
-          height={item.thumbnail.height}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       )}
     </div>

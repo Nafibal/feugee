@@ -36,22 +36,22 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
         card clips it. No-JS and reduced motion leave it top-flush — a
         static, fully covered frame. */}
     <div data-work-media style={{ height: `${MEDIA_OVERSHOOT * 100}%` }}>
-      {item.thumbnail.kind === "video" ? (
+      {item.visual.kind === "video" ? (
         <AutoVideo
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-full w-full object-cover"
-          height={item.thumbnail.height}
-          poster={item.thumbnail.posterUrl}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          poster={item.visual.posterUrl}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       ) : (
         <Image
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-full w-full object-cover"
-          height={item.thumbnail.height}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       )}
     </div>

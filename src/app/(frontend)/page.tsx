@@ -39,9 +39,9 @@ const toMarqueeClient = (client: Client): MarqueeClient | null => {
 
 const getLandingPageData = cache(async () => {
   const payload = await getPayload({ config: configPromise });
-  // Depth 3 populates the Selected Works, their Thumbnails and, in turn, the
-  // posters. Clients is orderable — its default `_order` sort is the drag
-  // order set in the CMS Dashboard.
+  // Depth 3 populates the Selected Works, their Feature Visuals/Thumbnails
+  // and, in turn, the posters. Clients is orderable — its default `_order`
+  // sort is the drag order set in the CMS Dashboard.
   const [landingPage, clientsResult] = await Promise.all([
     payload.findGlobal({
       slug: "landing-page",

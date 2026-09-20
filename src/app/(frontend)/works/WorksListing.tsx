@@ -62,8 +62,8 @@ const balanceColumns = (items: WorksListItem[]): WorksListItem[][] => {
       columns[0].height <= columns[1].height ? columns[0] : columns[1];
     shortest.items.push(item);
     shortest.height +=
-      item.thumbnail.width > 0
-        ? item.thumbnail.height / item.thumbnail.width
+      item.visual.width > 0
+        ? item.visual.height / item.visual.width
         : 1;
   }
 
@@ -93,24 +93,24 @@ const WorkCard = ({
     <div
       className={`transition-[filter] duration-300 ${dimmed ? "grayscale" : ""}`}
     >
-      {item.thumbnail.kind === "video" ? (
+      {item.visual.kind === "video" ? (
         // Video thumbnails autoplay muted while on screen; the poster-derived
         // width/height keep the card's slot identical to an image card's.
         <AutoVideo
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-auto w-full object-cover"
-          height={item.thumbnail.height}
-          poster={item.thumbnail.posterUrl}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          poster={item.visual.posterUrl}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       ) : (
         <Image
-          alt={item.thumbnail.alt}
+          alt={item.visual.alt}
           className="h-auto w-full object-cover"
-          height={item.thumbnail.height}
-          src={item.thumbnail.url}
-          width={item.thumbnail.width}
+          height={item.visual.height}
+          src={item.visual.url}
+          width={item.visual.width}
         />
       )}
     </div>

@@ -18,12 +18,13 @@ export const videoPosterOf = (asset: Asset): Asset | null =>
     : null;
 
 /**
- * A Work's Thumbnail as a render-ready discriminated union, or null when the
- * Work has no usable Thumbnail (none set, or a shallow-populated bare ID).
- * Every card surface — Selected Works, the Works Page masonry, the Footer —
- * discriminates on this one shape instead of re-deriving it.
+ * A Work's visual — its Thumbnail or its Feature Visual — as a render-ready
+ * discriminated union, or null when the Asset is not usable (none set, or a
+ * shallow-populated bare ID). Every card surface — Selected Works, the Works
+ * Page masonry, the Footer — discriminates on this one shape instead of
+ * re-deriving it.
  */
-export type WorkThumbnail =
+export type CardVisual =
   | {
       kind: "image";
       url: string;
@@ -40,19 +41,21 @@ export type WorkThumbnail =
       alt: string;
     };
 
-export const workThumbnailOf = (work: Work): WorkThumbnail | null => {
+const assetVisualOf = (
+  asset: Asset | number | null | undefined,
+): CardVisual | null => {
   if (
-    typeof work.thumbnail !== "object" ||
-    work.thumbnail === null ||
-    typeof work.thumbnail.url !== "string"
+    typeof asset !== "object" ||
+    asset === null ||
+    typeof asset.url !== "string"
   ) {
     return null;
   }
 
-  const { url, alt } = work.thumbnail;
+  const { url, alt } = asset;
 
-  if (work.thumbnail.mimeType?.startsWith("video/")) {
-    const poster = videoPosterOf(work.thumbnail);
+  if (asset.mimeType?.startsWith("video/")) {
+    const poster = videoPosterOf(asset);
     return {
       kind: "video",
       url,
@@ -66,8 +69,16 @@ export const workThumbnailOf = (work: Work): WorkThumbnail | null => {
   return {
     kind: "image",
     url,
-    width: work.thumbnail.width ?? 1,
-    height: work.thumbnail.height ?? 1,
+    width: asset.width ?? 1,
+    height: asset.height ?? 1,
     alt,
   };
 };
+
+/** A Work's Thumbnail as a render-ready CardVisual, or null when unusable. */
+export const workThumbnailOf = (work: Work): CardVisual | null =>
+  assetVisualOf(work.thumbnail);
+
+/** A Work's Feature Visual as a render-ready CardVisual, or null when unusable. */
+export const workFeatureVisualOf = (work: Work): CardVisual | null =>
+  assetVisualOf(work.featureVisual);

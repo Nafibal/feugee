@@ -278,15 +278,16 @@ export const SelectedWorksSection = ({
             the arrow marking the Work the Pinned Caption names — an
             indicator only, so pointer-events-none never blocks the card
             Links and aria-hidden defers to the static captions as the
-            accessible text. CSS sticky holds it at the viewport's middle
-            for exactly the cards' extent — no reveal lifecycle — so it
-            rides in with the first card and out with the last, never over
-            the neighbouring sections. The arrow ships invisible: only JS
-            positions it, so no-JS gets the bare titles. The md: gate
-            keeps it off small viewports; z-20 sits it above the cards but
-            below the Pinned Caption layer should a short viewport ever
-            overlap the two. */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-20">
+            accessible text. The wrapper spans the first card's middle to
+            the last card's middle (h-svh cards make that exactly half a
+            viewport in from each end of the list), so the rail rides in
+            at the first Work's center, holds the viewport's middle, and
+            departs at the last Work's center. The arrow ships invisible:
+            only JS positions it, so no-JS gets the bare titles. The md:
+            gate keeps it off small viewports; z-20 sits it above the
+            cards but below the Pinned Caption layer should a short
+            viewport ever overlap the two. */}
+        <div className="pointer-events-none absolute bottom-[50svh] right-0 top-[50svh] z-20">
           <div
             aria-hidden="true"
             className="sticky top-[50svh] -translate-y-1/2 hidden flex-col items-start gap-3 pr-16 md:flex"

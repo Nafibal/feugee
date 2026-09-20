@@ -173,7 +173,7 @@ export const HeroSlider = ({
             re-announce every few seconds — so a static sr-only twin carries
             the full title to assistive tech and crawlers. */}
         <h1
-          className="text-[clamp(2.25rem,7vw,6.5rem)] font-bold leading-[1.15] tracking-tight text-white"
+          className="text-7xl leading-[1.15] tracking-tight text-white"
           style={{ ["--title-line" as string]: `${TITLE_LINE_EM}em` }}
         >
           <span aria-hidden="true">
@@ -186,7 +186,7 @@ export const HeroSlider = ({
                     line at a time, so words exit upward as the next enters.
                     The transition is dropped under reduced motion so the
                     reset to the first word snaps instead of sliding. */}
-                <span className="inline-block h-[var(--title-line)] overflow-hidden align-bottom text-secondary-500">
+                <span className="inline-block h-(--title-line) overflow-hidden align-bottom text-secondary-500">
                   <span
                     className={`block ${reducedMotion ? "" : "transition-transform duration-500 ease-[cubic-bezier(0.65,0,0.35,1)]"}`}
                     style={{
@@ -195,7 +195,7 @@ export const HeroSlider = ({
                   >
                     {rotatingWords.map((word, index) => (
                       <span
-                        className="block h-[var(--title-line)]"
+                        className="block h-(--title-line)"
                         key={`${word}-${index}`}
                       >
                         {word}

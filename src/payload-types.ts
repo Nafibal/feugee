@@ -1271,6 +1271,22 @@ export interface LandingPage {
    */
   selectedWorks?: (number | Work)[] | null;
   /**
+   * Endorsements of the agency, shown below Selected Works in two counter-scrolling columns.
+   */
+  testimonials?: {
+    heading?: string | null;
+    description?: string | null;
+    items?:
+      | {
+          name: string;
+          job?: string | null;
+          company?: string | null;
+          testimony: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  /**
    * The closing call-to-action section: eyebrow, headline, body copy, and the button.
    */
   contactCta?: {
@@ -1391,6 +1407,21 @@ export interface LandingPageSelect<T extends boolean = true> {
         id?: T;
       };
   selectedWorks?: T;
+  testimonials?:
+    | T
+    | {
+        heading?: T;
+        description?: T;
+        items?:
+          | T
+          | {
+              name?: T;
+              job?: T;
+              company?: T;
+              testimony?: T;
+              id?: T;
+            };
+      };
   contactCta?:
     | T
     | {

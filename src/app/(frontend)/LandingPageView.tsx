@@ -11,6 +11,10 @@ import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
 import { ArrowRight } from "@/components/ArrowRight";
 import { WhoWeAreSection } from "@/components/who-we-are/WhoWeAreSection";
 import { SelectedWorksSection } from "@/components/selected-works/SelectedWorksSection";
+import {
+  TestimonialsSection,
+  type TestimonialItem,
+} from "@/components/testimonials/TestimonialsSection";
 import { videoPosterOf } from "@/components/work";
 
 // Shared by the Contact CTA's link and fallback-button branches.
@@ -62,6 +66,27 @@ export const LandingPageView = ({
   const stats = data.stats ?? [];
   const showAbout = description !== null || stats.length > 0;
 
+  // Rows missing their required text are a mid-edit Live Preview state —
+  // left out until they resolve, like a half-uploaded hero slide.
+  const testimonialItems = useMemo<TestimonialItem[]>(
+    () =>
+      (data.testimonials?.items ?? []).flatMap((item) => {
+        const name = item.name?.trim();
+        const testimony = item.testimony?.trim();
+        if (!name || !testimony) return [];
+        return [
+          {
+            id: item.id ?? null,
+            name,
+            job: item.job?.trim() || null,
+            company: item.company?.trim() || null,
+            testimony,
+          },
+        ];
+      }),
+    [data],
+  );
+
   const ctaEyebrow = data.contactCta?.eyebrow?.trim() || null;
   const ctaHeadline = data.contactCta?.headline?.trim() || null;
   const ctaBody = data.contactCta?.body?.trim() || null;
@@ -91,6 +116,14 @@ export const LandingPageView = ({
       {clients.length > 0 && <ClientMarquee clients={clients} />}
 
       <SelectedWorksSection works={data.selectedWorks} />
+
+      {testimonialItems.length > 0 && (
+        <TestimonialsSection
+          description={data.testimonials?.description?.trim() || null}
+          heading={data.testimonials?.heading?.trim() || "Testimonials"}
+          items={testimonialItems}
+        />
+      )}
 
       {showContactCta && (
         <section

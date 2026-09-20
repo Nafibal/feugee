@@ -16,7 +16,7 @@ export interface MarqueeClient {
 const LogoImage = ({ client }: { client: MarqueeClient }) => (
   <Image
     alt={client.logo.alt}
-    className="h-8 w-auto max-w-[160px] object-contain opacity-60 transition-opacity duration-300 hover:opacity-100 [filter:grayscale(1)_brightness(0)_invert(1)] md:h-10"
+    className="h-8 w-auto max-w-40 object-contain opacity-60 transition-opacity duration-300 hover:opacity-100 filter-[grayscale(1)_brightness(0)_invert(1)] md:h-10"
     height={client.logo.height}
     src={client.logo.url}
     unoptimized
@@ -67,7 +67,7 @@ export const ClientMarquee = ({ clients }: { clients: MarqueeClient[] }) => (
     className="group relative border-t border-neutral-900 p-6 md:p-16"
   >
     <div className="overflow-hidden mask-[linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-      <div className="flex w-max animate-marquee group-hover:[animation-play-state:paused] motion-reduce:animate-none">
+      <div className="flex w-max animate-marquee motion-reduce:animate-none">
         <LogoList clients={clients} />
         <LogoList clients={clients} hidden />
       </div>

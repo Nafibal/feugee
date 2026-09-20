@@ -98,8 +98,8 @@ export const HeroSlider = ({ slides }: { slides: HeroSlide[] }) => {
             <div
               className={
                 index === safeActiveIndex
-                  ? "h-[3px] w-8 bg-white md:w-16"
-                  : "h-[3px] w-6 bg-white/50"
+                  ? "h-0.75 w-8 bg-white md:w-16"
+                  : "h-0.75 w-6 bg-white/50"
               }
               key={slide.id || index}
             />

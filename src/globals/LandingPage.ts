@@ -117,6 +117,54 @@ export const LandingPage: GlobalConfig = {
     },
     {
       type: "group",
+      name: "testimonials",
+      label: "Testimonials",
+      admin: {
+        description:
+          "Endorsements of the agency, shown below Selected Works in two counter-scrolling columns.",
+      },
+      fields: [
+        {
+          name: "heading",
+          type: "text",
+          defaultValue: "Testimonials",
+        },
+        {
+          name: "description",
+          type: "textarea",
+        },
+        {
+          name: "items",
+          type: "array",
+          labels: {
+            singular: "Testimonial",
+            plural: "Testimonials",
+          },
+          fields: [
+            {
+              name: "name",
+              type: "text",
+              required: true,
+            },
+            {
+              name: "job",
+              type: "text",
+            },
+            {
+              name: "company",
+              type: "text",
+            },
+            {
+              name: "testimony",
+              type: "textarea",
+              required: true,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: "group",
       name: "contactCta",
       label: "Contact CTA",
       admin: {

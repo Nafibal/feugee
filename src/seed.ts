@@ -742,6 +742,78 @@ if ((landingForCta.contactCta?.headline ?? "").trim() === "") {
   payload.logger.info("Landing page already has a Contact CTA — skipping CTA seed")
 }
 
+// ---- Landing Page Testimonials ------------------------------------------
+// Same independent-guard shape as the CTA block above: an older database
+// can have hero slides but no testimonials, and the section renders only
+// with content, so it would silently stay hidden. Six samples so each
+// counter-scrolling column holds enough cards to scroll without gaps.
+const landingForTestimonials = await payload.findGlobal({
+  slug: "landing-page",
+  draft: false,
+})
+
+if ((landingForTestimonials.testimonials?.items?.length ?? 0) === 0) {
+  await payload.updateGlobal({
+    slug: "landing-page",
+    draft: false,
+    data: {
+      _status: "published",
+      testimonials: {
+        heading: "Testimonials",
+        description:
+          "What clients say after the final frame — endorsements from the brands we have built with.",
+        items: [
+          {
+            name: "Emil Anton",
+            job: "Marketing Director",
+            company: "Fest",
+            testimony:
+              "Feugee turned a vague brief into a campaign people still quote back at us.",
+          },
+          {
+            name: "Mara Lindqvist",
+            job: "Brand Lead",
+            company: "Solstice",
+            testimony:
+              "They move fast without ever making the work feel rushed.",
+          },
+          {
+            name: "Daniel Okafor",
+            job: "Founder",
+            company: "Northlight",
+            testimony:
+              "One team from strategy to final frame — nothing got lost in between.",
+          },
+          {
+            name: "Priya Raman",
+            job: "CMO",
+            company: "Tidepool",
+            testimony:
+              "Our launch film outperformed every benchmark we set. Doubled them, actually.",
+          },
+          {
+            name: "Jonas Weber",
+            job: "Head of Content",
+            company: "Pulse",
+            testimony:
+              "The rare agency that listens first and shows off second.",
+          },
+          {
+            name: "Alicia Gomez",
+            job: "VP Marketing",
+            company: "Kestrel",
+            testimony:
+              "Every review came back the same: this looks like a different company.",
+          },
+        ],
+      },
+    },
+  })
+  payload.logger.info("Seeded landing page testimonials: 6 agency endorsements")
+} else {
+  payload.logger.info("Landing page already has testimonials — skipping testimonial seed")
+}
+
 // ---- Footer (site-wide chrome) ----------------------------------------
 // Seed only a Footer the CMS has never saved (findGlobal returns a doc with
 // no id for one) — anything an editor has touched is theirs. Publish

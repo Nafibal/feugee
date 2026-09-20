@@ -41,11 +41,7 @@ const toRect = (rect: DOMRect): Rect => ({
 });
 
 const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
-  <Link
-    className="relative block"
-    data-work-card
-    href={`/works/${item.slug}`}
-  >
+  <Link className="relative block" data-work-card href={`/works/${item.slug}`}>
     {item.thumbnail.kind === "video" ? (
       <AutoVideo
         alt={item.thumbnail.alt}
@@ -162,9 +158,11 @@ export const SelectedWorksSection = ({
 
   return (
     <section aria-label="Selected works" className="pt-32" ref={scopeRef}>
-      <h2 className="px-6 text-center text-4xl font-bold uppercase tracking-tight text-neutral-50 md:px-16 md:text-5xl">
-        Selected Works
-      </h2>
+      <div className="w-full flex justify-center border ">
+        <div className="rounded border border-neutral-700 px-4 py-2">
+          <h2 className="text-md text-center text-white">Selected Works</h2>
+        </div>
+      </div>
       <div className="mt-12 flex flex-col gap-1 md:mt-16" ref={listRef}>
         {items.map((item) => (
           <SelectedWorkCard item={item} key={item.id} />

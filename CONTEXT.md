@@ -32,6 +32,10 @@ _Avoid_: Featured works, highlights
 The title and short description of the Work currently occupying the bottom of the screen in the Selected Works section — held in one spot while Works scroll past, shown only while its Work is on screen.
 _Avoid_: Sticky caption, floating caption, work overlay
 
+**Testimonials**:
+The Landing Page section below Selected Works that presents Agency Testimonials in two columns drifting in opposite directions.
+_Avoid_: Reviews, quotes wall, testimonials section
+
 **Works Page**:
 The public page listing every published Work.
 _Avoid_: Portfolio page, projects page
@@ -149,8 +153,12 @@ The creative disciplines the Agency applied to a Work.
 _Avoid_: Skills, services
 
 **Testimonial**:
-A quoted endorsement of a Work, attributed to a named person and their company.
+A quoted endorsement of a Work, attributed to a named person and their company. Distinct from the Agency Testimonial.
 _Avoid_: Quote, review
+
+**Agency Testimonial**:
+A quoted endorsement of the Agency itself — not tied to any one Work — attributed to a named person, their job, and their company.
+_Avoid_: Quote, review, landing testimonial
 
 **Stat**:
 A proof figure on the Landing Page, as a value with a label — e.g. "55+" with "Videos".

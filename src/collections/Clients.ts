@@ -30,7 +30,7 @@ export const Clients: CollectionConfig = {
       filterOptions: () => ({ mimeType: { like: "image/" } }),
       admin: {
         description:
-          "Image only. The marquee applies its own colour treatment at render time.",
+          "Image only — SVG especially welcome. The marquee applies its own colour treatment at render time.",
       },
     },
     {

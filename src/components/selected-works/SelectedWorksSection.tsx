@@ -226,9 +226,7 @@ export const SelectedWorksSection = ({
         cardRects().forEach((card, index) => {
           const caption = captions[index];
           if (!caption) return;
-          caption.style.clipPath = formatClipPath(
-            clipInsetsFor(zone, card),
-          );
+          caption.style.clipPath = formatClipPath(clipInsetsFor(zone, card));
         });
       };
       applyClips();
@@ -292,7 +290,7 @@ export const SelectedWorksSection = ({
             </span>
             {items.map((item) => (
               <span
-                className="pl-6 text-xl font-semibold text-white"
+                className="pl-6 text-3xl text-white"
                 data-rail-entry
                 key={item.id}
               >

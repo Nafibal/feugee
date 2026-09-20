@@ -687,8 +687,9 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
       // and the published read path would never see the content.
       _status: "published",
       hero: {
-        title: "Feugee",
+        title: "We're Feugee",
         subtitle: "Ambitious ideas for ambitious business",
+        rotatingWords: [{ word: "Motion" }, { word: "Design" }, { word: "Experience" }],
         slides: heroSlides,
       },
       whoWeAre: {
@@ -712,6 +713,32 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
   )
 } else {
   payload.logger.info("Landing page hero already has slides — skipping landing content seed")
+}
+
+// ---- Landing Page hero rotating words -----------------------------------
+// Same independent-guard shape as the CTA block below: an older database can
+// have hero slides but no rotating words, and the title's second line
+// renders only with them.
+const landingForRotatingWords = await payload.findGlobal({
+  slug: "landing-page",
+  draft: false,
+})
+
+if ((landingForRotatingWords.hero?.rotatingWords?.length ?? 0) === 0) {
+  await payload.updateGlobal({
+    slug: "landing-page",
+    draft: false,
+    data: {
+      _status: "published",
+      // Partial update: title and slides stay as the editor left them.
+      hero: {
+        rotatingWords: [{ word: "Motion" }, { word: "Design" }, { word: "Experience" }],
+      },
+    },
+  })
+  payload.logger.info("Seeded landing page hero rotating words: Motion, Design, Experience")
+} else {
+  payload.logger.info("Landing page hero already has rotating words — skipping word seed")
 }
 
 // ---- Landing Page Contact CTA ------------------------------------------

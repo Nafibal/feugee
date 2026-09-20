@@ -118,6 +118,24 @@
   }
 }
 
+/*
+ * Scroll Cue idle pulse — page behavior, not a Design Token: the Hero's
+ * "| Scroll to explore" text breathes softly until reduced motion says no.
+ */
+@theme {
+  --animate-cue-pulse: cue-pulse 2.4s ease-in-out infinite;
+
+  @keyframes cue-pulse {
+    0%,
+    100% {
+      opacity: 0.55;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+}
+
 @layer base {
   body {
     @apply bg-background text-foreground font-sans;

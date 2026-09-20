@@ -1234,11 +1234,20 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface LandingPage {
   id: number;
   /**
-   * The full-screen opening: one title and subtitle over a slider of videos.
+   * The full-screen opening: the title and its rotating words over a slider of videos.
    */
   hero?: {
     title?: string | null;
     subtitle?: string | null;
+    /**
+     * The words that cycle as the title's last word, in order. A single word renders statically.
+     */
+    rotatingWords?:
+      | {
+          word: string;
+          id?: string | null;
+        }[]
+      | null;
     slides?:
       | {
           /**
@@ -1386,6 +1395,12 @@ export interface LandingPageSelect<T extends boolean = true> {
     | {
         title?: T;
         subtitle?: T;
+        rotatingWords?:
+          | T
+          | {
+              word?: T;
+              id?: T;
+            };
         slides?:
           | T
           | {

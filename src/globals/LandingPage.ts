@@ -28,7 +28,8 @@ export const LandingPage: GlobalConfig = {
       name: "hero",
       label: "Hero",
       admin: {
-        description: "The full-screen opening: one title and subtitle over a slider of videos.",
+        description:
+          "The full-screen opening: the title and its rotating words over a slider of videos.",
       },
       fields: [
         {
@@ -38,6 +39,26 @@ export const LandingPage: GlobalConfig = {
         {
           name: "subtitle",
           type: "text",
+        },
+        {
+          name: "rotatingWords",
+          type: "array",
+          labels: {
+            singular: "Rotating Word",
+            plural: "Rotating Words",
+          },
+          minRows: 1,
+          admin: {
+            description:
+              "The words that cycle as the title's last word, in order. A single word renders statically.",
+          },
+          fields: [
+            {
+              name: "word",
+              type: "text",
+              required: true,
+            },
+          ],
         },
         {
           name: "slides",

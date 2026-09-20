@@ -16,6 +16,7 @@ import {
   type TestimonialItem,
 } from "@/components/testimonials/TestimonialsSection";
 import { videoPosterOf } from "@/components/work";
+import { normalizeRotatingWords } from "@/components/heroTitle";
 
 // Shared by the Contact CTA's link and fallback-button branches.
 const ctaButtonClassName =
@@ -61,6 +62,17 @@ export const LandingPageView = ({
     [data],
   );
 
+  // The visible Hero title doubles as the page's h1; without slides the Hero
+  // stays hidden and the title falls back to this sr-only h1 below.
+  const heroTitle = data.hero?.title?.trim() || "Feugee";
+
+  // Blank words are a mid-edit Live Preview state — dropped until they
+  // resolve, like a half-uploaded hero slide.
+  const rotatingWords = useMemo(
+    () => normalizeRotatingWords(data.hero?.rotatingWords),
+    [data],
+  );
+
   const heading = data.whoWeAre?.heading?.trim() || "Who We Are";
   const description = data.whoWeAre?.description?.trim() || null;
   const stats = data.stats ?? [];
@@ -100,10 +112,11 @@ export const LandingPageView = ({
 
   return (
     <div className="flex flex-1 flex-col">
-      {/* The Hero renders no visible title, so this stands in as the page's
-          h1 — same text as the metadata title, hidden from sighted visitors. */}
-      <h1 className="sr-only">{data.hero?.title?.trim() || "Feugee"}</h1>
-      {slides.length > 0 && <HeroSlider slides={slides} />}
+      {slides.length > 0 ? (
+        <HeroSlider rotatingWords={rotatingWords} slides={slides} title={heroTitle} />
+      ) : (
+        <h1 className="sr-only">{heroTitle}</h1>
+      )}
 
       {showAbout && (
         <WhoWeAreSection

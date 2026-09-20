@@ -72,8 +72,10 @@ export default async function Page() {
 export const generateMetadata = async (): Promise<Metadata> => {
   const { landingPage } = await getLandingPageData();
 
+  const heroTitle = landingPage.hero?.title?.trim();
+
   return {
-    title: landingPage.hero?.title || "Feugee",
+    title: heroTitle ? `Feugee — ${heroTitle}` : "Feugee",
     description: landingPage.hero?.subtitle || undefined,
   };
 };

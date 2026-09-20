@@ -13,12 +13,20 @@ The site's front page a visitor lands on first.
 _Avoid_: Home, homepage
 
 **Hero**:
-The opening, full-screen section of the Landing Page — a slider of autoplaying video Assets beneath a single title and subtitle.
+The opening, full-screen section of the Landing Page: a slider of autoplaying video Assets that stays visually still while the page scrolls over it, the title stacked in its bottom-left, and a Scroll Cue in its bottom-right.
 _Avoid_: Banner, header, carousel
 
 **Slide**:
 A single video Asset in the Hero's slider, shown full-screen one at a time.
 _Avoid_: Frame, panel
+
+**Rotating Word**:
+The changing final word of the Hero title — one of the agency-managed words that cycles in place above the slide dashes.
+_Avoid_: Cycling word, animated word, swap word
+
+**Scroll Cue**:
+The "| Scroll to explore" text in the Hero's bottom-right signaling more content below.
+_Avoid_: Scroll hint, scroll indicator, scroll arrow
 
 **Client Marquee**:
 The strip of Client logos on the Landing Page that auto-scrolls horizontally without end.

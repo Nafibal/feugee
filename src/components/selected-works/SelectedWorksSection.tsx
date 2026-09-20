@@ -184,10 +184,15 @@ export const SelectedWorksSection = ({
           rail.classList.toggle("hidden", !active);
           if (active) mark(current, true);
         };
+        // The bounds hold the viewport's middle, not its full traversal:
+        // from the first card's top reaching center to the last card's
+        // bottom leaving it. Any wider and the rail appears over the
+        // previous section while the first caption is still entering the
+        // zone — and lingers over the next one after the captions are gone.
         const railTrigger = ScrollTrigger.create({
           trigger: list,
-          start: "top bottom",
-          end: "bottom top",
+          start: "top center",
+          end: "bottom center",
           onToggle: (self) => reveal(self.isActive),
           onUpdate: applyRail,
           onRefresh: applyRail,

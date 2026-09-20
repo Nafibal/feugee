@@ -1,13 +1,13 @@
 import type { Rect } from "./captionClip";
 
 /**
- * The Work the Works Rail marks: the one covering the most of the caption
- * zone. That is the same seam the Pinned Caption hands off across — the
- * entering Work takes the mark exactly when it covers more of the zone
- * than the leaving one, i.e. as the seam sweeps past the zone's middle.
- * The gap-1 seam never blanks the mark: one of the two always covers more.
+ * The Work the Works Rail marks: the one covering the most of a probe
+ * zone. The rail feeds a hairline band at its own vertical middle, so
+ * the mark names the Work the rail is sitting on and flips exactly as
+ * the seam between two cards crosses it.
  *
- * null means no Work touches the zone at all; callers keep the last mark.
+ * null means nothing covers the probe — the seam gap, or past the
+ * section's ends; callers keep the last mark.
  */
 export const railActiveIndex = (
   zone: Rect,

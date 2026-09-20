@@ -58,12 +58,8 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
     {/* The static caption is the readable fallback: the accessible text,
         the no-JS state, and what reduced-motion visitors see. Its gradient
         stays on the media once the text steps aside for the Pinned
-        Caption. The bar itself is the layer's in-card twin — same content
-        and classes — which the Works Rail measures as the caption zone. */}
-    <div
-      className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16"
-      data-caption-bar
-    >
+        Caption. */}
+    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16">
       <h3
         className="text-3xl font-medium text-white md:text-5xl"
         data-static-caption
@@ -104,10 +100,6 @@ export const SelectedWorksSection = ({
       if (!scope || !list || !layer || items.length === 0) return;
 
       const cards = gsap.utils.toArray<HTMLElement>("[data-work-card]", list);
-      const captionBars = gsap.utils.toArray<HTMLElement>(
-        "[data-caption-bar]",
-        scope,
-      );
       const cardRects = () =>
         cards.map((card) => toRect(card.getBoundingClientRect()));
       const staticCaptions = gsap.utils.toArray<HTMLElement>(
@@ -132,21 +124,20 @@ export const SelectedWorksSection = ({
         const arrow = rail.querySelector<HTMLElement>("[data-rail-arrow]");
         let current = 0;
 
-        // The zone is what the Pinned Caption clips to: a bottom-anchored
-        // strip as tall as the layer's captions. The layer itself is
-        // display:none until the motion path unhides it — and stays hidden
-        // under reduced motion — so the height comes from the static
-        // caption bars instead; the tallest twin matches the grid-stacked
-        // layer exactly.
-        const zoneRect = (): Rect => {
-          const height = Math.max(
-            0,
-            ...captionBars.map((bar) => bar.offsetHeight),
-          );
+        // The mark follows the rail itself: a hairline probe at the rail's
+        // vertical middle, wherever sticky currently holds it — riding the
+        // first Work's center on the way in, the viewport's middle while
+        // stuck, the last Work's center on the way out. The Work covering
+        // the probe is the marked one, flipping exactly as a seam crosses
+        // the rail. The Pinned Caption keeps its own bottom-of-screen
+        // rule, so the two can disagree for part of each handoff.
+        const railProbe = (): Rect => {
+          const box = rail.getBoundingClientRect();
+          const middle = box.top + box.height / 2;
           return {
-            top: innerHeight - height,
+            top: middle - 0.5,
             right: innerWidth,
-            bottom: innerHeight,
+            bottom: middle + 0.5,
             left: 0,
           };
         };
@@ -173,9 +164,9 @@ export const SelectedWorksSection = ({
         // lands pre-paint — and is what shows the arrow at all.
         mark(0, true);
         const applyRail = () => {
-          const next = railActiveIndex(zoneRect(), cardRects());
-          // No Work touching the zone (past the section's ends) keeps the
-          // last mark.
+          const next = railActiveIndex(railProbe(), cardRects());
+          // Nothing under the rail (the seam gap, or past the section's
+          // ends) keeps the last mark.
           if (next === null || next === current) return;
           current = next;
           mark(next);
@@ -275,7 +266,7 @@ export const SelectedWorksSection = ({
         ))}
 
         {/* The Works Rail: the section's Work titles down the right edge,
-            the arrow marking the Work the Pinned Caption names — an
+            the arrow marking the Work the rail itself sits on — an
             indicator only, so pointer-events-none never blocks the card
             Links and aria-hidden defers to the static captions as the
             accessible text. The wrapper spans the first card's middle to
@@ -301,7 +292,7 @@ export const SelectedWorksSection = ({
             </span>
             {items.map((item) => (
               <span
-                className="pl-6 text-sm text-white"
+                className="pl-6 text-xl font-semibold text-white"
                 data-rail-entry
                 key={item.id}
               >

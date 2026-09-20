@@ -67,6 +67,39 @@ describe("railActiveIndex", () => {
   });
 });
 
+describe("railActiveIndex (hairline rail probe)", () => {
+  // The rail feeds a 1px band at its own middle — a 720px viewport's
+  // centerline here — so the mark names the Work the rail sits on.
+  const probe: Rect = { top: 359.5, right: 1280, bottom: 360.5, left: 0 };
+
+  it("marks the Work the rail still sits on before the seam crosses it", () => {
+    expect(
+      railActiveIndex(probe, [
+        card({ top: 0, bottom: 362 }),
+        card({ top: 366, bottom: 1086 }),
+      ]),
+    ).toBe(0);
+  });
+
+  it("hands off only once the seam has crossed the rail", () => {
+    expect(
+      railActiveIndex(probe, [
+        card({ top: -12, bottom: 350 }),
+        card({ top: 354, bottom: 1074 }),
+      ]),
+    ).toBe(1);
+  });
+
+  it("returns null across the seam gap, keeping the last mark", () => {
+    expect(
+      railActiveIndex(probe, [
+        card({ top: -4, bottom: 358 }),
+        card({ top: 366, bottom: 1086 }),
+      ]),
+    ).toBeNull();
+  });
+});
+
 describe("railArrowOffsetY", () => {
   it("centers a shorter arrow on its entry", () => {
     expect(railArrowOffsetY(334, 20, 16)).toBe(336);

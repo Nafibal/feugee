@@ -184,46 +184,5 @@ export const LandingPage: GlobalConfig = {
         },
       ],
     },
-    {
-      type: "group",
-      name: "contactCta",
-      label: "Contact CTA",
-      admin: {
-        description:
-          "The closing call-to-action section: eyebrow, headline, body copy, and the button.",
-      },
-      fields: [
-        {
-          name: "eyebrow",
-          type: "text",
-          admin: {
-            description: 'The small line above the headline — e.g. "Free 20-min intro call".',
-          },
-        },
-        {
-          name: "headline",
-          type: "text",
-        },
-        {
-          name: "body",
-          type: "textarea",
-        },
-        {
-          name: "actionLabel",
-          type: "text",
-          admin: {
-            description: 'The button label — e.g. "Work with us".',
-          },
-        },
-        {
-          name: "actionUrl",
-          type: "text",
-          admin: {
-            description:
-              "Where the button points — internal path or external URL. Without it the button renders inert.",
-          },
-        },
-      ],
-    },
   ],
 }

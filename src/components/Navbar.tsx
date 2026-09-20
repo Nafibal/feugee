@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { getFooterGlobal } from "./footer-data";
+import { LogoMark } from "./LogoMark";
 import { Menu, toMenuLinks } from "./menu";
 
 // Mounted in the frontend root layout, so every public page shares it. The
@@ -17,14 +17,7 @@ export const Navbar = async () => {
        off --navbar-height. */
     <header className="sticky top-0 z-40 -mb-(--navbar-height) flex h-(--navbar-height) items-center justify-between px-6">
       <Link href="/">
-        <Image
-          src="/logo.svg"
-          alt="Feugee"
-          height={32}
-          width={113}
-          // A vector wordmark has nothing to optimize — serve the file as-is.
-          unoptimized
-        />
+        <LogoMark ariaLabel="Feugee" height={32} width={113} />
       </Link>
       {menuLinks.length > 0 && <Menu links={menuLinks} />}
     </header>

@@ -1290,10 +1290,22 @@ export interface LandingPage {
         }[]
       | null;
   };
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * The content of the Footer at the bottom of every public page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
   /**
-   * The closing call-to-action section: eyebrow, headline, body copy, and the button.
+   * The closing call-to-action at the top of the Footer: eyebrow, headline, body copy, and the button.
    */
-  contactCta?: {
+  cta?: {
     /**
      * The small line above the headline — e.g. "Free 20-min intro call".
      */
@@ -1309,18 +1321,6 @@ export interface LandingPage {
      */
     actionUrl?: string | null;
   };
-  _status?: ('draft' | 'published') | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * The content of the Footer at the bottom of every public page.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer".
- */
-export interface Footer {
-  id: number;
   about?: {
     heading?: string | null;
     description?: string | null;
@@ -1432,15 +1432,6 @@ export interface LandingPageSelect<T extends boolean = true> {
               id?: T;
             };
       };
-  contactCta?:
-    | T
-    | {
-        eyebrow?: T;
-        headline?: T;
-        body?: T;
-        actionLabel?: T;
-        actionUrl?: T;
-      };
   _status?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1451,6 +1442,15 @@ export interface LandingPageSelect<T extends boolean = true> {
  * via the `definition` "footer_select".
  */
 export interface FooterSelect<T extends boolean = true> {
+  cta?:
+    | T
+    | {
+        eyebrow?: T;
+        headline?: T;
+        body?: T;
+        actionLabel?: T;
+        actionUrl?: T;
+      };
   about?:
     | T
     | {

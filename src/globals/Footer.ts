@@ -7,6 +7,13 @@ export const Footer: GlobalConfig = {
   label: "Footer",
   admin: {
     description: "The content of the Footer at the bottom of every public page.",
+    livePreview: {
+      url: "/",
+      breakpoints: [
+        { label: "Mobile", name: "mobile", width: 375, height: 667 },
+        { label: "Tablet", name: "tablet", width: 768, height: 1024 },
+      ],
+    },
   },
   access: {
     read: () => true,
@@ -18,6 +25,47 @@ export const Footer: GlobalConfig = {
     max: 50,
   },
   fields: [
+    {
+      type: "group",
+      name: "cta",
+      label: "Contact CTA",
+      admin: {
+        description:
+          "The closing call-to-action at the top of the Footer: eyebrow, headline, body copy, and the button.",
+      },
+      fields: [
+        {
+          name: "eyebrow",
+          type: "text",
+          admin: {
+            description: 'The small line above the headline — e.g. "Free 20-min intro call".',
+          },
+        },
+        {
+          name: "headline",
+          type: "text",
+        },
+        {
+          name: "body",
+          type: "textarea",
+        },
+        {
+          name: "actionLabel",
+          type: "text",
+          admin: {
+            description: 'The button label — e.g. "Work with us".',
+          },
+        },
+        {
+          name: "actionUrl",
+          type: "text",
+          admin: {
+            description:
+              "Where the button points — internal path or external URL. Without it the button renders inert.",
+          },
+        },
+      ],
+    },
     {
       type: "group",
       name: "about",

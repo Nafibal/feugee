@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useLivePreview } from "@payloadcms/live-preview-react";
 import { useMemo, useState } from "react";
 
@@ -8,7 +7,6 @@ import type { LandingPage } from "@/payload-types";
 
 import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
-import { ArrowRight } from "@/components/ArrowRight";
 import { WhoWeAreSection } from "@/components/who-we-are/WhoWeAreSection";
 import { SelectedWorksSection } from "@/components/selected-works/SelectedWorksSection";
 import {
@@ -17,10 +15,6 @@ import {
 } from "@/components/testimonials/TestimonialsSection";
 import { videoPosterOf } from "@/components/work";
 import { normalizeRotatingWords } from "@/components/heroTitle";
-
-// Shared by the Contact CTA's link and fallback-button branches.
-const ctaButtonClassName =
-  "inline-flex items-center gap-2 text-white px-6 py-3 rounded border-neutral-800 border";
 
 export const LandingPageView = ({
   clients,
@@ -99,17 +93,6 @@ export const LandingPageView = ({
     [data],
   );
 
-  const ctaEyebrow = data.contactCta?.eyebrow?.trim() || null;
-  const ctaHeadline = data.contactCta?.headline?.trim() || null;
-  const ctaBody = data.contactCta?.body?.trim() || null;
-  const ctaActionLabel = data.contactCta?.actionLabel?.trim() || null;
-  const ctaActionUrl = data.contactCta?.actionUrl?.trim() || null;
-  const showContactCta =
-    ctaEyebrow !== null ||
-    ctaHeadline !== null ||
-    ctaBody !== null ||
-    ctaActionLabel !== null;
-
   return (
     <div className="flex flex-1 flex-col">
       {slides.length > 0 ? (
@@ -136,39 +119,6 @@ export const LandingPageView = ({
           heading={data.testimonials?.heading?.trim() || "Testimonials"}
           items={testimonialItems}
         />
-      )}
-
-      {showContactCta && (
-        <section
-          aria-label="Contact"
-          className="flex min-h-svh w-full flex-col items-center justify-center gap-y-8 px-6 md:gap-y-12 md:px-16"
-        >
-          <div className="flex flex-col gap-y-6 items-center text-center">
-            {ctaEyebrow && (
-              <p className="text-lg text-neutral-300 md:text-xl">
-                {ctaEyebrow}
-              </p>
-            )}
-            {ctaHeadline && (
-              <h2 className="text-4xl text-white font-bold md:text-7xl">
-                {ctaHeadline}
-              </h2>
-            )}
-            {ctaBody && (
-              <p className="text-lg text-neutral-300 md:text-xl">{ctaBody}</p>
-            )}
-          </div>
-          {ctaActionLabel &&
-            (ctaActionUrl ? (
-              <Link className={ctaButtonClassName} href={ctaActionUrl}>
-                {ctaActionLabel} <ArrowRight />
-              </Link>
-            ) : (
-              <button className={ctaButtonClassName} type="button">
-                {ctaActionLabel} <ArrowRight />
-              </button>
-            ))}
-        </section>
       )}
     </div>
   );

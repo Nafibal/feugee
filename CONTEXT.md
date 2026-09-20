@@ -89,7 +89,7 @@ The public site's primary navigation, opened as a dropdown from the Navbar on ev
 _Avoid_: Nav, hamburger, overlay menu, navigation drawer
 
 **Footer**:
-The strip at the bottom of every public page: an About blurb, Other Works cards, menu links, contact details, and the display wordmark above the bottom bar. Its content is a global in the CMS, separate from the Landing Page.
+The strip at the bottom of every public page: the Contact CTA, an About blurb, Other Works cards, menu links, contact details, and the Wordmark behind the bottom bar. Its content is a global in the CMS, separate from the Landing Page.
 _Avoid_: Bottom bar, site footer, footer section
 
 **Other Works**:
@@ -99,6 +99,10 @@ _Avoid_: Other projects, featured works
 **Social Link**:
 A social media profile linked from the Footer's bottom bar — a platform (which picks the icon) and its URL.
 _Avoid_: Social icon, social media button
+
+**Wordmark**:
+The Agency's FEUGEE logo artwork stretched edge-to-edge behind the Footer's bottom bar as a quiet monochrome watermark — the same artwork the Navbar shows small at full color. Part of the site's code, not CMS content.
+_Avoid_: Giant logo, footer logo, display wordmark
 
 ### CMS
 
@@ -177,8 +181,12 @@ A proof figure on the Landing Page, as a value with a label — e.g. "55+" with 
 _Avoid_: Metric, counter, fact
 
 **Contact CTA**:
-The closing call-to-action section of the Landing Page — an eyebrow, headline, body copy, and the Work with us button. Managed as the `contactCta` group on the Landing Page global.
+The closing call-to-action at the top of the Footer on every public page — an eyebrow, headline, body copy, and the Work with us button. Managed as the `cta` group on the Footer global.
 _Avoid_: Contact section, CTA banner
+
+**Contact Details**:
+The Footer's contact block — a heading, an optional call-to-action link, and the Agency's email and phone. Distinct from the Contact CTA.
+_Avoid_: Contact info, contact section
 
 ### Design
 

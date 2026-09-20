@@ -730,13 +730,6 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
       },
       stats: landingNow.stats ?? [],
       selectedWorks,
-      // Preserve a CTA an editor may have set on a hero-less global.
-      contactCta: landingNow.contactCta ?? {
-        eyebrow: "Free 20-min intro call",
-        headline: "Tell us what you\u2019re building",
-        body: "Tell us about your goals and we will reply within a day with a clear scope and next steps.",
-        actionLabel: "Work with us",
-      },
     },
   })
   payload.logger.info(
@@ -747,9 +740,8 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
 }
 
 // ---- Landing Page hero rotating words -----------------------------------
-// Same independent-guard shape as the CTA block below: an older database can
-// have hero slides but no rotating words, and the title's second line
-// renders only with them.
+// Independent of the hero guard above: an older database can have hero slides
+// but no rotating words, and the title's second line renders only with them.
 const landingForRotatingWords = await payload.findGlobal({
   slug: "landing-page",
   draft: false,
@@ -772,38 +764,10 @@ if ((landingForRotatingWords.hero?.rotatingWords?.length ?? 0) === 0) {
   payload.logger.info("Landing page hero already has rotating words — skipping word seed")
 }
 
-// ---- Landing Page Contact CTA ------------------------------------------
-// Independent of the hero guard above: a database seeded before this section
-// existed has hero slides but no contactCta, and would otherwise silently
-// lose the section (it renders only with content).
-const landingForCta = await payload.findGlobal({
-  slug: "landing-page",
-  draft: false,
-})
-
-if ((landingForCta.contactCta?.headline ?? "").trim() === "") {
-  await payload.updateGlobal({
-    slug: "landing-page",
-    draft: false,
-    data: {
-      _status: "published",
-      contactCta: {
-        eyebrow: "Free 20-min intro call",
-        headline: "Tell us what you\u2019re building",
-        body: "Tell us about your goals and we will reply within a day with a clear scope and next steps.",
-        actionLabel: "Work with us",
-      },
-    },
-  })
-  payload.logger.info("Seeded landing page Contact CTA")
-} else {
-  payload.logger.info("Landing page already has a Contact CTA — skipping CTA seed")
-}
-
 // ---- Landing Page Testimonials ------------------------------------------
-// Same independent-guard shape as the CTA block above: an older database
-// can have hero slides but no testimonials, and the section renders only
-// with content, so it would silently stay hidden. Six samples so each
+// Same independent-guard shape as the rotating-words block above: an older
+// database can have hero slides but no testimonials, and the section renders
+// only with content, so it would silently stay hidden. Six samples so each
 // counter-scrolling column holds enough cards to scroll without gaps.
 const landingForTestimonials = await payload.findGlobal({
   slug: "landing-page",
@@ -873,6 +837,15 @@ if ((landingForTestimonials.testimonials?.items?.length ?? 0) === 0) {
 }
 
 // ---- Footer (site-wide chrome) ----------------------------------------
+// The sample Contact CTA, shared by the fresh-footer seed and the CTA
+// backfill below.
+const sampleCta = {
+  eyebrow: "Free 20-min intro call",
+  headline: "Tell us what you’re building",
+  body: "Tell us about your goals and we will reply within a day with a clear scope and next steps.",
+  actionLabel: "Work with us",
+}
+
 // Seed only a Footer the CMS has never saved (findGlobal returns a doc with
 // no id for one) — anything an editor has touched is theirs. Publish
 // explicitly: a drafts global saves as draft and the published read path
@@ -895,6 +868,7 @@ if (!existingFooter.id) {
     draft: false,
     data: {
       _status: "published",
+      cta: sampleCta,
       about: {
         heading: "About",
         description:
@@ -929,6 +903,41 @@ if (!existingFooter.id) {
   )
 } else {
   payload.logger.info("Footer already has content — skipping footer seed")
+}
+
+// ---- Footer Contact CTA (moved from the Landing Page global) -----------
+// The Contact CTA lives on the Footer global now. A database seeded before
+// the move still holds its content under the landing global, where the field
+// no longer exists — read it through a cast and copy it across. Fresh
+// databases got the sample CTA from the footer seed above.
+const footerForCta = await payload.findGlobal({
+  slug: "footer",
+  draft: false,
+})
+
+if ((footerForCta.cta?.headline ?? "").trim() === "") {
+  const landingRaw = await payload.findGlobal({
+    slug: "landing-page",
+    draft: false,
+  })
+  const storedCta = (landingRaw as { contactCta?: Record<string, string> })
+    .contactCta
+
+  await payload.updateGlobal({
+    slug: "footer",
+    draft: false,
+    data: {
+      _status: "published",
+      cta: storedCta ?? sampleCta,
+    },
+  })
+  payload.logger.info(
+    storedCta
+      ? "Migrated landing page Contact CTA into the footer"
+      : "Seeded footer Contact CTA",
+  )
+} else {
+  payload.logger.info("Footer already has a Contact CTA — skipping CTA seed")
 }
 
 process.exit(0)

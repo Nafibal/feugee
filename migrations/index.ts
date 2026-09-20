@@ -7,6 +7,7 @@ import * as migration_20260914_125939_add_year_duration_clients_landing_page fro
 import * as migration_20260919_103052_add_landing_page_testimonials from './20260919_103052_add_landing_page_testimonials';
 import * as migration_20260920_070322_add_landing_page_hero_rotating_words from './20260920_070322_add_landing_page_hero_rotating_words';
 import * as migration_20260920_081137_drop_works_short_description from './20260920_081137_drop_works_short_description';
+import * as migration_20260920_123826_move_contact_cta_to_footer from './20260920_123826_move_contact_cta_to_footer';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20260920_081137_drop_works_short_description.up,
     down: migration_20260920_081137_drop_works_short_description.down,
-    name: '20260920_081137_drop_works_short_description'
+    name: '20260920_081137_drop_works_short_description',
+  },
+  {
+    up: migration_20260920_123826_move_contact_cta_to_footer.up,
+    down: migration_20260920_123826_move_contact_cta_to_footer.down,
+    name: '20260920_123826_move_contact_cta_to_footer',
   },
 ];

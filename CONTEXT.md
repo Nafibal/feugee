@@ -40,6 +40,10 @@ _Avoid_: Featured works, highlights
 The title and year of the Work currently occupying the bottom of the screen in the Selected Works section — held in one spot while Works scroll past, shown only while its Work is on screen.
 _Avoid_: Sticky caption, floating caption, work overlay
 
+**Works Rail**:
+The vertical strip of Work titles along the right edge of the Selected Works section, with an arrow marking the Work currently occupying the bottom of the screen — the same Work the Pinned Caption names. An indicator only: nothing in it is clickable.
+_Avoid_: Side nav, works nav, dot nav, work indicator
+
 **Testimonials**:
 The Landing Page section below Selected Works that presents Agency Testimonials in two columns drifting in opposite directions.
 _Avoid_: Reviews, quotes wall, testimonials section

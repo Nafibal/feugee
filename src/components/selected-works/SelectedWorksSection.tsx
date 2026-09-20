@@ -9,10 +9,12 @@ import { useRef } from "react";
 
 import type { Work } from "@/payload-types";
 
+import { ArrowRight } from "@/components/ArrowRight";
 import { AutoVideo } from "@/components/AutoVideo";
 
 import { clipInsetsFor, formatClipPath, type Rect } from "./captionClip";
 import { MEDIA_OVERSHOOT, driftTravelPercent } from "./mediaDrift";
+import { railActiveIndex, railArrowOffsetY } from "./railActiveIndex";
 import { toSelectedWorkItem, type SelectedWorkItem } from "./selectedWorkItem";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -56,8 +58,12 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
     {/* The static caption is the readable fallback: the accessible text,
         the no-JS state, and what reduced-motion visitors see. Its gradient
         stays on the media once the text steps aside for the Pinned
-        Caption. */}
-    <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16">
+        Caption. The bar itself is the layer's in-card twin — same content
+        and classes — which the Works Rail measures as the caption zone. */}
+    <div
+      className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-start justify-end gap-2 bg-linear-to-t from-black/80 via-black/30 to-transparent p-6 md:flex-row md:items-center md:justify-between md:p-16"
+      data-caption-bar
+    >
       <h3
         className="text-3xl font-medium text-white md:text-5xl"
         data-static-caption
@@ -97,20 +103,107 @@ export const SelectedWorksSection = ({
       const layer = scope?.querySelector<HTMLElement>("[data-pinned-layer]");
       if (!scope || !list || !layer || items.length === 0) return;
 
-      // Reduced motion — and, by never running this, no-JS — keeps the
-      // static in-card captions: the readable end state.
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-
       const cards = gsap.utils.toArray<HTMLElement>("[data-work-card]", list);
-      const captions = gsap.utils.toArray<HTMLElement>(
-        "[data-pinned-caption]",
-        layer,
+      const captionBars = gsap.utils.toArray<HTMLElement>(
+        "[data-caption-bar]",
+        scope,
       );
+      const cardRects = () =>
+        cards.map((card) => toRect(card.getBoundingClientRect()));
       const staticCaptions = gsap.utils.toArray<HTMLElement>(
         "[data-static-caption]",
         scope,
+      );
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
+      // ---- Works Rail ------------------------------------------------------
+      // Runs before the reduced-motion gate below: the white↔secondary mark
+      // is information, not motion — only the arrow's slide is gated. The
+      // rail ships display:none; the trigger reveals it while the section
+      // traverses the viewport and hides it again after.
+      const rail = scope.querySelector<HTMLElement>("[data-works-rail]");
+      if (rail) {
+        const entries = gsap.utils.toArray<HTMLElement>(
+          "[data-rail-entry]",
+          rail,
+        );
+        const arrow = rail.querySelector<HTMLElement>("[data-rail-arrow]");
+        let current = 0;
+
+        // The zone is what the Pinned Caption clips to: a bottom-anchored
+        // strip as tall as the layer's captions. The layer itself is
+        // display:none until the motion path unhides it — and stays hidden
+        // under reduced motion — so the height comes from the static
+        // caption bars instead; the tallest twin matches the grid-stacked
+        // layer exactly.
+        const zoneRect = (): Rect => {
+          const height = Math.max(
+            0,
+            ...captionBars.map((bar) => bar.offsetHeight),
+          );
+          return {
+            top: innerHeight - height,
+            right: innerWidth,
+            bottom: innerHeight,
+            left: 0,
+          };
+        };
+
+        const mark = (index: number, instant = false) => {
+          entries.forEach((entry, i) => {
+            const active = i === index;
+            entry.classList.toggle("text-white", !active);
+            entry.classList.toggle("text-secondary-500", active);
+          });
+          const target = entries[index];
+          if (!arrow || !target) return;
+          const y = railArrowOffsetY(
+            target.offsetTop,
+            target.offsetHeight,
+            arrow.offsetHeight,
+          );
+          if (instant || reduced) gsap.set(arrow, { y });
+          else gsap.to(arrow, { y, duration: 0.35, ease: "power2.out" });
+        };
+
+        const applyRail = () => {
+          const next = railActiveIndex(zoneRect(), cardRects());
+          // No Work touching the zone (past the section's ends) keeps the
+          // last mark.
+          if (next === null || next === current) return;
+          current = next;
+          mark(next);
+        };
+
+        // Revealing also re-marks: entries cannot be measured while the
+        // rail is display:none, so the arrow's first placement happens the
+        // moment the rail becomes laid out.
+        const reveal = (active: boolean) => {
+          rail.classList.toggle("hidden", !active);
+          if (active) mark(current, true);
+        };
+        const railTrigger = ScrollTrigger.create({
+          trigger: list,
+          start: "top bottom",
+          end: "bottom top",
+          onToggle: (self) => reveal(self.isActive),
+          onUpdate: applyRail,
+          onRefresh: applyRail,
+        });
+        reveal(railTrigger.isActive);
+      }
+
+      // Reduced motion — and, by never running this, no-JS — keeps the
+      // static in-card captions: the readable end state.
+      if (reduced) {
+        return;
+      }
+
+      const captions = gsap.utils.toArray<HTMLElement>(
+        "[data-pinned-caption]",
+        layer,
       );
 
       gsap.set(captions, { clipPath: "inset(0 0 100% 0)" });
@@ -145,11 +238,11 @@ export const SelectedWorksSection = ({
       // through the caption and the content hands off mid-letter.
       const applyClips = () => {
         const zone = toRect(layer.getBoundingClientRect());
-        cards.forEach((card, index) => {
+        cardRects().forEach((card, index) => {
           const caption = captions[index];
           if (!caption) return;
           caption.style.clipPath = formatClipPath(
-            clipInsetsFor(zone, toRect(card.getBoundingClientRect())),
+            clipInsetsFor(zone, card),
           );
         });
       };
@@ -212,6 +305,38 @@ export const SelectedWorksSection = ({
                 <p className="text-base text-white md:text-lg">{item.year}</p>
               )}
             </div>
+          ))}
+        </div>
+      </div>
+
+      {/* The Works Rail: the section's Work titles down the right edge, the
+          arrow marking the Work the Pinned Caption names — an indicator
+          only, so pointer-events-none never blocks the card Links and
+          aria-hidden defers to the static captions as the accessible text.
+          Ships display:none so no-JS never sees it (the fixed-layer
+          pattern); once revealed, the inner md: gate keeps it off small
+          viewports. z-20 sits it above the cards but below the Pinned
+          Caption layer should a short viewport ever overlap the two. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed inset-y-0 right-0 z-20 hidden"
+        data-works-rail
+      >
+        <div className="relative hidden h-full flex-col items-start justify-center gap-3 pr-16 md:flex">
+          <span
+            className="absolute left-0 top-0 text-secondary-500"
+            data-rail-arrow
+          >
+            <ArrowRight />
+          </span>
+          {items.map((item) => (
+            <span
+              className="pl-6 text-sm text-white"
+              data-rail-entry
+              key={item.id}
+            >
+              {item.title}
+            </span>
           ))}
         </div>
       </div>

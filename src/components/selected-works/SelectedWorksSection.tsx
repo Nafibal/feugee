@@ -120,9 +120,9 @@ export const SelectedWorksSection = ({
 
       // ---- Works Rail ------------------------------------------------------
       // Runs before the reduced-motion gate below: the white↔secondary mark
-      // is information, not motion — only the arrow's slide is gated. The
-      // rail ships display:none; the trigger reveals it while the section
-      // traverses the viewport and hides it again after.
+      // is information, not motion — only the arrow's slide is gated. CSS
+      // sticky owns the rail's visibility (in with the first card, out with
+      // the last); this block only tracks which Work holds the mark.
       const rail = scope.querySelector<HTMLElement>("[data-works-rail]");
       if (rail) {
         const entries = gsap.utils.toArray<HTMLElement>(
@@ -159,6 +159,7 @@ export const SelectedWorksSection = ({
           });
           const target = entries[index];
           if (!arrow || !target) return;
+          arrow.classList.remove("invisible");
           const y = railArrowOffsetY(
             target.offsetTop,
             target.offsetHeight,
@@ -168,6 +169,9 @@ export const SelectedWorksSection = ({
           else gsap.to(arrow, { y, duration: 0.35, ease: "power2.out" });
         };
 
+        // The sticky rail is laid out from the start, so the first mark
+        // lands pre-paint — and is what shows the arrow at all.
+        mark(0, true);
         const applyRail = () => {
           const next = railActiveIndex(zoneRect(), cardRects());
           // No Work touching the zone (past the section's ends) keeps the
@@ -176,28 +180,13 @@ export const SelectedWorksSection = ({
           current = next;
           mark(next);
         };
-
-        // Revealing also re-marks: entries cannot be measured while the
-        // rail is display:none, so the arrow's first placement happens the
-        // moment the rail becomes laid out.
-        const reveal = (active: boolean) => {
-          rail.classList.toggle("hidden", !active);
-          if (active) mark(current, true);
-        };
-        // The bounds hold the viewport's middle, not its full traversal:
-        // from the first card's top reaching center to the last card's
-        // bottom leaving it. Any wider and the rail appears over the
-        // previous section while the first caption is still entering the
-        // zone — and lingers over the next one after the captions are gone.
-        const railTrigger = ScrollTrigger.create({
+        ScrollTrigger.create({
           trigger: list,
-          start: "top center",
-          end: "bottom center",
-          onToggle: (self) => reveal(self.isActive),
+          start: "top bottom",
+          end: "bottom top",
           onUpdate: applyRail,
           onRefresh: applyRail,
         });
-        reveal(railTrigger.isActive);
       }
 
       // Reduced motion — and, by never running this, no-JS — keeps the
@@ -280,10 +269,46 @@ export const SelectedWorksSection = ({
           <h2 className="text-md text-center text-white">Selected Works</h2>
         </div>
       </div>
-      <div className="flex flex-col gap-1 " ref={listRef}>
+      <div className="relative flex flex-col gap-1" ref={listRef}>
         {items.map((item) => (
           <SelectedWorkCard item={item} key={item.id} />
         ))}
+
+        {/* The Works Rail: the section's Work titles down the right edge,
+            the arrow marking the Work the Pinned Caption names — an
+            indicator only, so pointer-events-none never blocks the card
+            Links and aria-hidden defers to the static captions as the
+            accessible text. CSS sticky holds it at the viewport's middle
+            for exactly the cards' extent — no reveal lifecycle — so it
+            rides in with the first card and out with the last, never over
+            the neighbouring sections. The arrow ships invisible: only JS
+            positions it, so no-JS gets the bare titles. The md: gate
+            keeps it off small viewports; z-20 sits it above the cards but
+            below the Pinned Caption layer should a short viewport ever
+            overlap the two. */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-20">
+          <div
+            aria-hidden="true"
+            className="sticky top-[50svh] -translate-y-1/2 hidden flex-col items-start gap-3 pr-16 md:flex"
+            data-works-rail
+          >
+            <span
+              className="invisible absolute left-0 top-0 text-secondary-500"
+              data-rail-arrow
+            >
+              <ArrowRight />
+            </span>
+            {items.map((item) => (
+              <span
+                className="pl-6 text-sm text-white"
+                data-rail-entry
+                key={item.id}
+              >
+                {item.title}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* The Pinned Caption layer: one caption per Work at the same fixed
@@ -310,38 +335,6 @@ export const SelectedWorksSection = ({
                 <p className="text-base text-white md:text-lg">{item.year}</p>
               )}
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* The Works Rail: the section's Work titles down the right edge, the
-          arrow marking the Work the Pinned Caption names — an indicator
-          only, so pointer-events-none never blocks the card Links and
-          aria-hidden defers to the static captions as the accessible text.
-          Ships display:none so no-JS never sees it (the fixed-layer
-          pattern); once revealed, the inner md: gate keeps it off small
-          viewports. z-20 sits it above the cards but below the Pinned
-          Caption layer should a short viewport ever overlap the two. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-y-0 right-0 z-20 hidden"
-        data-works-rail
-      >
-        <div className="relative hidden h-full flex-col items-start justify-center gap-3 pr-16 md:flex">
-          <span
-            className="absolute left-0 top-0 text-secondary-500"
-            data-rail-arrow
-          >
-            <ArrowRight />
-          </span>
-          {items.map((item) => (
-            <span
-              className="pl-6 text-sm text-white"
-              data-rail-entry
-              key={item.id}
-            >
-              {item.title}
-            </span>
           ))}
         </div>
       </div>

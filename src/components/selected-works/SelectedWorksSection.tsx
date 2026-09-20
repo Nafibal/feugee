@@ -177,12 +177,12 @@ export const SelectedWorksSection = ({
       {/* Sticks below the Navbar for the whole section; z-20 keeps it above
           the cards but below the Pinned Caption layer (z-30) should a very
           short viewport ever make the two meet. */}
-      <div className="sticky top-(--navbar-height) z-20 flex w-full justify-center">
+      <div className="pb-12 sticky top-(--navbar-height) z-20 flex w-full justify-center md:pb-16">
         <div className="rounded border border-neutral-700 bg-neutral-950/70 px-4 py-2 backdrop-blur">
           <h2 className="text-md text-center text-white">Selected Works</h2>
         </div>
       </div>
-      <div className="mt-12 flex flex-col gap-1 md:mt-16" ref={listRef}>
+      <div className="flex flex-col gap-1 " ref={listRef}>
         {items.map((item) => (
           <SelectedWorkCard item={item} key={item.id} />
         ))}

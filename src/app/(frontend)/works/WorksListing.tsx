@@ -63,9 +63,7 @@ const balanceColumns = (items: WorksListItem[]): WorksListItem[][] => {
       columns[0].height <= columns[1].height ? columns[0] : columns[1];
     shortest.items.push(item);
     shortest.height +=
-      item.visual.width > 0
-        ? item.visual.height / item.visual.width
-        : 1;
+      item.visual.width > 0 ? item.visual.height / item.visual.width : 1;
   }
 
   return columns.map((column) => column.items);
@@ -128,7 +126,7 @@ const WorkCard = ({
         keeps its own opacity fade because blend and opacity compose on the
         same element. */}
     <div className="pointer-events-none absolute inset-x-0 bottom-0 flex h-1/2 items-end">
-      <div className="absolute inset-0 opacity-0 backdrop-blur-[0px] [mask-image:linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 max-lg:opacity-100 max-lg:backdrop-blur-[12px] group-hover/card:backdrop-blur-[12px] group-hover/card:opacity-100" />
+      <div className="absolute inset-0 opacity-0 backdrop-blur-[0px] mask-[linear-gradient(to_top,black_30%,transparent)] transition-[opacity,backdrop-filter] duration-300 max-lg:opacity-100 max-lg:backdrop-blur-md group-hover/card:backdrop-blur-md group-hover/card:opacity-100" />
       <div className="relative flex w-full items-baseline justify-between gap-4 p-4 opacity-0 transition-opacity duration-300 mix-blend-difference max-lg:opacity-100 group-hover/card:opacity-100">
         <h2 className="text-3xl text-white font-bold">{item.title}</h2>
         {item.firstExpertise && (
@@ -244,7 +242,7 @@ export const WorksListing = ({
   const mainRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="mx-auto grid w-full lg:grid-cols-[360px_1fr]">
+    <div className="mx-auto min-h-screen grid w-full lg:grid-cols-[360px_1fr]">
       <ScrollProgress colorClassName="bg-secondary-500" scope={mainRef} />
       {/* The lg+ sticky top already seats the aside clear of the overlaid
           navbar (sticky pushes down to its offset); below lg it is static

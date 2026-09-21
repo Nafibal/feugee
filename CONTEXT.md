@@ -156,17 +156,9 @@ _Avoid_: Live, released
 The industry a Work was created for; the facet the Works Page filters Works by.
 _Avoid_: Category, industry, vertical
 
-**Tag**:
-A short free-form label attached to a Work and displayed as a chip.
-_Avoid_: Tag chip, label, keyword
-
 **Year**:
 The year a Work was produced or released.
 _Avoid_: Date, date completed
-
-**Duration**:
-How long a Work took to produce, in the Agency's own words — e.g. "6 weeks". Not a film runtime.
-_Avoid_: Runtime, length, timeframe
 
 **Associate**:
 The project lead responsible for a Work.

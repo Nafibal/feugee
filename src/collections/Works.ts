@@ -64,18 +64,6 @@ export const Works: CollectionConfig = {
       },
     },
     {
-      name: "tags",
-      type: "text",
-      hasMany: true,
-      admin: {
-        description: "Free-form labels, displayed as chips.",
-      },
-    },
-    {
-      name: "description",
-      type: "richText",
-    },
-    {
       name: "client",
       type: "text",
     },
@@ -91,13 +79,6 @@ export const Works: CollectionConfig = {
       max: new Date().getFullYear(),
       admin: {
         description: "Year the Work was produced or released.",
-      },
-    },
-    {
-      name: "duration",
-      type: "text",
-      admin: {
-        description: 'How long the Work took to produce, in your own words — e.g. "6 weeks".',
       },
     },
     {

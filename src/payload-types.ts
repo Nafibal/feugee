@@ -150,35 +150,12 @@ export interface Work {
    * Shown in place of the Thumbnail as this Work's card in the Landing Page's Selected Works. Image or video. Falls back to the Thumbnail when empty.
    */
   featureVisual?: (number | null) | Asset;
-  /**
-   * Free-form labels, displayed as chips.
-   */
-  tags?: string[] | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
   client?: string | null;
   sector?: (number | null) | Sector;
   /**
    * Year the Work was produced or released.
    */
   year?: number | null;
-  /**
-   * How long the Work took to produce, in your own words — e.g. "6 weeks".
-   */
-  duration?: string | null;
   /**
    * The project lead responsible for this Work.
    */
@@ -605,7 +582,6 @@ export interface Asset {
    * Describes the image or video for screen readers and search engines.
    */
   alt: string;
-  caption?: string | null;
   /**
    * Image shown before the video plays. Pick one with the same frame size as the video — it fixes the video's slot in grids and the masonry.
    */
@@ -621,32 +597,6 @@ export interface Asset {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
-  sizes?: {
-    thumbnail?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    tablet?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-    desktop?: {
-      url?: string | null;
-      width?: number | null;
-      height?: number | null;
-      mimeType?: string | null;
-      filesize?: number | null;
-      filename?: string | null;
-    };
-  };
 }
 /**
  * The industries Works are filed under — drives filtering on the Works Page.
@@ -808,12 +758,9 @@ export interface WorksSelect<T extends boolean = true> {
   subtitle?: T;
   thumbnail?: T;
   featureVisual?: T;
-  tags?: T;
-  description?: T;
   client?: T;
   sector?: T;
   year?: T;
-  duration?: T;
   associate?: T;
   expertise?: T;
   projectTeam?: T;
@@ -1102,7 +1049,6 @@ export interface SectorsSelect<T extends boolean = true> {
  */
 export interface AssetsSelect<T extends boolean = true> {
   alt?: T;
-  caption?: T;
   poster?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1115,40 +1061,6 @@ export interface AssetsSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
-  sizes?:
-    | T
-    | {
-        thumbnail?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        tablet?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-        desktop?:
-          | T
-          | {
-              url?: T;
-              width?: T;
-              height?: T;
-              mimeType?: T;
-              filesize?: T;
-              filename?: T;
-            };
-      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1360,10 +1272,6 @@ export interface Footer {
     phone?: string | null;
   };
   /**
-   * The oversized display wordmark above the bottom bar.
-   */
-  wordmark?: string | null;
-  /**
    * The pinned location label in the bottom bar.
    */
   location?: string | null;
@@ -1481,7 +1389,6 @@ export interface FooterSelect<T extends boolean = true> {
         email?: T;
         phone?: T;
       };
-  wordmark?: T;
   location?: T;
   socialLinks?:
     | T

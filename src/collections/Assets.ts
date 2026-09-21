@@ -15,12 +15,6 @@ export const Assets: CollectionConfig = {
   },
   upload: {
     mimeTypes: ["image/*", "video/*"],
-    // Videos pass through untouched — sizes are only generated for images.
-    imageSizes: [
-      { name: "thumbnail", width: 640 },
-      { name: "tablet", width: 1024 },
-      { name: "desktop", width: 1600 },
-    ],
   },
   fields: [
     {
@@ -31,10 +25,6 @@ export const Assets: CollectionConfig = {
         description:
           "Describes the image or video for screen readers and search engines.",
       },
-    },
-    {
-      name: "caption",
-      type: "text",
     },
     {
       name: "poster",

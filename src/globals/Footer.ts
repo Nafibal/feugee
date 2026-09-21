@@ -160,14 +160,6 @@ export const Footer: GlobalConfig = {
       ],
     },
     {
-      name: "wordmark",
-      type: "text",
-      defaultValue: "FEUGEE STUDIO",
-      admin: {
-        description: "The oversized display wordmark above the bottom bar.",
-      },
-    },
-    {
       name: "location",
       type: "text",
       admin: {

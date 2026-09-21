@@ -105,7 +105,6 @@ const assetDefs = [
     height: 1600,
     background: "#8b6f47",
     alt: "Archival denim jacket photographed against a warm studio backdrop",
-    caption: "Solstice lookbook, cover shot",
   },
   {
     key: "solsticeStationery",
@@ -122,7 +121,6 @@ const assetDefs = [
     height: 900,
     background: "#5f6b4f",
     alt: "Storefront signage at dusk",
-    caption: "Retail signage, Turin",
   },
   {
     key: "pulsePoster1",
@@ -203,7 +201,7 @@ for (const def of assetDefs) {
   if (id === undefined) {
     const asset = await payload.create({
       collection: "assets",
-      data: { alt: def.alt, caption: def.caption },
+      data: { alt: def.alt },
       file: await solidImage(def),
     })
     id = asset.id
@@ -227,7 +225,6 @@ type VideoDef = {
   name: string
   posterName: string
   alt: string
-  caption?: string
   // The lavfi "gradients" source — each def carries its own colourway, pace,
   // and duration (the hero loops match the slider's 8-second interval).
   gradient: string
@@ -240,7 +237,6 @@ const videoDefs: VideoDef[] = [
     name: "pulse-teaser.mp4",
     posterName: "pulse-teaser-poster.png",
     alt: "Animated gradient teaser in the Pulse Festival colourway",
-    caption: "Motion teaser, opening night",
     gradient:
       "gradients=size=1280x720:duration=4:rate=30:speed=0.03:c0=0xd94f30:c1=0x274b9f",
     duration: 4,
@@ -336,7 +332,7 @@ if (!hasFfmpeg) {
       const videoData = readFileSync(videoPath)
       const video = await payload.create({
         collection: "assets",
-        data: { alt: def.alt, caption: def.caption, poster: poster.id },
+        data: { alt: def.alt, poster: poster.id },
         file: {
           data: videoData,
           mimetype: "video/mp4",
@@ -378,13 +374,9 @@ if (existingWorks.docs.length === 0) {
       subtitle: "A denim house re-cut for the archive era",
       year: workYears["solstice-denim-rebrand"],
       thumbnail: assetIds.solsticeFeature,
-      description: lexicalParagraph(
-        "Solstice came to Feugee with a forty-year archive and no way to wear it. We rebuilt the identity around the garments themselves — every touchpoint now borrows its rhythm from the cutting table.",
-      ),
       client: "Solstice",
       sector: sectorIds["Fashion"],
       associate: "Amara Diallo",
-      tags: ["Branding", "Art Direction"],
       expertise: ["Brand Identity", "Motion Design"],
       projectTeam: ["Jonas Weber", "Rin Takahashi"],
       collaborators: ["Studio Kite", "Marta Nunes"],
@@ -477,13 +469,9 @@ if (existingWorks.docs.length === 0) {
       // The video teaser doubles as the Thumbnail and a gallery Item when
       // ffmpeg generated it; image-only environments fall back.
       thumbnail: videoAssetIds.pulseTeaser ?? assetIds.pulseStageWide,
-      description: lexicalParagraph(
-        "An identity that behaves like the lineup: loud, layered, and different every night. The system generates poster variants from the artists' own waveforms.",
-      ),
       client: "Pulse Festival",
       sector: sectorIds["Music"],
       associate: "Jonas Weber",
-      tags: ["Identity", "Motion"],
       expertise: ["Art Direction", "3D"],
       projectTeam: ["Amara Diallo"],
       collaborators: ["Field Recordings Co."],
@@ -531,13 +519,9 @@ if (existingWorks.docs.length === 0) {
       slug: "atlas-museum-wayfinding",
       subtitle: "Wayfinding and digital guides for a reopened museum",
       year: workYears["atlas-museum-wayfinding"],
-      description: lexicalParagraph(
-        "Draft in progress: a wayfinding system that carries the museum's reopening campaign into the building itself.",
-      ),
       client: "Atlas Museum",
       sector: sectorIds["Culture"],
       associate: "Rin Takahashi",
-      tags: ["Wayfinding", "Typography"],
       expertise: ["Environmental Graphics", "Design Systems"],
       projectTeam: ["Amara Diallo", "Jonas Weber"],
       collaborators: ["Atlas Museum Digital Team"],
@@ -887,7 +871,6 @@ if (!existingFooter.id) {
         email: "feugeestudio@gmail.com",
         phone: "+1 (123) 456-7890",
       },
-      wordmark: "FEUGEE STUDIO",
       location: "Malang, Indonesia",
       // Placeholder handles — the Agency swaps in the real profiles.
       socialLinks: [

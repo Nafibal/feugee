@@ -90,6 +90,15 @@
 }
 
 /*
+ * Swipe curve — page behavior, not a Design Token: the easing every
+ * Swipe Text exchange and Menu item rides, the same curve the Hero's
+ * Rotating Word already travels.
+ */
+@theme {
+  --ease-swipe: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/*
  * Marquee scroll — page behavior, not a Design Token, so it lives
  * outside the token block above. The Client Marquee runs horizontally;
  * the Testimonials columns run vertically, one rising and one sinking.

@@ -4,14 +4,19 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { navigateWithBlackout } from "@/components/page-transition/navigateWithBlackout";
+import { SwipeText } from "@/components/SwipeText";
 
+import { menuItemTransition } from "./menuItemTransition";
 import type { MenuLink } from "./menuLinks";
 
 /**
- * The Navbar's Menu control: a button toggling a dropdown of the site's
- * primary navigation. Escape and an outside press close it, a link click
- * closes it ahead of the navigation, and the panel carries its own solid
- * background because the Navbar sits transparently over page content.
+ * The Navbar's Menu control: a button toggling the site's primary navigation
+ * as bare text stacked under the label, which itself swaps to Close while
+ * open. Opening staggers the items up into place; closing drops them out
+ * together. Escape and an outside press close it, and a link click closes it
+ * ahead of the navigation. The items carry no panel of their own — they sit
+ * directly over page content, which the site's mostly-dark pages keep
+ * readable.
  */
 export const Menu = ({ links }: { links: MenuLink[] }) => {
   const [open, setOpen] = useState(false);
@@ -39,39 +44,46 @@ export const Menu = ({ links }: { links: MenuLink[] }) => {
 
   return (
     <div className="relative" ref={rootRef}>
+      {/* The same SwipeText instance rides both labels, so a click mid-hover
+          swaps the word in place without re-mounting into the hovered pose. */}
       <button
         aria-controls="site-menu"
         aria-expanded={open}
-        className="text-xl text-neutral-50"
+        className="group text-xl text-neutral-50"
         onClick={() => setOpen((current) => !current)}
         ref={buttonRef}
         type="button"
       >
-        Menu
+        <SwipeText>{open ? "Close" : "Menu"}</SwipeText>
       </button>
-      <div
-        className={`absolute right-0 top-full mt-2 rounded border border-neutral-800 bg-neutral-950/95 py-2 backdrop-blur transition duration-200 motion-reduce:transition-none ${
-          open
-            ? "visible translate-y-0 opacity-100"
-            : "invisible -translate-y-1 opacity-0"
+      {/* The visibility transition flips on instantly when opening and only
+          after the items' shared exit when closing, so the panel never hides
+          a motion still in flight. */}
+      <ul
+        className={`absolute right-0 top-full mt-2 flex flex-col gap-y-2 transition-[visibility] duration-200 motion-reduce:transition-none ${
+          open ? "visible" : "invisible"
         }`}
         id="site-menu"
       >
-        <ul className="flex min-w-56 flex-col">
-          {links.map((link) => (
-            <li key={link.id}>
+        {links.map((link, index) => {
+          const { className, transitionDelay } = menuItemTransition(
+            open,
+            index,
+          );
+          return (
+            <li className={className} key={link.id} style={{ transitionDelay }}>
               <Link
-                className="block px-6 py-2 text-xl text-neutral-300 transition-colors hover:text-white"
+                className="group text-xl text-neutral-50"
                 href={link.url}
                 onClick={() => setOpen(false)}
                 onNavigate={(event) => navigateWithBlackout(event, link.url)}
               >
-                {link.label}
+                <SwipeText>{link.label}</SwipeText>
               </Link>
             </li>
-          ))}
-        </ul>
-      </div>
+          );
+        })}
+      </ul>
     </div>
   );
 };

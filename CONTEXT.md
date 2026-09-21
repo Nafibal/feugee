@@ -209,3 +209,7 @@ _Avoid_: Theme, palette, brand kit
 **Difference Text**:
 Text the Public site renders white with difference blending over an image or video Asset, so it reads as the negative of whatever passes behind it.
 _Avoid_: Negative text, inverted text, knockout text, blend text
+
+**Swipe Text**:
+A control's label exchanging two clipped copies on hover — the resting copy swipes up out of view while an identical primary-500 copy swipes up from below into its place. Used on the Menu control's label, the Menu's items, and the Footer's menu links.
+_Avoid_: Rolling text, text swap, slide-up hover

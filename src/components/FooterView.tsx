@@ -13,6 +13,7 @@ import { hasFooterCtaContent, toFooterCta } from "./footerCta";
 import { LogoMark } from "./LogoMark";
 import { toMenuLinks } from "./menu";
 import { navigateWithBlackout } from "./page-transition/navigateWithBlackout";
+import { SwipeText } from "./SwipeText";
 import { toCardWork, type CardWork } from "./work";
 
 interface FooterWorkCard extends CardWork {
@@ -240,11 +241,11 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
                 {menuLinks.map((link) => (
                   <li key={link.id}>
                     <Link
-                      className="text-base text-white"
+                      className="group text-base text-white"
                       href={link.url}
                       onNavigate={(event) => navigateWithBlackout(event, link.url)}
                     >
-                      {link.label}
+                      <SwipeText>{link.label}</SwipeText>
                     </Link>
                   </li>
                 ))}

@@ -30,6 +30,7 @@ const toRect = (rect: DOMRect): Rect => ({
 const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
   <Link
     className="relative block h-svh overflow-hidden"
+    data-cursor="see-more"
     data-work-card
     href={`/works/${item.slug}`}
     onNavigate={(event) => navigateWithBlackout(event, `/works/${item.slug}`)}

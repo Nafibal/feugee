@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { albertSans } from "@/app/fonts";
 import "../globals.css";
 
+import { Cursor } from "@/components/Cursor";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
 import { PageTransition } from "@/components/page-transition/PageTransition";
@@ -17,6 +18,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-neutral-950">
         <SmoothScroll>
           <PageTransition />
+          {/* Outside the Blackout slab, so the Page Shift never drags it —
+              the Cursor stays viewport-pinned like the pointer it replaces. */}
+          <Cursor />
           <Navbar />
           {/* Every page's primary content sits in one main landmark; page
               views contribute sections, not their own main. The data

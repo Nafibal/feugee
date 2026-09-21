@@ -84,6 +84,10 @@ _Avoid_: Cell, block, element
 A thin fixed bar at the top of a public page that fills left to right as the visitor scrolls through the page's main content.
 _Avoid_: Progress indicator, reading bar, scroll tracker
 
+**Cursor**:
+The Public site's own pointer, standing in for the system's on hover-capable devices: a rounded, semi-transparent white pill rendered with difference blending, carrying a white arrow aimed at the top left. Over the cards in Selected Works it widens around a "See More" label while the arrow turns to aim at the top right.
+_Avoid_: Custom cursor, mouse follower, cursor dot
+
 **Blackout**:
 The black screen that hides one public page being swapped for another: it enters from the left edge to cover the page, then exits past the right edge — always traveling left to right, over everything else on the page.
 _Avoid_: Curtain, Cover, black screen swipe, transition panel

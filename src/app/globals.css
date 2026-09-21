@@ -158,4 +158,33 @@
       display: none;
     }
   }
+
+}
+
+/* The Cursor (CONTEXT.md) hides the system pointer — but only once the
+   Cursor component itself is live on <html>, so touch, no-JS, and
+   reduced-motion visitors keep the pointer they came with. Deliberately
+   unlayered: Tailwind utilities live in @layer utilities, which outranks
+   @layer base, so a base-layer cursor: none lost to any element carrying
+   cursor-pointer and the system pointer surfaced next to the Cursor pill.
+   Unlayered author styles outrank every layer, so no utility can
+   reintroduce the pointer; editable fields keep their text caret. */
+[data-custom-cursor],
+[data-custom-cursor] *,
+[data-custom-cursor] *::before,
+[data-custom-cursor] *::after {
+  cursor: none;
+}
+
+[data-custom-cursor] input:is(
+    [type="email"],
+    [type="password"],
+    [type="search"],
+    [type="tel"],
+    [type="text"],
+    [type="url"]
+  ),
+[data-custom-cursor] textarea,
+[data-custom-cursor] [contenteditable="true"] {
+  cursor: text;
 }

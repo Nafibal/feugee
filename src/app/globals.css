@@ -140,4 +140,13 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  /* The Blackout (ADR 0007) never shows for reduced-motion visitors —
+     navigation swaps instantly, first paint included. The no-JS case hides
+     it via a <noscript> style next to the overlay itself. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-blackout-overlay] {
+      display: none;
+    }
+  }
 }

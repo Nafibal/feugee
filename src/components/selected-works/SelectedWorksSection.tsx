@@ -11,6 +11,7 @@ import type { Work } from "@/payload-types";
 
 import { ArrowRight } from "@/components/ArrowRight";
 import { AutoVideo } from "@/components/AutoVideo";
+import { navigateWithBlackout } from "@/components/page-transition/navigateWithBlackout";
 
 import { clipInsetsFor, formatClipPath, type Rect } from "./captionClip";
 import { MEDIA_OVERSHOOT, driftTravelPercent } from "./mediaDrift";
@@ -31,6 +32,7 @@ const SelectedWorkCard = ({ item }: { item: SelectedWorkItem }) => (
     className="relative block h-svh overflow-hidden"
     data-work-card
     href={`/works/${item.slug}`}
+    onNavigate={(event) => navigateWithBlackout(event, `/works/${item.slug}`)}
   >
     {/* The drift track: taller than the card so it can travel while the
         card clips it. No-JS and reduced motion leave it top-flush — a

@@ -13,6 +13,7 @@ import {
 
 import { ArrowRight } from "@/components/ArrowRight";
 import { AutoVideo } from "@/components/AutoVideo";
+import { navigateWithBlackout } from "@/components/page-transition/navigateWithBlackout";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import type { CardWork } from "@/components/work";
 
@@ -87,6 +88,7 @@ const WorkCard = ({
     className="group/card relative block"
     data-work-card
     href={`/works/${item.slug}`}
+    onNavigate={(event) => navigateWithBlackout(event, `/works/${item.slug}`)}
     onMouseEnter={canHover ? onHoverStart : undefined}
     onMouseLeave={canHover ? onHoverEnd : undefined}
   >

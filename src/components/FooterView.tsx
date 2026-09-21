@@ -12,6 +12,7 @@ import { AutoVideo } from "./AutoVideo";
 import { hasFooterCtaContent, toFooterCta } from "./footerCta";
 import { LogoMark } from "./LogoMark";
 import { toMenuLinks } from "./menu";
+import { navigateWithBlackout } from "./page-transition/navigateWithBlackout";
 import { toCardWork, type CardWork } from "./work";
 
 interface FooterWorkCard extends CardWork {
@@ -35,7 +36,11 @@ const WorkCard = ({
   item: FooterWorkCard;
   isFirst: boolean;
 }) => (
-  <Link className="block w-full" href={`/works/${item.slug}`}>
+  <Link
+    className="block w-full"
+    href={`/works/${item.slug}`}
+    onNavigate={(event) => navigateWithBlackout(event, `/works/${item.slug}`)}
+  >
     <div
       className={`${
         isFirst
@@ -163,7 +168,11 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
   });
 
   return (
-    <footer className="mt-auto px-6 pt-6 flex flex-col gap-y-6 items-stretch justify-start bg-linear-to-b from-[#161616] to-neutral-950">
+    /* The data attribute marks the Page Shift slab (ADR 0007). */
+    <footer
+      className="mt-auto px-6 pt-6 flex flex-col gap-y-6 items-stretch justify-start bg-linear-to-b from-[#161616] to-neutral-950"
+      data-blackout-slab
+    >
       {hasFooterCtaContent(cta) && (
         <section
           aria-label="Contact CTA"
@@ -186,7 +195,11 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
           </div>
           {cta.actionLabel &&
             (cta.actionUrl ? (
-              <Link className={ctaButtonClassName} href={cta.actionUrl}>
+              <Link
+                className={ctaButtonClassName}
+                href={cta.actionUrl}
+                onNavigate={(event) => navigateWithBlackout(event, cta.actionUrl!)}
+              >
                 {cta.actionLabel} <ArrowRight />
               </Link>
             ) : (
@@ -226,7 +239,11 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
               <ul className="flex flex-col justify-start items-start gap-y-2">
                 {menuLinks.map((link) => (
                   <li key={link.id}>
-                    <Link className="text-base text-white" href={link.url}>
+                    <Link
+                      className="text-base text-white"
+                      href={link.url}
+                      onNavigate={(event) => navigateWithBlackout(event, link.url)}
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -245,6 +262,9 @@ export const FooterView = ({ initialData }: { initialData: Footer }) => {
                     <Link
                       className="text-base text-white"
                       href={callToActionUrl}
+                      onNavigate={(event) =>
+                        navigateWithBlackout(event, callToActionUrl)
+                      }
                     >
                       {callToAction}
                     </Link>

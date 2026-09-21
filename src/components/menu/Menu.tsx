@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import { navigateWithBlackout } from "@/components/page-transition/navigateWithBlackout";
+
 import type { MenuLink } from "./menuLinks";
 
 /**
@@ -62,6 +64,7 @@ export const Menu = ({ links }: { links: MenuLink[] }) => {
                 className="block px-6 py-2 text-xl text-neutral-300 transition-colors hover:text-white"
                 href={link.url}
                 onClick={() => setOpen(false)}
+                onNavigate={(event) => navigateWithBlackout(event, link.url)}
               >
                 {link.label}
               </Link>

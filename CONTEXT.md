@@ -84,6 +84,14 @@ _Avoid_: Cell, block, element
 A thin fixed bar at the top of a public page that fills left to right as the visitor scrolls through the page's main content.
 _Avoid_: Progress indicator, reading bar, scroll tracker
 
+**Blackout**:
+The black screen that hides one public page being swapped for another: it enters from the left edge to cover the page, then exits past the right edge — always traveling left to right, over everything else on the page.
+_Avoid_: Curtain, Cover, black screen swipe, transition panel
+
+**Page Shift**:
+The whole page — Navbar, content, and Footer as one slab — drifting slightly rightward as the Blackout covers it, and the incoming page settling into place from a leftward offset as the Blackout reveals it, trailing a beat behind the Blackout's own motion.
+_Avoid_: Page slide, parallax, push, page transition animation
+
 **Navbar**:
 The strip at the top of every public page: the logo and the Menu control.
 _Avoid_: Header, top bar, navigation bar

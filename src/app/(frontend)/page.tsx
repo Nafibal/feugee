@@ -7,6 +7,8 @@ import type { Client } from "@/payload-types";
 
 import type { MarqueeClient } from "@/components/ClientMarquee";
 import { sizedUrlOf } from "@/components/work";
+import { heroOgImage } from "@/seo/ogImage";
+import { pageMetadata } from "@/seo/metadata";
 import { LandingPageView } from "./LandingPageView";
 
 // The page reads the database on every request, so request-time rendering is
@@ -76,8 +78,10 @@ export const generateMetadata = async (): Promise<Metadata> => {
 
   const heroTitle = landingPage.hero?.title?.trim();
 
-  return {
+  return pageMetadata({
     title: heroTitle ? `Feugee — ${heroTitle}` : "Feugee",
-    description: landingPage.hero?.subtitle || undefined,
-  };
+    description: landingPage.hero?.subtitle,
+    url: "/",
+    image: heroOgImage(landingPage.hero),
+  });
 };

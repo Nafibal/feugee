@@ -6,6 +6,8 @@ import { getPayload } from "payload"
 
 import { publishedWhere } from "@/access/publishedRead"
 import type { Work } from "@/payload-types"
+import { ogImageOf } from "@/seo/ogImage"
+import { pageMetadata } from "@/seo/metadata"
 
 import { WorkDetail } from "./WorkDetail"
 
@@ -25,6 +27,9 @@ const getWork = cache(async (slug: string): Promise<Work | null> => {
       ],
     },
     draft: Boolean(user),
+    // Depth 2 populates the Thumbnail and, in turn, its Poster — the OG image
+    // stands a video Thumbnail in via that Poster.
+    depth: 2,
     limit: 1,
   })
   return works.docs[0] ?? null
@@ -40,5 +45,12 @@ export default async function Page({ params }: PageProps<"/works/[slug]">) {
 export async function generateMetadata({ params }: PageProps<"/works/[slug]">) {
   const { slug } = await params
   const work = await getWork(slug)
-  return { title: work ? `${work.title} — Feugee` : "Work — Feugee" }
+  if (!work) return pageMetadata({ title: "Work — Feugee" })
+
+  return pageMetadata({
+    title: `${work.title} — Feugee`,
+    description: work.subtitle,
+    url: `/works/${work.slug}`,
+    image: ogImageOf(work.thumbnail),
+  })
 }

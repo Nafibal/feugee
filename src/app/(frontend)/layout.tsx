@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { albertSans } from "@/app/fonts";
+import { env } from "@/env";
 import "../globals.css";
 
 import { Cursor } from "@/components/Cursor";
@@ -9,6 +10,9 @@ import { PageTransition } from "@/components/page-transition/PageTransition";
 import { SmoothScroll } from "@/components/SmoothScroll";
 
 export const metadata: Metadata = {
+  // The production URL from the env — the base every page's relative
+  // canonical/OG URL composes against (see src/seo/metadata.ts).
+  metadataBase: new URL(env.NEXT_PUBLIC_SERVER_URL),
   title: "Feugee",
 };
 

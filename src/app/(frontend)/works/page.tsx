@@ -1,10 +1,14 @@
 import configPromise from "@payload-config";
+import type { Metadata } from "next";
 import { cache } from "react";
 import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
 import { toCardWork, workThumbnailOf } from "@/components/work";
+import { getFooterGlobal } from "@/components/footer-data";
+import { type OgImage, ogImageOf } from "@/seo/ogImage";
+import { pageMetadata } from "@/seo/metadata";
 import {
   WorksListing,
   type SectorOption,
@@ -46,6 +50,7 @@ const getWorksPageData = cache(
     items: WorksListItem[];
     sectorOptions: SectorOption[];
     showFilter: boolean;
+    ogImage: OgImage | null;
   }> => {
     const payload = await getPayload({ config: configPromise });
     // Orderable collections default to `_order` ascending — the CMS's manual
@@ -87,10 +92,19 @@ const getWorksPageData = cache(
       },
     );
 
+    // The listing's share face is its first Work's — the page is nothing but
+    // the Works. Desktop-sized, straight off the raw docs (the card items
+    // request the tablet variant for their tighter slots).
+    const ogImage =
+      worksResult.docs
+        .map((work) => ogImageOf(work.thumbnail))
+        .find((image): image is OgImage => image !== null) ?? null;
+
     return {
       items,
       sectorOptions,
       showFilter: worksResult.docs.length > FILTER_THRESHOLD,
+      ogImage,
     };
   },
 );
@@ -112,6 +126,19 @@ export default async function Page({ searchParams }: PageProps<"/works">) {
   );
 }
 
-export const generateMetadata = () => ({
-  title: "Our Works — Feugee",
-});
+export const generateMetadata = async (): Promise<Metadata> => {
+  const [{ ogImage }, footer] = await Promise.all([
+    getWorksPageData(),
+    getFooterGlobal(),
+  ]);
+
+  return pageMetadata({
+    title: "Our Works — Feugee",
+    // The listing has no CMS copy of its own; the About blurb is the
+    // agency-managed site description. getFooterGlobal is the layout's own
+    // request-cached read — no extra query.
+    description: footer?.about?.description,
+    url: "/works",
+    image: ogImage,
+  });
+};

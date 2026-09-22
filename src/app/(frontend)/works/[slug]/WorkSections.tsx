@@ -1,5 +1,7 @@
 import type { Work } from "@/payload-types";
 
+import type { AssetSizeName } from "@/components/work";
+
 import { WorkItemView, type WorkItem } from "./WorkItems";
 
 export type WorkSection = NonNullable<Work["sections"]>[number];
@@ -30,6 +32,12 @@ const itemClass = (layout: WorkLayout, index: number) => {
   return "";
 };
 
+// The variant an Asset item requests, from its cell in the layout: only a
+// one-column item spans the full content column (desktop); every other
+// layout's cells are at most half of it (tablet).
+const assetSizeForLayout = (layout: WorkLayout): AssetSizeName =>
+  layout.blockType === "one-column" ? "desktop" : "tablet";
+
 export const WorkSections = ({ sections }: { sections: Work["sections"] }) => {
   if (!sections?.length) return null;
 
@@ -51,7 +59,10 @@ export const WorkSections = ({ sections }: { sections: Work["sections"] }) => {
                   key={item.id ?? itemIndex}
                   className={itemClass(layout, itemIndex)}
                 >
-                  <WorkItemView item={item} />
+                  <WorkItemView
+                    assetSize={assetSizeForLayout(layout)}
+                    item={item}
+                  />
                 </div>
               ))}
             </div>

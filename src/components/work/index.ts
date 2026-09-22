@@ -6,9 +6,11 @@
  */
 export { toCardWork, type CardWork } from "./cardWork";
 export {
+  sizedUrlOf,
   VIDEO_ASPECT_FALLBACK,
   videoPosterOf,
   workFeatureVisualOf,
   workThumbnailOf,
+  type AssetSizeName,
   type CardVisual,
 } from "./visual";

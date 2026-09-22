@@ -14,7 +14,7 @@ import { LogoMark } from "./LogoMark";
 import { toMenuLinks } from "./menu";
 import { navigateWithBlackout } from "./page-transition/navigateWithBlackout";
 import { SwipeText } from "./SwipeText";
-import { toCardWork, type CardWork } from "./work";
+import { toCardWork, workThumbnailOf, type CardWork } from "./work";
 
 interface FooterWorkCard extends CardWork {
   subtitle: string | null;
@@ -22,9 +22,11 @@ interface FooterWorkCard extends CardWork {
 
 // The card guards (published, populated, usable Thumbnail) live in
 // toCardWork; this adds only what the Footer's Other Works cards display.
+// The cards share the footer row — roughly a quarter of its width on md+ —
+// so they request the thumbnail variant.
 const toFooterWorkCard = (work: number | Work): FooterWorkCard | null => {
   if (typeof work !== "object") return null;
-  const card = toCardWork(work);
+  const card = toCardWork(work, workThumbnailOf(work, "thumbnail"));
   if (card === null) return null;
 
   return { ...card, subtitle: work.subtitle ?? null };
@@ -59,11 +61,13 @@ const WorkCard = ({
           width={item.visual.width}
         />
       ) : (
+        /* A sized Payload variant — the optimizer would only re-encode it. */
         <Image
           alt={item.visual.alt}
           className="h-full w-full object-cover"
           height={item.visual.height}
           src={item.visual.url}
+          unoptimized
           width={item.visual.width}
         />
       )}

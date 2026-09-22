@@ -21,6 +21,39 @@ export const Assets: CollectionConfig = {
   },
   upload: {
     mimeTypes: ["image/*", "video/*"],
+    // The size ladder every public placement requests from, smallest to
+    // largest: Footer cards and marquee logos (thumbnail), the Works
+    // masonry and multi-column Work items (tablet), one-column Work items
+    // (desktop), and full-bleed surfaces — Selected Works cards, the Hero
+    // Slider's posters, the Work Detail hero (wide). Payload skips a size
+    // when the original is narrower than it, so a small original never
+    // gains upscaled variants; placements fall back down the ladder at
+    // render time. Videos and SVGs get no variants (sharp does not resize
+    // them); a video's poster is a separate image Asset and is sized like
+    // any other.
+    imageSizes: [
+      {
+        name: "thumbnail",
+        width: 640,
+        formatOptions: { format: "webp", options: { quality: 80 } },
+      },
+      {
+        name: "tablet",
+        width: 1024,
+        formatOptions: { format: "webp", options: { quality: 80 } },
+      },
+      {
+        name: "desktop",
+        width: 1600,
+        formatOptions: { format: "webp", options: { quality: 80 } },
+      },
+      {
+        name: "wide",
+        width: 2400,
+        formatOptions: { format: "webp", options: { quality: 80 } },
+      },
+    ],
+    adminThumbnail: "thumbnail",
   },
   hooks: {
     beforeValidate: [

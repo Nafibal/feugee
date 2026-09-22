@@ -4,6 +4,13 @@ import type { Env } from "./env"
 
 type R2StorageOptions = Omit<S3StorageOptions, "collections">
 
+/**
+ * The S3 endpoint the credentials point at: the explicit S3-compatible
+ * override (local dev's Biznet Gio, via R2_ENDPOINT) or the derived R2 one.
+ */
+export const r2EndpointOf = (env: Env): string =>
+  env.R2_ENDPOINT ?? `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`
+
 export function r2StorageOptions(env: Env): R2StorageOptions {
   const s3CompatibleOverride = Boolean(env.R2_ENDPOINT)
 
@@ -19,9 +26,7 @@ export function r2StorageOptions(env: Env): R2StorageOptions {
         accessKeyId: env.R2_ACCESS_KEY_ID,
         secretAccessKey: env.R2_SECRET_ACCESS_KEY,
       },
-      endpoint:
-        env.R2_ENDPOINT ??
-        `https://${env.R2_ACCOUNT_ID}.r2.cloudflarestorage.com`,
+      endpoint: r2EndpointOf(env),
       // S3-compatible clusters sign against a fixed region; R2 requires its
       // "auto" pseudo-region.
       region: s3CompatibleOverride ? "us-east-1" : "auto",

@@ -144,6 +144,10 @@ _Avoid_: Media, file, upload
 The image Asset standing in for a video Asset before it plays. Serves as the preview frame and — because Payload measures no dimensions for videos — as the video's aspect ratio in the Works masonry and Layouts.
 _Avoid_: Still frame, preview image, thumbnail frame
 
+**Size ladder**:
+The four WebP variants the CMS generates for each image Asset — thumbnail 640, tablet 1024, desktop 1600, wide 2400 — that public placements request instead of original files. A size wider than the original is skipped; a placement falls back to the closest variant that exists, ending at the original file. Videos and SVGs get none (a video's Poster is a separate image Asset with its own variants).
+_Avoid_: Thumbnails (the CMS sense), responsive sizes, srcset
+
 **Draft**:
 A Work visible only inside the CMS Dashboard, not yet shown on the public site.
 _Avoid_: Unpublished, pending

@@ -13,7 +13,7 @@ import {
   TestimonialsSection,
   type TestimonialItem,
 } from "@/components/testimonials/TestimonialsSection";
-import { videoPosterOf } from "@/components/work";
+import { sizedUrlOf, videoPosterOf } from "@/components/work";
 import { normalizeRotatingWords } from "@/components/heroTitle";
 
 export const LandingPageView = ({
@@ -36,7 +36,8 @@ export const LandingPageView = ({
   });
 
   // The video field is video-only by config; a shallow populate mid-edit
-  // (bare ID) just leaves the slide out until it resolves again.
+  // (bare ID) just leaves the slide out until it resolves again. Slides are
+  // full-bleed, so their posters request the wide variant.
   const slides = useMemo<HeroSlide[]>(
     () =>
       (data.hero?.slides ?? []).flatMap((slide) => {
@@ -48,7 +49,7 @@ export const LandingPageView = ({
           {
             id: slide.id ?? "",
             url: slide.video.url,
-            posterUrl: poster?.url ?? null,
+            posterUrl: poster ? sizedUrlOf(poster, "wide") : null,
             alt: slide.video.alt,
           },
         ];

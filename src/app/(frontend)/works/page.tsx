@@ -4,7 +4,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
-import { toCardWork } from "@/components/work";
+import { toCardWork, workThumbnailOf } from "@/components/work";
 import {
   WorksListing,
   type SectorOption,
@@ -28,9 +28,10 @@ const sectorSlugOf = (
 
 // The card guards live in toCardWork; this adds only what the Works Page's
 // masonry cards display. Its published check is belt-and-braces — the query
-// above already filters to published Works.
+// above already filters to published Works. Cards are full-width below lg
+// and one of two content columns above — the tablet variant covers both.
 const toListItem = (work: Work): WorksListItem | null => {
-  const card = toCardWork(work);
+  const card = toCardWork(work, workThumbnailOf(work, "tablet"));
   if (card === null) return null;
 
   return {

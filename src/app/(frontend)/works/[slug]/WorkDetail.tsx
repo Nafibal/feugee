@@ -54,8 +54,9 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
       ? data.sector.name
       : null;
   // The hero is a direct thumbnail consumer — the work module owns the
-  // video/poster discrimination and the poster-derived dimensions.
-  const heroThumbnail = workThumbnailOf(data);
+  // video/poster discrimination and the poster-derived dimensions. It is
+  // full-bleed (100vw × 100svh), so it requests the wide variant.
+  const heroThumbnail = workThumbnailOf(data, "wide");
 
   // Scroll-spy for the Contents nav: the section crossing a band near the top
   // of the viewport is the current one.
@@ -146,11 +147,14 @@ export const WorkDetail = ({ initialData }: { initialData: Work }) => {
                   width={heroThumbnail.width}
                 />
               ) : (
+                /* A sized Payload variant — the optimizer would only
+                   re-encode it. */
                 <Image
                   src={heroThumbnail.url}
                   alt={heroThumbnail.alt}
                   fill
                   className="object-cover"
+                  unoptimized
                 />
               )}
             </div>

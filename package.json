@@ -17,6 +17,7 @@
     "generate:importmap": "payload generate:importmap",
     "generate:secret": "payload generate:secret",
     "seed": "payload run src/seed",
+    "regenerate:sizes": "payload run src/regenerateAssetSizes",
     "prepare": "husky"
   },
   "dependencies": {

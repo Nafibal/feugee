@@ -6,6 +6,7 @@ import { getPayload } from "payload";
 import type { Client } from "@/payload-types";
 
 import type { MarqueeClient } from "@/components/ClientMarquee";
+import { sizedUrlOf } from "@/components/work";
 import { LandingPageView } from "./LandingPageView";
 
 // The page reads the database on every request, so request-time rendering is
@@ -14,7 +15,8 @@ export const dynamic = "force-dynamic";
 
 // A Client without a populated logo can't ride the marquee — drop it. Fallback
 // dimensions cover logo formats Payload doesn't measure (SVG); the marquee
-// fixes the height and lets the width follow.
+// fixes the height and lets the width follow. Raster logos request the
+// thumbnail variant — the marquee renders them ~40px tall.
 const toMarqueeClient = (client: Client): MarqueeClient | null => {
   if (
     typeof client.logo !== "object" ||
@@ -29,7 +31,7 @@ const toMarqueeClient = (client: Client): MarqueeClient | null => {
     name: client.name,
     url: client.url ?? null,
     logo: {
-      url: client.logo.url,
+      url: sizedUrlOf(client.logo, "thumbnail") ?? client.logo.url,
       alt: client.logo.alt,
       width: client.logo.width ?? 120,
       height: client.logo.height ?? 40,

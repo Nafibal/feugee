@@ -104,11 +104,13 @@ const WorkVisual = ({ item }: { item: WorksListItem }) =>
       width={item.visual.width}
     />
   ) : (
+    /* A sized Payload variant — the optimizer would only re-encode it. */
     <Image
       alt={item.visual.alt}
       className="h-auto w-full object-cover"
       height={item.visual.height}
       src={item.visual.url}
+      unoptimized
       width={item.visual.width}
     />
   );

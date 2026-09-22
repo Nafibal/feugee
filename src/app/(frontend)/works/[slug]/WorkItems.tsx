@@ -4,12 +4,23 @@ import { RichText } from "@payloadcms/richtext-lexical/react";
 import type { Asset } from "@/payload-types";
 
 import { AutoVideo } from "@/components/AutoVideo";
-import { VIDEO_ASPECT_FALLBACK, videoPosterOf } from "@/components/work";
+import {
+  sizedUrlOf,
+  VIDEO_ASPECT_FALLBACK,
+  videoPosterOf,
+  type AssetSizeName,
+} from "@/components/work";
 import type { WorkLayout } from "./WorkSections";
 
 export type WorkItem = NonNullable<NonNullable<WorkLayout["items"]>[number]>;
 
-const AssetFigure = ({ asset }: { asset: number | Asset }) => {
+const AssetFigure = ({
+  asset,
+  size,
+}: {
+  asset: number | Asset;
+  size: AssetSizeName;
+}) => {
   // The relationship can be empty or unpopulated while a Live Preview edit
   // is mid-flight — render nothing rather than crash.
   if (typeof asset !== "object" || asset === null || !asset.url) {
@@ -17,7 +28,8 @@ const AssetFigure = ({ asset }: { asset: number | Asset }) => {
   }
 
   // Video Items autoplay muted like the rest of the page's video; the poster
-  // image sizes the grid cell until playback starts.
+  // image sizes the grid cell until playback starts — its dimensions, not a
+  // variant's, keep that slot honest.
   if (asset.mimeType?.startsWith("video/")) {
     const poster = videoPosterOf(asset);
     return (
@@ -26,7 +38,7 @@ const AssetFigure = ({ asset }: { asset: number | Asset }) => {
           alt={asset.alt}
           className="h-full w-full object-cover"
           height={poster?.height ?? VIDEO_ASPECT_FALLBACK.height}
-          poster={poster?.url ?? null}
+          poster={poster ? sizedUrlOf(poster, size) : null}
           src={asset.url}
           width={poster?.width ?? VIDEO_ASPECT_FALLBACK.width}
         />
@@ -36,10 +48,12 @@ const AssetFigure = ({ asset }: { asset: number | Asset }) => {
 
   return (
     <figure className="h-full w-full">
+      {/* A sized Payload variant — the optimizer would only re-encode it. */}
       <Image
-        src={asset.url}
+        src={sizedUrlOf(asset, size) ?? asset.url}
         alt={asset.alt}
         className="w-full h-full object-cover"
+        unoptimized
         width={asset.width ?? 1}
         height={asset.height ?? 1}
       />
@@ -47,7 +61,13 @@ const AssetFigure = ({ asset }: { asset: number | Asset }) => {
   );
 };
 
-export const WorkItemView = ({ item }: { item: WorkItem }) => {
+export const WorkItemView = ({
+  assetSize,
+  item,
+}: {
+  assetSize: AssetSizeName;
+  item: WorkItem;
+}) => {
   switch (item.blockType) {
     case "title":
       return (
@@ -81,6 +101,6 @@ export const WorkItemView = ({ item }: { item: WorkItem }) => {
         </div>
       );
     case "asset":
-      return <AssetFigure asset={item.asset} />;
+      return <AssetFigure asset={item.asset} size={assetSize} />;
   }
 };

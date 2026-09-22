@@ -20,6 +20,19 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Database migrations
+
+The CMS schema is owned by the migration chain in `migrations/`, never by `payload dev`'s live push. Two checks keep it honest:
+
+- **No drift between configs and migrations**: `npx payload migrate:create` should report `No schema changes detected` (decline the blank-file prompt it offers).
+- **The chain builds from zero**: before each deploy, run the one-liner below. It stands up a throwaway Postgres, replays every migration from an empty database, and runs the seed end-to-end — proving deploy order will not hit a broken or missing migration. It exits non-zero on any failure (including the container never becoming ready within 30s), never touches a same-named container it did not start, and always tears its own container down. The seed uploads its fixture Assets to the configured bucket, exactly like a local `npm run seed`.
+
+```bash
+( docker run --rm -d --name feugee-chain-check -e POSTGRES_USER=chain -e POSTGRES_PASSWORD=chain -e POSTGRES_DB=chain -p 5433:5432 postgres:18-alpine || exit 1; for i in $(seq 1 30); do docker exec feugee-chain-check pg_isready -U chain -q && ready=1 && break; sleep 1; done; [ "$ready" = 1 ] && DATABASE_URL='postgres://chain:chain@localhost:5433/chain' npm run migrate && DATABASE_URL='postgres://chain:chain@localhost:5433/chain' npm run seed; rc=$?; docker rm -f feugee-chain-check >/dev/null; exit $rc )
+```
+
+`npm run migrate:status` against the target database should likewise show every migration as ran before a deploy ships.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

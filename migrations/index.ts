@@ -11,6 +11,7 @@ import * as migration_20260920_123826_move_contact_cta_to_footer from './2026092
 import * as migration_20260920_123832_add_works_feature_visual from './20260920_123832_add_works_feature_visual';
 import * as migration_20260922_194500_add_object_key_and_password_request_at from './20260922_194500_add_object_key_and_password_request_at';
 import * as migration_20260922_211800_add_asset_size_variants from './20260922_211800_add_asset_size_variants';
+import * as migration_20260922_223608_drop_unused_fields_and_restore_size_indexes from './20260922_223608_drop_unused_fields_and_restore_size_indexes';
 
 export const migrations = [
   {
@@ -77,5 +78,10 @@ export const migrations = [
     up: migration_20260922_211800_add_asset_size_variants.up,
     down: migration_20260922_211800_add_asset_size_variants.down,
     name: '20260922_211800_add_asset_size_variants',
+  },
+  {
+    up: migration_20260922_223608_drop_unused_fields_and_restore_size_indexes.up,
+    down: migration_20260922_223608_drop_unused_fields_and_restore_size_indexes.down,
+    name: '20260922_223608_drop_unused_fields_and_restore_size_indexes',
   },
 ];

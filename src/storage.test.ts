@@ -5,9 +5,14 @@ const accountId = "b374b36817deffd929433cde176d1439"
 const baseEnv = {
   DATABASE_URL: "postgres://feugee:feugee@localhost:5432/feugee",
   PAYLOAD_SECRET: "0123456789abcdef0123456789abcdef",
+  NEXT_PUBLIC_SERVER_URL: "http://localhost:3000",
   R2_BUCKET: "feugee",
   R2_ACCESS_KEY_ID: "test-key-id",
   R2_SECRET_ACCESS_KEY: "test-secret",
+  SMTP_HOST: "localhost",
+  SMTP_PORT: 1025,
+  EMAIL_FROM_ADDRESS: "feugee@feugee.test",
+  EMAIL_FROM_NAME: "Feugee",
 }
 
 const localDevEnv = {
@@ -23,7 +28,7 @@ const productionEnv = {
 // env.ts parses process.env at import time — stub a valid local-dev baseline
 // before the dynamic import below runs.
 for (const [key, value] of Object.entries(localDevEnv)) {
-  vi.stubEnv(key, value)
+  vi.stubEnv(key, String(value))
 }
 
 const { envSchema } = await import("./env")

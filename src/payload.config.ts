@@ -11,6 +11,7 @@ import { Clients } from "./collections/Clients"
 import { Sectors } from "./collections/Sectors"
 import { Users } from "./collections/Users"
 import { Works } from "./collections/Works"
+import { emailAdapterOf } from "./email"
 import { env } from "./env"
 import { Footer } from "./globals/Footer"
 import { LandingPage } from "./globals/LandingPage"
@@ -20,6 +21,7 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  serverURL: env.NEXT_PUBLIC_SERVER_URL,
   admin: {
     user: Users.slug,
     importMap: {
@@ -31,6 +33,7 @@ export default buildConfig({
   globals: [LandingPage, Footer],
   editor: lexicalEditor(),
   secret: env.PAYLOAD_SECRET,
+  email: emailAdapterOf(env),
   typescript: {
     outputFile: path.resolve(dirname, "payload-types.ts"),
   },

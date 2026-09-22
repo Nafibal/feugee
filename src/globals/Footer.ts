@@ -1,5 +1,7 @@
 import type { GlobalConfig } from "payload"
 
+import { publishedRead } from "../access/publishedRead"
+
 // Site chrome rather than Landing Page content, so this lives on its own
 // global — the (frontend) root layout mounts the Footer on every public page.
 export const Footer: GlobalConfig = {
@@ -16,7 +18,7 @@ export const Footer: GlobalConfig = {
     },
   },
   access: {
-    read: () => true,
+    read: publishedRead,
   },
   versions: {
     drafts: {

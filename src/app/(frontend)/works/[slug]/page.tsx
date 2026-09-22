@@ -1,24 +1,30 @@
 import configPromise from "@payload-config"
+import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { cache } from "react"
 import { getPayload } from "payload"
 
+import { publishedWhere } from "@/access/publishedRead"
 import type { Work } from "@/payload-types"
 
 import { WorkDetail } from "./WorkDetail"
 
-// Demo integration page — it deliberately renders the newest draft so that
-// draft-only Works are reachable and the CMS Dashboard's Live Preview tab
-// always has a target. Public published-only semantics arrive with the real
-// Work Detail Page.
 export const dynamic = "force-dynamic"
 
 const getWork = cache(async (slug: string): Promise<Work | null> => {
   const payload = await getPayload({ config: configPromise })
+  const { user } = await payload.auth({ headers: await headers() })
   const works = await payload.find({
     collection: "works",
-    where: { slug: { equals: slug } },
-    draft: true,
+    where: {
+      and: [
+        { slug: { equals: slug } },
+        // Drafts render only for authenticated CMS sessions — the Dashboard's
+        // Live Preview iframe rides the admin cookie.
+        ...(user ? [] : [publishedWhere]),
+      ],
+    },
+    draft: Boolean(user),
     limit: 1,
   })
   return works.docs[0] ?? null

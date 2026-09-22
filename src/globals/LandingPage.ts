@@ -1,5 +1,7 @@
 import type { GlobalConfig } from "payload"
 
+import { publishedRead } from "../access/publishedRead"
+
 export const LandingPage: GlobalConfig = {
   slug: "landing-page",
   label: "Landing Page",
@@ -14,7 +16,7 @@ export const LandingPage: GlobalConfig = {
     },
   },
   access: {
-    read: () => true,
+    read: publishedRead,
   },
   versions: {
     drafts: {

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from "payload";
 
+import { publishedRead } from "../access/publishedRead";
 import { layoutBlocks } from "../blocks/layouts";
 import { slugField } from "../utilities/slug";
 
@@ -27,7 +28,7 @@ export const Works: CollectionConfig = {
     },
   },
   access: {
-    read: () => true,
+    read: publishedRead,
   },
   versions: {
     drafts: {

@@ -6,7 +6,7 @@ import { Menu, toMenuLinks } from "./menu";
 // Menu's links come from the Footer global — one CMS list drives both.
 export const Navbar = async () => {
   const footer = await getFooterGlobal();
-  const menuLinks = toMenuLinks(footer.menuLinks);
+  const menuLinks = toMenuLinks(footer?.menuLinks);
 
   return (
     /* The negative margin cancels the header's flow footprint: page content

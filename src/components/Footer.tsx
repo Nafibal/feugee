@@ -1,4 +1,4 @@
-import { getFooterGlobal } from "./footer-data";
+import { emptyFooter, getFooterGlobal } from "./footer-data";
 import { FooterView } from "./FooterView";
 
 // Mounted once in the frontend root layout, so every public page shares it.
@@ -8,5 +8,5 @@ import { FooterView } from "./FooterView";
 export const Footer = async () => {
   const footer = await getFooterGlobal();
 
-  return <FooterView initialData={footer} />;
+  return <FooterView initialData={footer ?? emptyFooter} />;
 };

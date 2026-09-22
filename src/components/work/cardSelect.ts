@@ -22,10 +22,14 @@ export type SelectShape = { [key: string]: boolean | SelectShape };
  * The Asset fields every card visual, hero slide, and OG image consumes:
  * the URL and alt, the size ladder (sizedUrlOf), image dimensions (layout),
  * the video/poster discrimination, and the poster's own URL, dimensions,
- * and ladder (a video's aspect and preview frame live there).
+ * and ladder (a video's aspect and preview frame live there). The filename
+ * rides along because an upload's URL is derived from it — a direct find
+ * on the assets collection that selects url without filename gets null
+ * back, which would drop every hero slide and card visual.
  */
 export const cardAssetSelect = {
   url: true,
+  filename: true,
   alt: true,
   width: true,
   height: true,

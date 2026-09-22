@@ -1,6 +1,7 @@
 import type { GlobalConfig } from "payload"
 
 import { publishedRead } from "../access/publishedRead"
+import { revalidateGlobalAfterChange } from "../hooks/revalidateSite"
 
 // Site chrome rather than Landing Page content, so this lives on its own
 // global — the (frontend) root layout mounts the Footer on every public page.
@@ -10,7 +11,9 @@ export const Footer: GlobalConfig = {
   admin: {
     description: "The content of the Footer at the bottom of every public page.",
     livePreview: {
-      url: "/",
+      // The whole Landing Page loads in the iframe with this flag; only the
+      // Footer's Live Preview client code arms itself for it.
+      url: "/?livePreview=footer",
       breakpoints: [
         { label: "Mobile", name: "mobile", width: 375, height: 667 },
         { label: "Tablet", name: "tablet", width: 768, height: 1024 },
@@ -19,6 +22,9 @@ export const Footer: GlobalConfig = {
   },
   access: {
     read: publishedRead,
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   versions: {
     drafts: {

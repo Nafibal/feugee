@@ -5,7 +5,7 @@ import { getPayload } from "payload";
 
 import type { Sector, Work } from "@/payload-types";
 
-import { toCardWork, workThumbnailOf } from "@/components/work";
+import { toCardWork, workThumbnailOf, asWorkSelect, listingWorksSelect } from "@/components/work";
 import { getFooterGlobal } from "@/components/footer-data";
 import { type OgImage, ogImageOf } from "@/seo/ogImage";
 import { pageMetadata } from "@/seo/metadata";
@@ -14,10 +14,6 @@ import {
   type SectorOption,
   type WorksListItem,
 } from "./WorksListing";
-
-// The page reads the database on every request, so request-time rendering is
-// the honest mode (same as the Work Detail Page).
-export const dynamic = "force-dynamic";
 
 // Below this many published Works the Filter Projects block stays hidden and
 // the page just lists everything.
@@ -45,6 +41,9 @@ const toListItem = (work: Work): WorksListItem | null => {
   };
 };
 
+// The page renders statically — revalidated by the Works and Sectors hooks —
+// so the ?sector= filter is seeded client-side inside WorksListing rather
+// than from request search params.
 const getWorksPageData = cache(
   async (): Promise<{
     items: WorksListItem[];
@@ -56,7 +55,8 @@ const getWorksPageData = cache(
     // Orderable collections default to `_order` ascending — the CMS's manual
     // order. The `_status` guard is belt-and-braces: docs seeded straight into
     // the parent table with `_status: "draft"` would otherwise slip past
-    // draft:false, which only excludes docs without a parent row.
+    // draft:false, which only excludes docs without a parent row. The select
+    // keeps the docs to the masonry's card fields — no detail-page Sections.
     const [worksResult, sectorsResult] = await Promise.all([
       payload.find({
         collection: "works",
@@ -65,6 +65,7 @@ const getWorksPageData = cache(
         draft: false,
         limit: 0,
         where: { _status: { equals: "published" } },
+        select: asWorkSelect(listingWorksSelect),
       }),
       payload.find({
         collection: "sectors",
@@ -109,16 +110,11 @@ const getWorksPageData = cache(
   },
 );
 
-export default async function Page({ searchParams }: PageProps<"/works">) {
-  const params = await searchParams;
-  const sectorParam =
-    typeof params?.sector === "string" ? params.sector : null;
-
+export default async function Page() {
   const { items, sectorOptions, showFilter } = await getWorksPageData();
 
   return (
     <WorksListing
-      initialSectorSlug={sectorParam}
       items={items}
       sectorOptions={sectorOptions}
       showFilter={showFilter}

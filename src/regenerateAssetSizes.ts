@@ -60,6 +60,10 @@ for (const asset of resizable) {
     await payload.update({
       collection: "assets",
       id: asset.id,
+      // Maintenance, not a CMS edit — the revalidation hooks have no Next
+      // request scope in a payload run script, and nothing visible changes:
+      // the variants are re-derived from the same source file.
+      context: { disableRevalidate: true },
       data: {},
       file: {
         data,

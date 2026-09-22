@@ -1,5 +1,9 @@
 import type { CollectionConfig } from "payload"
 
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from "../hooks/revalidateSite"
 import { slugField } from "../utilities/slug"
 
 export const Sectors: CollectionConfig = {
@@ -10,6 +14,10 @@ export const Sectors: CollectionConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     {

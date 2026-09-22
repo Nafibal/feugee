@@ -18,6 +18,10 @@ const seedEnv = z
 
 const payload = await getPayload({ config })
 
+// Seeding writes are setup, not CMS edits — the revalidation hooks skip them
+// (they have no Next request scope in a payload run script anyway).
+const noRevalidate = { disableRevalidate: true }
+
 const existing = await payload.find({
   collection: "users",
   limit: 1,
@@ -26,6 +30,7 @@ const existing = await payload.find({
 if (existing.docs.length === 0) {
   await payload.create({
     collection: "users",
+    context: noRevalidate,
     data: {
       email: seedEnv.PAYLOAD_ADMIN_EMAIL,
       password: seedEnv.PAYLOAD_ADMIN_PASSWORD,
@@ -83,6 +88,7 @@ if (existingSectors.docs.length === 0) {
   for (const name of sectorNames) {
     const sector = await payload.create({
       collection: "sectors",
+      context: noRevalidate,
       data: { name },
     })
     sectorIds[name] = sector.id
@@ -201,6 +207,7 @@ for (const def of assetDefs) {
   if (id === undefined) {
     const asset = await payload.create({
       collection: "assets",
+      context: noRevalidate,
       data: { alt: def.alt },
       file: await solidImage(def),
     })
@@ -320,6 +327,7 @@ if (!hasFfmpeg) {
       const posterData = readFileSync(posterPath)
       const poster = await payload.create({
         collection: "assets",
+        context: noRevalidate,
         data: { alt: `${def.alt} — still frame` },
         file: {
           data: posterData,
@@ -332,6 +340,7 @@ if (!hasFfmpeg) {
       const videoData = readFileSync(videoPath)
       const video = await payload.create({
         collection: "assets",
+        context: noRevalidate,
         data: { alt: def.alt, poster: poster.id },
         file: {
           data: videoData,
@@ -368,6 +377,7 @@ const workYears: Record<string, number> = {
 if (existingWorks.docs.length === 0) {
   await payload.create({
     collection: "works",
+    context: noRevalidate,
     data: {
       title: "Solstice Denim Rebrand",
       slug: "solstice-denim-rebrand",
@@ -461,6 +471,7 @@ if (existingWorks.docs.length === 0) {
 
   await payload.create({
     collection: "works",
+    context: noRevalidate,
     data: {
       title: "Pulse Festival Identity",
       slug: "pulse-festival-identity",
@@ -514,6 +525,7 @@ if (existingWorks.docs.length === 0) {
 
   await payload.create({
     collection: "works",
+    context: noRevalidate,
     data: {
       title: "Atlas Museum Wayfinding",
       slug: "atlas-museum-wayfinding",
@@ -553,6 +565,7 @@ for (const work of slugMatchedWorks.docs) {
   await payload.update({
     collection: "works",
     id: work.id,
+    context: noRevalidate,
     draft: false,
     data: { year },
   })
@@ -608,6 +621,7 @@ if (existingClients.docs.length === 0) {
     // Logos are Assets like every other image; Clients references them.
     const logo = await payload.create({
       collection: "assets",
+      context: noRevalidate,
       data: { alt: `${def.name} wordmark logo` },
       file: {
         data,
@@ -618,6 +632,7 @@ if (existingClients.docs.length === 0) {
     })
     await payload.create({
       collection: "clients",
+      context: noRevalidate,
       data: { name: def.name, url: def.url ?? null, logo: logo.id },
     })
   }
@@ -635,6 +650,7 @@ const publishedLandingPage = await payload.findGlobal({
 if ((publishedLandingPage.stats?.length ?? 0) === 0) {
   await payload.updateGlobal({
     slug: "landing-page",
+    context: noRevalidate,
     draft: false,
     data: {
       // Without an explicit _status the saved version defaults to draft,
@@ -696,6 +712,7 @@ if ((landingNow.hero?.slides?.length ?? 0) === 0) {
 
   await payload.updateGlobal({
     slug: "landing-page",
+    context: noRevalidate,
     draft: false,
     data: {
       // Without an explicit _status the saved version defaults to draft,
@@ -734,6 +751,7 @@ const landingForRotatingWords = await payload.findGlobal({
 if ((landingForRotatingWords.hero?.rotatingWords?.length ?? 0) === 0) {
   await payload.updateGlobal({
     slug: "landing-page",
+    context: noRevalidate,
     draft: false,
     data: {
       _status: "published",
@@ -761,6 +779,7 @@ const landingForTestimonials = await payload.findGlobal({
 if ((landingForTestimonials.testimonials?.items?.length ?? 0) === 0) {
   await payload.updateGlobal({
     slug: "landing-page",
+    context: noRevalidate,
     draft: false,
     data: {
       _status: "published",
@@ -849,6 +868,7 @@ if (!existingFooter.id) {
 
   await payload.updateGlobal({
     slug: "footer",
+    context: noRevalidate,
     draft: false,
     data: {
       _status: "published",
@@ -908,6 +928,7 @@ if ((footerForCta.cta?.headline ?? "").trim() === "") {
 
   await payload.updateGlobal({
     slug: "footer",
+    context: noRevalidate,
     draft: false,
     data: {
       _status: "published",

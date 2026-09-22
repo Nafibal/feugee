@@ -2,6 +2,10 @@ import type { CollectionConfig } from "payload";
 
 import { publishedRead } from "../access/publishedRead";
 import { layoutBlocks } from "../blocks/layouts";
+import {
+  revalidateWorkAfterChange,
+  revalidateWorkAfterDelete,
+} from "../hooks/revalidateSite";
 import { slugField } from "../utilities/slug";
 
 export const Works: CollectionConfig = {
@@ -15,9 +19,13 @@ export const Works: CollectionConfig = {
     useAsTitle: "title",
     defaultColumns: ["title", "sector", "_status"],
     livePreview: {
+      // The preview route renders drafts for authenticated CMS sessions
+      // only — the public Detail Page is static and cannot. Being dynamic
+      // and auth-gated, the route mounts its Live Preview machinery
+      // unconditionally; no anonymous visitor ever loads it.
       url: ({ data }) => {
         if (typeof data.slug === "string" && data.slug.length > 0) {
-          return `/works/${data.slug}`;
+          return `/works/${data.slug}/preview`;
         }
         return undefined;
       },
@@ -29,6 +37,10 @@ export const Works: CollectionConfig = {
   },
   access: {
     read: publishedRead,
+  },
+  hooks: {
+    afterChange: [revalidateWorkAfterChange],
+    afterDelete: [revalidateWorkAfterDelete],
   },
   versions: {
     drafts: {

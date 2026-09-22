@@ -1,5 +1,10 @@
 import type { CollectionConfig } from "payload"
 
+import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from "../hooks/revalidateSite"
+
 export const Clients: CollectionConfig = {
   slug: "clients",
   labels: {
@@ -15,6 +20,10 @@ export const Clients: CollectionConfig = {
   },
   access: {
     read: () => true,
+  },
+  hooks: {
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     {

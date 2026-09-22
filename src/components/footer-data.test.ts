@@ -11,11 +11,15 @@ import { getPayload } from "payload";
 import { getFooterGlobal } from "./footer-data";
 
 const findGlobal = vi.fn();
+const find = vi.fn();
 
-vi.mocked(getPayload).mockResolvedValue({ findGlobal } as unknown as Payload);
+vi.mocked(getPayload).mockResolvedValue({
+  findGlobal,
+  find,
+} as unknown as Payload);
 
 describe("getFooterGlobal", () => {
-  it("passes the global through when the read succeeds", async () => {
+  it("reads the global at depth 0 — Other Works rehydrate separately", async () => {
     findGlobal.mockResolvedValue({ id: 1, copyrightName: "Feugee" });
 
     await expect(getFooterGlobal()).resolves.toEqual({
@@ -24,9 +28,42 @@ describe("getFooterGlobal", () => {
     });
     expect(findGlobal).toHaveBeenCalledWith({
       slug: "footer",
-      depth: 3,
+      depth: 0,
       draft: false,
     });
+    expect(find).not.toHaveBeenCalled();
+  });
+
+  it("rehydrates Other Works through a card-select find, in CMS order", async () => {
+    findGlobal.mockResolvedValue({ id: 1, otherWorks: [7, 3, 9] });
+    find.mockResolvedValue({
+      docs: [
+        { id: 3, title: "Pulse Festival Identity" },
+        { id: 9, title: "Solstice Denim Rebrand" },
+      ],
+    });
+
+    await expect(getFooterGlobal()).resolves.toMatchObject({
+      otherWorks: [7, { id: 3 }, { id: 9 }],
+    });
+    expect(find).toHaveBeenCalledWith(
+      expect.objectContaining({
+        collection: "works",
+        depth: 2,
+        draft: false,
+        where: {
+          and: [
+            { id: { in: [7, 3, 9] } },
+            { _status: { equals: "published" } },
+          ],
+        },
+      }),
+    );
+
+    // The find is trimmed to the card fields — no detail-page Sections.
+    const { select } = find.mock.calls[0][0];
+    expect(select.sections).toBeUndefined();
+    expect(select.testimonials).toBeUndefined();
   });
 
   it("resolves null instead of throwing when the read fails", async () => {

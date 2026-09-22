@@ -1,5 +1,4 @@
 import configPromise from "@payload-config"
-import { headers } from "next/headers"
 import { notFound } from "next/navigation"
 import { cache } from "react"
 import { getPayload } from "payload"
@@ -11,22 +10,17 @@ import { pageMetadata } from "@/seo/metadata"
 
 import { WorkDetail } from "./WorkDetail"
 
-export const dynamic = "force-dynamic"
-
+// The page renders statically — revalidated by the Works hooks on publish —
+// so it reads published Works only. Drafts preview inside the CMS Dashboard
+// at /works/[slug]/preview.
 const getWork = cache(async (slug: string): Promise<Work | null> => {
   const payload = await getPayload({ config: configPromise })
-  const { user } = await payload.auth({ headers: await headers() })
   const works = await payload.find({
     collection: "works",
     where: {
-      and: [
-        { slug: { equals: slug } },
-        // Drafts render only for authenticated CMS sessions — the Dashboard's
-        // Live Preview iframe rides the admin cookie.
-        ...(user ? [] : [publishedWhere]),
-      ],
+      and: [{ slug: { equals: slug } }, publishedWhere],
     },
-    draft: Boolean(user),
+    draft: false,
     // Depth 2 populates the Thumbnail and, in turn, its Poster — the OG image
     // stands a video Thumbnail in via that Poster.
     depth: 2,
@@ -35,11 +29,28 @@ const getWork = cache(async (slug: string): Promise<Work | null> => {
   return works.docs[0] ?? null
 })
 
+// Prerender every published Work at build; one published later renders on
+// first request and is served from cache afterwards.
+export async function generateStaticParams() {
+  const payload = await getPayload({ config: configPromise })
+  const works = await payload.find({
+    collection: "works",
+    draft: false,
+    limit: 0,
+    where: publishedWhere,
+    depth: 0,
+    select: { slug: true },
+  })
+  return works.docs.flatMap((work) =>
+    typeof work.slug === "string" ? [{ slug: work.slug }] : [],
+  )
+}
+
 export default async function Page({ params }: PageProps<"/works/[slug]">) {
   const { slug } = await params
   const work = await getWork(slug)
   if (!work) notFound()
-  return <WorkDetail initialData={work} />
+  return <WorkDetail data={work} />
 }
 
 export async function generateMetadata({ params }: PageProps<"/works/[slug]">) {

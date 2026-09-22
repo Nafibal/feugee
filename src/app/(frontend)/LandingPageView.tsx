@@ -1,12 +1,12 @@
 "use client";
 
-import { useLivePreview } from "@payloadcms/live-preview-react";
-import { useMemo, useState } from "react";
+import { lazy, Suspense, useMemo } from "react";
 
 import type { LandingPage } from "@/payload-types";
 
 import { ClientMarquee, type MarqueeClient } from "@/components/ClientMarquee";
 import { HeroSlider, type HeroSlide } from "@/components/HeroSlider";
+import { usePreviewRequested } from "@/components/live-preview/usePreviewRequested";
 import { WhoWeAreSection } from "@/components/who-we-are/WhoWeAreSection";
 import { SelectedWorksSection } from "@/components/selected-works/SelectedWorksSection";
 import {
@@ -16,6 +16,12 @@ import {
 import { sizedUrlOf, videoPosterOf } from "@/components/work";
 import { normalizeRotatingWords } from "@/components/heroTitle";
 
+// The Live Preview machinery rides a lazy chunk: it only downloads inside
+// the CMS Dashboard's preview iframe, where the gate below has seen
+// ?livePreview=landing-page. Anonymous visitors get the static page and
+// none of this code.
+const LandingPageLivePreview = lazy(() => import("./LandingPageLivePreview"));
+
 export const LandingPageView = ({
   clients,
   initialData,
@@ -23,18 +29,27 @@ export const LandingPageView = ({
   clients: MarqueeClient[];
   initialData: LandingPage;
 }) => {
-  // The CMS Dashboard and this page share an origin, so the Live Preview
-  // iframe's messages arrive from window.location.origin. Empty during SSR —
-  // the hook only reads it inside effects.
-  const [serverURL] = useState(() =>
-    typeof window === "undefined" ? "" : window.location.origin,
-  );
-  const { data } = useLivePreview({
-    serverURL,
-    depth: 3,
-    initialData,
-  });
+  const livePreview = usePreviewRequested("landing-page");
+  const content = <LandingPageContent clients={clients} data={initialData} />;
 
+  if (!livePreview) return content;
+
+  // The static content doubles as the Suspense fallback, so the swap to the
+  // live view is seamless while the chunk loads.
+  return (
+    <Suspense fallback={content}>
+      <LandingPageLivePreview clients={clients} initialData={initialData} />
+    </Suspense>
+  );
+};
+
+export const LandingPageContent = ({
+  clients,
+  data,
+}: {
+  clients: MarqueeClient[];
+  data: LandingPage;
+}) => {
   // The video field is video-only by config; a shallow populate mid-edit
   // (bare ID) just leaves the slide out until it resolves again. Slides are
   // full-bleed, so their posters request the wide variant.

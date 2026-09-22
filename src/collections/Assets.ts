@@ -1,6 +1,10 @@
 import type { CollectionConfig } from "payload"
 
 import {
+  revalidateSiteAfterChange,
+  revalidateSiteAfterDelete,
+} from "../hooks/revalidateSite"
+import {
   assetUploadLimitBytes,
   describeSize,
   uploadSizeError,
@@ -64,6 +68,8 @@ export const Assets: CollectionConfig = {
         }
       },
     ],
+    afterChange: [revalidateSiteAfterChange],
+    afterDelete: [revalidateSiteAfterDelete],
   },
   fields: [
     {

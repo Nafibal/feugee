@@ -183,22 +183,14 @@ export const WorksListing = ({
   items,
   sectorOptions,
   showFilter,
-  initialSectorSlug,
 }: {
   items: WorksListItem[];
   sectorOptions: SectorOption[];
   showFilter: boolean;
-  initialSectorSlug: string | null;
 }) => {
   const filterable = showFilter && sectorOptions.length > 0;
 
-  const [activeSector, setActiveSector] = useState<string | null>(() =>
-    filterable &&
-    initialSectorSlug !== null &&
-    sectorOptions.some((sector) => sector.slug === initialSectorSlug)
-      ? initialSectorSlug
-      : null,
-  );
+  const [activeSector, setActiveSector] = useState<string | null>(null);
 
   const selectSector = (slug: string | null) => {
     if (slug === activeSector) return;
@@ -210,8 +202,9 @@ export const WorksListing = ({
     window.history.pushState(window.history.state, "", url);
   };
 
-  // History traversal (Back/Forward over pushed filter entries) re-syncs the
-  // selection from the URL; anything unknown falls back to "All".
+  // The page renders statically, so the deep-link filter (?sector=…) is read
+  // on the client after mount; popstate re-syncs history traversal over the
+  // pushed filter entries. Anything unknown falls back to "All".
   useEffect(() => {
     const syncFromLocation = () => {
       const slug = new URLSearchParams(window.location.search).get("sector");
@@ -222,6 +215,7 @@ export const WorksListing = ({
       );
     };
 
+    syncFromLocation();
     window.addEventListener("popstate", syncFromLocation);
     return () => window.removeEventListener("popstate", syncFromLocation);
   }, [sectorOptions]);

@@ -1,19 +1,24 @@
 import configPromise from "@payload-config";
 import type { Metadata } from "next";
 import { cache } from "react";
-import { getPayload } from "payload";
+import { getPayload, type Payload } from "payload";
 
-import type { Client } from "@/payload-types";
+import { publishedWhere } from "@/access/publishedRead";
+import type { Asset, Client, LandingPage, Work } from "@/payload-types";
 
 import type { MarqueeClient } from "@/components/ClientMarquee";
-import { sizedUrlOf } from "@/components/work";
+import {
+  asAssetsSelect,
+  asClientsSelect,
+  asWorkSelect,
+  cardAssetSelect,
+  clientsSelect,
+  selectedWorksSelect,
+  sizedUrlOf,
+} from "@/components/work";
 import { heroOgImage } from "@/seo/ogImage";
 import { pageMetadata } from "@/seo/metadata";
 import { LandingPageView } from "./LandingPageView";
-
-// The page reads the database on every request, so request-time rendering is
-// the honest mode (same as the Works Page).
-export const dynamic = "force-dynamic";
 
 // A Client without a populated logo can't ride the marquee — drop it. Fallback
 // dimensions cover logo formats Payload doesn't measure (SVG); the marquee
@@ -41,30 +46,99 @@ const toMarqueeClient = (client: Client): MarqueeClient | null => {
   };
 };
 
+// findGlobal's select cannot trim populated relationships — depth-populated
+// docs come back whole — so the global is read at depth 0 (bare IDs) and its
+// relationships rehydrated through card-select finds. The Selected Works
+// never carry their detail-page Sections over the wire, and the hero videos
+// none of their file metadata. The CMS's own order survives: both finds are
+// keyed by ID and poured back in the global's sequence.
+const rehydrateLandingPage = async (
+  payload: Payload,
+  landingPage: LandingPage,
+): Promise<LandingPage> => {
+  const heroVideoIds = (landingPage.hero?.slides ?? []).flatMap((slide) =>
+    typeof slide.video === "number" ? [slide.video] : [],
+  );
+  const selectedWorkIds = (landingPage.selectedWorks ?? []).flatMap((work) =>
+    typeof work === "number" ? [work] : [],
+  );
+
+  const [heroVideos, selectedWorks] = await Promise.all([
+    heroVideoIds.length === 0
+      ? { docs: [] as Asset[] }
+      : payload.find({
+          collection: "assets",
+          // Depth 1 populates a video's poster.
+          depth: 1,
+          where: { id: { in: heroVideoIds } },
+          select: asAssetsSelect(cardAssetSelect),
+        }),
+    selectedWorkIds.length === 0
+      ? { docs: [] as Work[] }
+      : payload.find({
+          collection: "works",
+          // Depth 2 populates the card visuals and, in turn, their posters.
+          depth: 2,
+          draft: false,
+          limit: selectedWorkIds.length,
+          where: { and: [{ id: { in: selectedWorkIds } }, publishedWhere] },
+          select: asWorkSelect(selectedWorksSelect),
+        }),
+  ]);
+
+  const assetById = new Map(heroVideos.docs.map((asset) => [asset.id, asset]));
+  const workById = new Map(selectedWorks.docs.map((work) => [work.id, work]));
+
+  // An ID the finds could not populate (a now-draft Work, a deleted Asset)
+  // stays a number — the views drop it like a mid-edit Live Preview state.
+  const hero = landingPage.hero
+    ? {
+        ...landingPage.hero,
+        slides: (landingPage.hero.slides ?? []).map((slide) => ({
+          ...slide,
+          video:
+            typeof slide.video === "number"
+              ? (assetById.get(slide.video) ?? slide.video)
+              : slide.video,
+        })),
+      }
+    : landingPage.hero;
+
+  return {
+    ...landingPage,
+    hero,
+    selectedWorks: selectedWorkIds.map((id) => workById.get(id) ?? id),
+  };
+};
+
+// The page renders statically; the Landing Page and Works hooks revalidate
+// it when published CMS content changes.
 const getLandingPageData = cache(async () => {
   const payload = await getPayload({ config: configPromise });
-  // Depth 3 populates the Selected Works, their Feature Visuals/Thumbnails
-  // and, in turn, the posters. Clients is orderable — its default `_order`
-  // sort is the drag order set in the CMS Dashboard.
+
+  // Clients is orderable — its default `_order` sort is the drag order set
+  // in the CMS Dashboard.
   const [landingPage, clientsResult] = await Promise.all([
     payload.findGlobal({
       slug: "landing-page",
-      depth: 3,
       draft: false,
+      depth: 0,
     }),
     payload.find({
       collection: "clients",
       depth: 1,
       draft: false,
       limit: 0,
+      select: asClientsSelect(clientsSelect),
     }),
   ]);
 
+  const hydrated = await rehydrateLandingPage(payload, landingPage);
   const clients = clientsResult.docs
     .map(toMarqueeClient)
     .filter((client): client is MarqueeClient => client !== null);
 
-  return { landingPage, clients };
+  return { landingPage: hydrated, clients };
 });
 
 export default async function Page() {

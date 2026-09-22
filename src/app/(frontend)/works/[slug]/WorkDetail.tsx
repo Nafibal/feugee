@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useLivePreview } from "@payloadcms/live-preview-react";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 import type { Work } from "@/payload-types";
@@ -35,19 +34,9 @@ const MetaList = ({ label, values }: { label: string; values: string[] }) => (
   </dl>
 );
 
-export const WorkDetail = ({ initialData }: { initialData: Work }) => {
-  // The CMS Dashboard and this page share an origin, so the Live Preview
-  // iframe's messages arrive from window.location.origin. Empty during SSR —
-  // the hook only reads it inside effects.
-  const [serverURL] = useState(() =>
-    typeof window === "undefined" ? "" : window.location.origin,
-  );
-  const { data } = useLivePreview({
-    serverURL,
-    depth: 2,
-    initialData,
-  });
-
+// Pure view of one Work. The public Detail Page renders it statically from
+// the published doc; the preview route hands it the Live Preview stream.
+export const WorkDetail = ({ data }: { data: Work }) => {
   const sections = useMemo(() => data.sections ?? [], [data.sections]);
   const sectorName =
     typeof data.sector === "object" && data.sector !== null

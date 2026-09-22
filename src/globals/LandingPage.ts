@@ -1,6 +1,7 @@
 import type { GlobalConfig } from "payload"
 
 import { publishedRead } from "../access/publishedRead"
+import { revalidateGlobalAfterChange } from "../hooks/revalidateSite"
 
 export const LandingPage: GlobalConfig = {
   slug: "landing-page",
@@ -8,7 +9,9 @@ export const LandingPage: GlobalConfig = {
   admin: {
     description: "The content of the site's front page, section by section.",
     livePreview: {
-      url: "/",
+      // The flag arms the Landing Page's Live Preview client code on an
+      // otherwise static route — anonymous visitors load none of it.
+      url: "/?livePreview=landing-page",
       breakpoints: [
         { label: "Mobile", name: "mobile", width: 375, height: 667 },
         { label: "Tablet", name: "tablet", width: 768, height: 1024 },
@@ -17,6 +20,9 @@ export const LandingPage: GlobalConfig = {
   },
   access: {
     read: publishedRead,
+  },
+  hooks: {
+    afterChange: [revalidateGlobalAfterChange],
   },
   versions: {
     drafts: {

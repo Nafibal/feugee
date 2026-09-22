@@ -2,19 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLivePreview } from "@payloadcms/live-preview-react";
-import { useState } from "react";
+import { lazy, Suspense } from "react";
 
 import type { Footer, Work } from "@/payload-types";
 
 import { ArrowRight } from "./ArrowRight";
 import { AutoVideo } from "./AutoVideo";
+import { usePreviewRequested } from "./live-preview/usePreviewRequested";
 import { hasFooterCtaContent, toFooterCta } from "./footerCta";
 import { LogoMark } from "./LogoMark";
 import { toMenuLinks } from "./menu";
 import { navigateWithBlackout } from "./page-transition/navigateWithBlackout";
 import { SwipeText } from "./SwipeText";
 import { toCardWork, workThumbnailOf, type CardWork } from "./work";
+
+// The Live Preview machinery rides a lazy chunk: it only downloads inside
+// the CMS Dashboard's preview iframe, where the gate below has seen
+// ?livePreview=footer. Anonymous visitors get the static chrome and none
+// of this code.
+const FooterLivePreview = lazy(() => import("./FooterLivePreview"));
 
 interface FooterWorkCard extends CardWork {
   subtitle: string | null;
@@ -131,18 +137,21 @@ const ctaButtonClassName =
   "inline-flex items-center gap-2 text-white px-6 py-3 rounded border-neutral-800 border";
 
 export const FooterView = ({ initialData }: { initialData: Footer }) => {
-  // The CMS Dashboard and the site share an origin, so the Live Preview
-  // iframe's messages arrive from window.location.origin. Empty during SSR —
-  // the hook only reads it inside effects.
-  const [serverURL] = useState(() =>
-    typeof window === "undefined" ? "" : window.location.origin,
-  );
-  const { data } = useLivePreview({
-    serverURL,
-    depth: 3,
-    initialData,
-  });
+  const livePreview = usePreviewRequested("footer");
+  const content = <FooterContent data={initialData} />;
 
+  if (!livePreview) return content;
+
+  // The static content doubles as the Suspense fallback, so the swap to the
+  // live view is seamless while the chunk loads.
+  return (
+    <Suspense fallback={content}>
+      <FooterLivePreview initialData={initialData} />
+    </Suspense>
+  );
+};
+
+export const FooterContent = ({ data }: { data: Footer }) => {
   const cta = toFooterCta(data.cta);
 
   const aboutHeading = data.about?.heading?.trim() || "About";

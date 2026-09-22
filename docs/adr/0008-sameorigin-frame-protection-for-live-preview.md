@@ -1,0 +1,5 @@
+# SAMEORIGIN frame protection for Live Preview
+
+Production responses carry `X-Frame-Options: SAMEORIGIN` (with HSTS, nosniff, and Referrer-Policy — see `src/securityHeaders.ts`) rather than the stricter `DENY`. Payload's Live Preview renders the public site inside an iframe within the CMS Dashboard, and both are served by the same Next.js app on one origin — `DENY` would blank every preview. `SAMEORIGIN` still blocks third-party framing (clickjacking), which is the threat the header exists for. If frame protection ever moves to a CSP `frame-ancestors` directive, the same-origin allowance must be preserved or Live Preview breaks.
+
+Related hardening settled in the same pass (2026-09-22, ticket #2): HSTS pins HTTPS for two years including subdomains but is not submitted to the preload list (irreversible, not wanted yet); Asset uploads are capped at 100 MB with a friendly CMS error (`src/collections/assetUploadCap.ts`); admin sessions expire after one hour — half Payload's default — with the cookie marked Secure in production (`src/collections/userAuth.ts`).

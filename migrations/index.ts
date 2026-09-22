@@ -9,6 +9,7 @@ import * as migration_20260920_070322_add_landing_page_hero_rotating_words from 
 import * as migration_20260920_081137_drop_works_short_description from './20260920_081137_drop_works_short_description';
 import * as migration_20260920_123826_move_contact_cta_to_footer from './20260920_123826_move_contact_cta_to_footer';
 import * as migration_20260920_123832_add_works_feature_visual from './20260920_123832_add_works_feature_visual';
+import * as migration_20260922_194500_add_object_key_and_password_request_at from './20260922_194500_add_object_key_and_password_request_at';
 
 export const migrations = [
   {
@@ -65,5 +66,10 @@ export const migrations = [
     up: migration_20260920_123832_add_works_feature_visual.up,
     down: migration_20260920_123832_add_works_feature_visual.down,
     name: '20260920_123832_add_works_feature_visual',
+  },
+  {
+    up: migration_20260922_194500_add_object_key_and_password_request_at.up,
+    down: migration_20260922_194500_add_object_key_and_password_request_at.down,
+    name: '20260922_194500_add_object_key_and_password_request_at',
   },
 ];

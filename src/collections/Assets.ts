@@ -1,5 +1,11 @@
 import type { CollectionConfig } from "payload"
 
+import {
+  assetUploadLimitBytes,
+  describeSize,
+  uploadSizeError,
+} from "./assetUploadCap"
+
 export const Assets: CollectionConfig = {
   slug: "assets",
   labels: {
@@ -8,13 +14,23 @@ export const Assets: CollectionConfig = {
   },
   admin: {
     useAsTitle: "filename",
-    description: "Images and videos referenced by site content.",
+    description: `Images and videos referenced by site content. Up to ${describeSize(assetUploadLimitBytes)} each.`,
   },
   access: {
     read: () => true,
   },
   upload: {
     mimeTypes: ["image/*", "video/*"],
+  },
+  hooks: {
+    beforeValidate: [
+      ({ req }) => {
+        const error = uploadSizeError(req.file?.size)
+        if (error) {
+          throw error
+        }
+      },
+    ],
   },
   fields: [
     {

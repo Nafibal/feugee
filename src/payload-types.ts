@@ -571,7 +571,7 @@ export interface Work {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Images and videos referenced by site content.
+ * Images and videos referenced by site content. Up to 100 MB each.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "assets".
@@ -586,6 +586,7 @@ export interface Asset {
    * Image shown before the video plays. Pick one with the same frame size as the video — it fixes the video's slot in grids and the masonry.
    */
   poster?: (number | null) | Asset;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -649,6 +650,7 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -1050,6 +1052,7 @@ export interface SectorsSelect<T extends boolean = true> {
 export interface AssetsSelect<T extends boolean = true> {
   alt?: T;
   poster?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -1087,6 +1090,7 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  resetPasswordRequestedAt?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
